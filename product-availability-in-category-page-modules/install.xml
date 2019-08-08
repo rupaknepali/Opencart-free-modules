@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Product Availability Module</name>
+    <version>1.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_product_available</code>
+    <file path="catalog/controller/extension/module/featured.php">
+        <operation>
+            <search><![CDATA[ if ($product_info) { ]]></search>
+            <add position="after"><![CDATA[
+            if ($product_info['quantity']            <= 0) {
+						$stock = $product_info['stock_status'];
+					} elseif ($this->config->get('config_stock_display')) {
+						$stock = $product_info['quantity'];
+					} else {
+						$stock = $this->language->get('text_instock');
+					}
+            ]]>            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[ 'special'     => $special, ]]></search>
+            <add position="after"><![CDATA[ 'stock'     => $stock, ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/extension/module/latest.php|catalog/controller/extension/module/bestseller.php|catalog/controller/extension/module/special.php">
+        <operation>
+            <search><![CDATA[ if ((float)$result['special']) { ]]></search>
+            <add position="before"><![CDATA[
+            if ($result['quantity']            <= 0) {
+						$stock = $result['stock_status'];
+					} elseif ($this->config->get('config_stock_display')) {
+						$stock = $result['quantity'];
+					} else {
+						$stock = $this->language->get('text_instock');
+					}
+            ]]>            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[ 'special'     => $special, ]]></search>
+            <add position="after"><![CDATA[ 'stock'     => $stock, ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/language/*/extension/module/latest.php|catalog/language/*/extension/module/bestseller.php|catalog/language/*/extension/module/featured.php|catalog/language/*/extension/module/special.php">
+        <operation>
+            <search><![CDATA[ $_['text_tax']      = 'Ex Tax:'; ]]></search>
+            <add position=" "><![CDATA[ 
+                $_['text_stock']               = 'Availability:';
+                $_['text_instock']             = 'In Stock';
+                ]]>            </add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/extension/module/latest.twig|catalog/view/theme/*/template/extension/module/bestseller.twig|catalog/view/theme/*/template/extension/module/featured.twig|catalog/view/theme/*/template/extension/module/special.twig">
+        <operation>
+            <search><![CDATA[ {{ product.description }} ]]></search>
+            <add position="after"><![CDATA[ 
+           <h6> {{ text_stock }} {{ product.stock }}</h6>
+            ]]>            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/language/*/product/category.php">
+        <operation>
+            <search><![CDATA[ $_['text_limit']        = 'Show:'; ]]></search>
+            <add position=" "><![CDATA[ 
+                $_['text_stock']               = 'Availability:';
+                $_['text_instock']             = 'In Stock';
+                ]]>            </add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/category.twig">
+        <operation>
+            <search><![CDATA[ {% if product.price %} ]]></search>
+            <add position="before"><![CDATA[ 
+           <h6> {{ text_stock }} {{ product.stock }}</h6>
+            ]]>            </add>
+        </operation>
+    </file>
+    <file path="catalog/controller/product/category.php">
+        <operation>
+            <search><![CDATA[ $data['products'][] = array( ]]></search>
+            <add position="before"><![CDATA[
+            if ($result['quantity']            <= 0) {
+					$stock = $result['stock_status'];
+				} elseif ($this->config->get('config_stock_display')) {
+					$stock = $result['quantity'];
+				} else {
+					$stock = $this->language->get('text_instock');
+				}
+            ]]>            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[ 'thumb'       => $image, ]]></search>
+            <add position="after"><![CDATA[ 'stock'       => $stock, ]]></add>
+        </operation>
+    </file>
+
+</modification>
