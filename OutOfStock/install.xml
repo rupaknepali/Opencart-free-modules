@@ -51,6 +51,13 @@
     </file>
     <file path="catalog/view/theme/*/template/product/product.twig">
         <operation>
+            <search position="replace"><![CDATA[<ul class="nav nav-tabs"> ]]></search>
+            <add><![CDATA[
+                        <div class="clearfix"></div><ul class="nav nav-tabs">
+                ]]>
+            </add>
+        </operation>
+        <operation>
             <search position="replace"><![CDATA[<a class="thumbnail" href="{{ popup }}" ]]></search>
             <add><![CDATA[
                         {% if module_outofstock_style and module_outofstock_show_marker_in_product_page and module_outofstock_show_marker_in_product_page %}
@@ -88,19 +95,6 @@
             </add>
         </operation>
         <operation>
-            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span><i class="fa fa-shopping-cart"></i></button>]]></search>
-            <add><![CDATA[
-                
-                {% if  (product.quantity < 1) %}
-                    <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');" disabled><span class="hidden-xs hidden-sm hidden-md" disabled>{{ button_cart_outOfStock }}</span></button>
-                {% else %}
-                    <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span><i class="fa fa-shopping-cart"></i></button>
-                {% endif %}
-
-                ]]>
-            </add>
-        </operation>
-        <operation>
             <search position="replace"><![CDATA[<div class="product-thumb transition">]]></search>
             <add><![CDATA[
                <div class="product-thumb transition">
@@ -110,9 +104,25 @@
                 ]]>
             </add>
         </operation>
-        <operation error="skip">
-            <search position="replace" index='3'><![CDATA[<div class="{{ class }}">]]></search>
-            <add><![CDATA[<div class="{{ class }} product-layout"'>]]>
+        <operation>
+            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}']]></search>
+            <add><![CDATA[
+                
+                {% if  (product.quantity < 1) %}
+                    <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');" disabled><span class="hidden-xs hidden-sm hidden-md" disabled>{{ button_cart_outOfStock }}</span></button>
+                {% else %}
+                    <button type="button" onclick="cart.add('{{ product.product_id }}'
+                ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[<i class="fa fa-shopping-cart"></i></button>]]></search>
+            <add><![CDATA[
+                <i class="fa fa-shopping-cart"></i></button>
+                {% endif %}
+                
+                ]]>
             </add>
         </operation>
     </file>
@@ -175,16 +185,23 @@
             </add>
         </operation>
         <operation>
-            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i><span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>]]></search>
+            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}']]></search>
             <add><![CDATA[
                 
                 {% if  (product.quantity < 1) %}
                     <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');" disabled><span class="hidden-xs hidden-sm hidden-md" disabled>{{ button_cart_outOfStock }}</span></button>
                 {% else %}
-                    <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span><i class="fa fa-shopping-cart"></i></button>
-                {% endif %}
-
+                    <button type="button" onclick="cart.add('{{ product.product_id }}'
                 ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[{{ button_cart }}</span></button>]]></search>
+            <add><![CDATA[
+                {{ button_cart }}</span></button>
+                {% endif %}
+                 ]]>
             </add>
         </operation>
 
@@ -277,16 +294,23 @@
         </operation>
 
         <operation>
-            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i><span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>]]></search>
+            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}']]></search>
             <add><![CDATA[
                 
                 {% if  (product.quantity < 1) %}
                     <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');" disabled><span class="hidden-xs hidden-sm hidden-md" disabled>{{ button_cart_outOfStock }}</span></button>
                 {% else %}
-                    <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span><i class="fa fa-shopping-cart"></i></button>
-                {% endif %}
-
+                    <button type="button" onclick="cart.add('{{ product.product_id }}'
                 ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[{{ button_cart }}</span></button>]]></search>
+            <add><![CDATA[
+                {{ button_cart }}</span></button>
+                {% endif %}
+                 ]]>
             </add>
         </operation>
 
