@@ -2,7 +2,7 @@
 //As our file is login.php so Class name is ControllerExtensionModuleLogin which extends the Controller base class
 class ControllerExtensionModuleLogin extends Controller
 {
-	//Create index method. Index method is called automatically if no parameters are passed, check this video tutorial for details https://www.youtube.com/watch?v=X6bsMmReT-4
+	//Create index method. Index method is called automatically if no parameters are passed, check this video tutorial for details https://www.youtube.com/watch?v=X6bsMmReT-4. The difference between the single instance and multi-instance module is in the index method, multi-instance module's index method is like "public function index($setting) {"
 	public function index()
 	{
 		//Loads the language file by which the varaibles of language file are accessible in twig files
