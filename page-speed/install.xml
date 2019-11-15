@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>10 ways to speed up the Opencart site</name>
+  <code>webocreationpagespeed100</code>
+  <version>1.0.0</version>
+  <author>Rupak Nepali</author>
+  <link>https://webocreation.com</link>
+
+  <file path="catalog/view/theme/*/*/*/*.twig|catalog/view/theme/*/template/*/*/*.twig">
+    <operation>
+      <search>
+        <![CDATA[<img ]]>
+      </search>
+      <add position="replace">
+        <![CDATA[<img loading="lazy"  ]]>
+      </add>
+    </operation>
+  </file>
+
+  <file path="system/library/response.php">
+    <operation>
+      <search position="replace"><![CDATA[
+    public function output() {
+            ]]>      </search>
+      <add><![CDATA[
+    public function output() {
+        /*source compressor*/
+        if ($this->output) {
+            //$this->output = preg_replace('/<!--(.|\n)*?-->/', " ", $this->output);
+            $this->output = preg_replace("/(\n)+/", "\n", $this->output);
+            $this->output = preg_replace("/\r\n+/", "\n", $this->output);
+            $this->output = preg_replace("/\n(\t)+/", "\n", $this->output);
+            $this->output = preg_replace("/\n(\ )+/", "\n", $this->output);
+            $this->output = preg_replace("/\>(\n)+</", '><', $this->output);
+            $this->output = preg_replace("/\>\r\n</", '><', $this->output);
+        }
+            ]]>      </add>
+    </operation>
+  </file>
+  <file path="catalog/controller/common/header.php">
+    <operation>
+      <search>
+        <![CDATA[
+		      $data['links'] = $this->document->getLinks();
+        ]]>
+      </search>
+      <add position="replace">
+        <![CDATA[
+        $data['links'] ="";
+          //$data['links'] = $this->document->getLinks();
+        ]]>
+      </add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+		$data['styles'] = $this->document->getStyles();
+]]>      </search>
+      <add position="replace"><![CDATA[
+      $data['styles'] ="";
+  //$data['styles'] = $this->document->getStyles();
+]]>      </add>
+    </operation>
+  </file>
+
+  <file path="catalog/controller/common/footer.php">
+    <operation>
+      <search><![CDATA[
+		$data['scripts'] = $this->document->getScripts('footer');
+]]>      </search>
+      <add position="after"><![CDATA[
+    $data['links'] = $this->document->getLinks();
+    $data['styles'] = $this->document->getStyles();
+    //$data['scripts'] = $this->document->getScripts();
+]]>      </add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/*/template/common/header.twig">
+    <operation>
+      <search><![CDATA[
+<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+]]>      </search>
+      <add position="replace" offset="6"><![CDATA[
+<!--<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
+<link href="catalog/view/theme/default/stylesheet/stylesheet.css" rel="stylesheet">-->
+]]>      </add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+<script src="catalog/view/javascript/common.js" type="text/javascript"></script>
+]]>      </search>
+      <add position="replace" offset="3"><![CDATA[
+<!--<script src="catalog/view/javascript/common.js" type="text/javascript"></script>-->
+]]>      </add>
+    </operation>
+  </file>
+  <file path="catalog/view/theme/*/template/common/footer.twig">
+    <operation>
+      <search>
+        <![CDATA[{% for script in scripts %}]]>
+      </search>
+      <add position="before"><![CDATA[
+<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
+<link href="catalog/view/theme/default/stylesheet/stylesheet.css" rel="stylesheet">
+    
+{% for style in styles %} 
+<link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
+{% endfor %}
+{% for link in links %}
+<link href="{{ link.href }}" rel="{{ link.rel }}" />
+{% endfor %}
+
+<script defer="defer" src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="catalog/view/javascript/common.js" type="text/javascript"></script>
+
+]]>      </add>
+    </operation>
+  </file>
+
+
+  <!-- Minify HTML output -->
+  <file path="system/library/template.php">
+    <operation>
+      <search><![CDATA[return $this->adaptor->render($template, $cache);]]></search>
+      <add position="replace"><![CDATA[
+    if (strpos($template, 'template/') !== false) {
+        return $this->minify($this->adaptor->render($template, $cache));
+    } else {
+        return $this->adaptor->render($template, $cache);
+    }
+            ]]>      </add>
+    </operation>
+    <operation>
+      <search><![CDATA[private $adaptor;]]></search>
+      <add position="after"><![CDATA[
+    /**
+	 * @param	string	$body
+	 * @return	string
+ 	*/
+	public function minify($body) {
+        $search = array(
+            '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+            '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+            '/(\s)+/s',         // shorten multiple whitespace sequences
+        );
+
+        $replace = array(
+            '>',
+            '<',
+            '\\1',
+            ''
+        );
+
+        $body = preg_replace($search, $replace, $body);
+
+        return $body;
+    }
+
+            ]]>      </add>
+    </operation>
+  </file>
+</modification>
