@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>All Product Show</name>
+    <version>3.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_all_products_show</code>
+    <description>Show all Products in a Page frontend</description>
+
+    <file path="catalog/view/theme/*/template/common/menu.twig">
+        <operation>
+            <search><![CDATA[{% for category in categories %}]]></search>
+            <add position="before"><![CDATA[
+                <li><a href="{{ allproductsurl }}">{{ text_heading_title }}</a></li>
+            ]]>            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/common/menu.php">
+        <operation>
+            <search><![CDATA[$data['categories'] = array();]]></search>
+            <add position="before"><![CDATA[
+                $data['allproductsurl']=$this->url->link('extension/module/allproduct');
+                $this->load->language('extension/module/allproduct');
+                $data['text_heading_title']=$this->language->get('text_heading_title');
+            ]]>            </add>
+        </operation>
+    </file>
+
+</modification>
