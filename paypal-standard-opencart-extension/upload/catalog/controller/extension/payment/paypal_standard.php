@@ -1,15 +1,20 @@
 <?php
-class ControllerExtensionPaymentPPStandard extends Controller
+//As our file is paypal_standard.php so Class name is ControllerExtensionPaymentPaypalStandard which extends the Controller base class
+class ControllerExtensionPaymentPaypalStandard extends Controller
 {
+    //Create index method. Index method is called automatically if no parameters are passed, check this video tutorial for details https://www.youtube.com/watch?v=X6bsMmReT-4.
+    //In payment extension you don't need to pass any parameter in index() method.
     public function index()
     {
+        //Loads the language file by which the varaibles of language file are accessible in twig files
         $this->load->language('extension/payment/paypal_standard');
-
+        //Text to show when it is in test mode.
         $data['text_testmode'] = $this->language->get('text_testmode');
+        //Text to show for the button.
         $data['button_confirm'] = $this->language->get('button_confirm');
-
+        //Get the configured value, and find when it is on test mode or not.
         $data['testmode'] = $this->config->get('payment_paypal_standard_test');
-
+        //If it is on test mode then set the form action URL to sandbox paypal URL else set the form action URL to live paypal URL
         if (!$this->config->get('payment_paypal_standard_test')) {
             $data['action'] = 'https://www.paypal.com/cgi-bin/webscr';
         } else {
@@ -26,6 +31,7 @@ class ControllerExtensionPaymentPPStandard extends Controller
 
             $data['products'] = array();
 
+            // Get the products of the Cart
             foreach ($this->cart->getProducts() as $product) {
                 $option_data = array();
 
@@ -87,6 +93,8 @@ class ControllerExtensionPaymentPPStandard extends Controller
             $data['invoice'] = $this->session->data['order_id'] . ' - ' . $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
             $data['lc'] = $this->session->data['language'];
             $data['return'] = $this->url->link('checkout/success');
+
+            //Notify URL is important to get the callback once the payment gateway processes the payment.
             $data['notify_url'] = $this->url->link('extension/payment/paypal_standard/callback', '', true);
             $data['cancel_return'] = $this->url->link('checkout/checkout', '', true);
 
@@ -102,8 +110,11 @@ class ControllerExtensionPaymentPPStandard extends Controller
         }
     }
 
+    //Some Instant Update variables set up the Cart Upload to use your callback server. Include the following required variables in the Cart Upload command to have PayPal send Instant Update requests to your callback server.
+    //It means the Paypal will call this URL and update the order status in the database of the website.
     public function callback()
     {
+        //The PayPal sends back the order id so that we know it it is the right order that we are processing back.
         if (isset($this->request->post['custom'])) {
             $order_id = $this->request->post['custom'];
         } else {
@@ -115,27 +126,25 @@ class ControllerExtensionPaymentPPStandard extends Controller
         $order_info = $this->model_checkout_order->getOrder($order_id);
 
         if ($order_info) {
+            
+            
             $request = 'cmd=_notify-validate';
 
             foreach ($this->request->post as $key => $value) {
                 $request .= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
             }
-
             if (!$this->config->get('payment_paypal_standard_test')) {
                 $curl = curl_init('https://www.paypal.com/cgi-bin/webscr');
             } else {
                 $curl = curl_init('https://www.sandbox.paypal.com/cgi-bin/webscr');
             }
-
             curl_setopt($curl, CURLOPT_POST, true);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_HEADER, false);
             curl_setopt($curl, CURLOPT_TIMEOUT, 30);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
             $response = curl_exec($curl);
-
             if (!$response) {
                 $this->log->write('paypal_standard :: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
             }

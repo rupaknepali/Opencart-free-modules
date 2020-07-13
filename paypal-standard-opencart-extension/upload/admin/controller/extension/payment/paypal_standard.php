@@ -153,7 +153,6 @@ class ControllerExtensionPaymentPaypalStandard extends Controller
         }
 
         $this->load->model('localisation/geo_zone');
-
         $data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
         if (isset($this->request->post['payment_paypal_standard_status'])) {
