@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Custom Menu</name>
+    <version>3.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_custom_top_menu</code>
+    <description>Custom Menu for Opencart</description>
+
+    <file path="catalog/view/theme/*/template/common/menu.twig">
+        <operation>
+            <search><![CDATA[{% for category in categories %}]]></search>
+            <add position="before"><![CDATA[
+                <li><a href="https://YOURURLHERE">TEXTHERE</a></li>
+            ]]>            </add>
+        </operation>
+    </file>
+</modification>
