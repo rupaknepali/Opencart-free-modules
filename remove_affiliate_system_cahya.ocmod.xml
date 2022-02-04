@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+<id>Remove Affiliate System</id>
+<name><![CDATA[<font color="#0000"><b>Remove Affiliate System</font>]]></name>
+<code>Remove Affiliate System</code>
+<version><![CDATA[<b>1.0</b>]]></version>
+<link>http://www.cahyamaulana.com</link>
+<author><![CDATA[<font color="#000"><b>Cahya Maulana</font>]]></author>
+  
+  <file path="catalog/view/theme/*/template/common/footer.tpl">
+	<operation>
+	  <search><![CDATA[<li><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>]]></search>
+	  <add position="replace"><![CDATA[]]></add>
+	</operation>
+  </file>
+  
+  <file path="catalog/controller/affiliate/*.php">
+	<operation>
+	  <search><![CDATA[public function index(]]></search>
+	  <add position="after"><![CDATA[$this->response->redirect($this->url->link('common/home'));]]></add>
+	</operation>
+  </file>
+</modification>

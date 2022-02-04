@@ -1,0 +1,261 @@
+{{ header }}
+<div class="container" id="product-category">
+    <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+            <li>
+                <a href="{{ breadcrumb.href }}">
+                    {{ breadcrumb.text }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="row">
+        {{ column_left }}
+        {% if column_left and column_right %}
+            {% set class = 'col-sm-6' %}
+        {% elseif column_left or column_right %}
+            {% set class = 'col-sm-9' %}
+        {% else %}
+            {% set class = 'col-sm-12' %}
+        {% endif %}
+        <div id="content" class="{{ class }}">
+            {{ content_top }}
+            <h2>
+                {{ heading_title }}
+            </h2>
+            <p>
+                {{ decription }}
+            </p>
+            <style>
+                .testimonial-quote
+                {
+                    font-size: 16px;
+                }
+
+                .testimonial-quote blockquote
+                {
+                    /* Negate theme styles */
+                    border: 0;
+                    margin: 0;
+                    padding: 0;
+                    background: none;
+                    color: gray;
+                    font-family: Georgia, serif;
+                    font-size: 1.2em;
+                    font-style: italic;
+                    line-height: 1.4 !important;
+                    position: relative;
+                    text-shadow: 0 1px white;
+                    z-index: 600;
+                }
+
+                .testimonial-quote blockquote *
+                {
+                    box-sizing: border-box;
+                }
+
+                .testimonial-quote blockquote p
+                {
+                    color: #75808a;
+                    line-height: 1.4 !important;
+                }
+
+                .testimonial-quote blockquote p:first-child:before
+                {
+                    content: '\201C';
+                    color: #81bedb;
+                    font-size: 2.5em;
+                    font-weight: 700;
+                    opacity: .3;
+                    position: absolute;
+                    top: -0.4em;
+                    left: -0.2em;
+                    text-shadow: none;
+                    z-index: -300;
+                }
+
+                .testimonial-quote img
+                {
+                    border: 3px solid #9CC1D3;
+                    border-radius: 50%;
+                    display: block;
+                    width: 120px;
+                    height: 120px;
+                    position: absolute;
+                    top: -0.2em;
+                    left: 0;
+                }
+
+                .testimonial-quote cite
+                {
+                    color: gray;
+                    display: block;
+                    font-size: 0.8em;
+                }
+
+                .testimonial-quote cite span
+                {
+                    color: #5e5e5e;
+                    font-size: 1em;
+                    font-style: normal;
+                    letter-spacing: 1px;
+                    text-shadow: 0 1px white;
+                }
+
+                .testimonial-quote
+                {
+                    position: relative;
+                }
+
+                .testimonial-quote.right .quote-container
+                {
+                    padding-left: 0;
+                    padding-right: 160px;
+                }
+
+                .testimonial-quote.right img
+                {
+                    left: auto;
+                    right: 0;
+                }
+
+                .testimonial-quote.right cite
+                {
+                    text-align: right;
+                }
+                .rating .fa-stack
+                {
+                    font-size: 15px;
+                }
+                .rating .fa-star,
+                .rating .fa-star-o
+                {
+                    font-size: 30px;
+                }
+            </style>
+            <div class="product-layout product-list">
+
+                {% if reviews %}
+                    {% for review in reviews %}
+                        <div class="product-thumb">
+                            <div class="image">
+                                <a href="{{ review.href }}">
+                                    <img src="{{ review.thumb }}" alt="{{review.name}}" title="{{review.name}}" class="img-responsive">
+                                </a>
+                            </div>
+                            <div>
+                                <div class="caption">
+                                    <h4>
+                                        <a href="{{ review.href }}">
+                                            {{review.name}}
+                                        </a>
+                                    </h4>
+                                    <p>
+                                        {{ review.description }}
+                                    </p>
+
+                                    {% if review.rating %}
+                                        <div class="rating">
+                                            {% for i in 1..5 %}
+                                                {% if review.rating < i %}
+                                                    <span class="fa fa-stack">
+                                                        <i class="fa fa-star-o fa-stack-2x"></i>
+                                                    </span>
+                                                {% else %}
+                                                    <span class="fa fa-stack">
+                                                        <i class="fa fa-star fa-stack-2x"></i>
+                                                        <i class="fa fa-star-o fa-stack-2x"></i>
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+
+
+                                        <div class="testimonial-quote group">
+                                            <div class="quote-container">
+                                                <blockquote>
+                                                    <p>
+                                                        {{ review.text }}
+
+                                                    </p>
+                                                </blockquote>
+                                                <cite>
+                                                    <span>
+                                                        -
+                                                        {{ review.author }}
+                                                        <br>
+                                                        -
+                                                        {{ review.date_added }}
+                                                    </span>
+
+
+                                                </cite>
+                                            </div>
+                                        </div>
+
+                                        <h4>
+                                            <a href="{{ review.href }}#tab-review">
+                                                (
+                                                {{ review.totalreviews }}
+                                                ) total reviews
+                                            </a>
+
+                                        </h4>
+
+                                    {% endif %}
+                                    {% if review.price %}
+                                        <p class="price">
+                                            {% if not review.special %}
+                                                {{ review.price }}
+                                            {% else %}
+                                                <span class="price-new">
+                                                    {{ review.special }}
+                                                </span>
+                                                <span class="price-old">
+                                                    {{ review.price }}
+                                                </span>
+                                            {% endif %}
+                                            {% if review.tax %}
+                                                <span class="price-tax">
+                                                    {{ text_tax }}
+                                                    {{ review.tax }}
+                                                </span>
+                                            {% endif %}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                                <div class="button-group">
+                                    <button onclick="cart.add('{{ review.product_id }}');" type="button">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <span class="hidden-xs hidden-sm hidden-md">
+                                            {{ button_cart }}
+                                        </span>
+                                    </button>
+                                    <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ review.product_id }}');">
+                                        <i class="fa fa-heart"></i>
+                                    </button>
+                                    <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ review.product_id }}');">
+                                        <i class="fa fa-exchange"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                </div>
+
+                <div class="text-right">
+                    {{ pagination }}
+                </div>
+            {% else %}
+                <p>
+                    {{ text_no_reviews }}
+                </p>
+            {% endif %}
+
+            {{ content_bottom }}
+        </div>
+        {{ column_right }}
+    </div>
+</div>
+{{ footer }}

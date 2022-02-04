@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>showproductavailability</name>
+    <version>1.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreationproduct_available</code>
+    <description>This show product availability in category page and other product modules</description>
+    <file path="catalog/controller/extensions/module/latest.php">
+        <operation>
+            <search><![CDATA[ if ($product_info) { ]]></search>
+            <add position="after"><![CDATA[
+            if ($product_info['quantity']            <= 0) {
+						$stock = $product_info['stock_status'];
+					} elseif ($this->config->get('config_stock_display')) {
+						$stock = $product_info['quantity'];
+					} else {
+						$stock = $this->language->get('text_instock');
+					}
+            ]]>            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[ 'special'     => $special, ]]></search>
+            <add position="after"><![CDATA[ 'stock'     => $stock, ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/language/*/extension/module/latest.php">
+        <operation>
+            <search><![CDATA[ $_['text_tax']      = 'Ex Tax:'; ]]></search>
+            <add position=" "><![CDATA[ 
+                $_['text_stock']               = 'Availability:';
+                $_['text_instock']             = 'In Stock';
+                ]]>            </add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/extension/module/latest.twig">
+        <operation>
+            <search><![CDATA[ {{ product.description }} ]]></search>
+            <add position=" "><![CDATA[ 
+            <br>
+            {{ text_stock }} {{ product.stock }}
+            ]]>            </add>
+        </operation>
+    </file>
+</modification>

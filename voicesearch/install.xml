@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Voice Search</name>
+  <version>1.0</version>
+  <author>Rupak Nepali</author>
+  <link>https://webocreation.com</link>
+  <code>webocreation_voice_search_opencart</code>
+  <file path="catalog/view/theme/default/template/common/search.twig">
+    <operation>
+      <search><![CDATA[<div id="search" class="input-group">]]></search>
+      <add position="after"><![CDATA[
+            <style>
+        .speech {
+            width: 15%;
+            float: left;
+            border: 1px solid #ccc;
+            border-radius: 10px 0px 0px 10px;
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            border-right: 0px;
+            align-items: center;
+            display: flex;
+            height: 40px;
+        }
+
+        .speech img {
+            width: 20px;
+            position: relative;
+            margin: auto;
+        }
+
+        #search .input-lg {
+            height: 40px;
+            line-height: 20px;
+            padding: 0 10px;
+            border-left-width: 0px;
+            border-radius: 0px;
+            width:85%;
+        }
+    </style>
+    <script>
+        function startDictation() {
+            if (window.hasOwnProperty('webkitSpeechRecognition')) {
+                var recognition = new webkitSpeechRecognition();
+
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.lang = 'en-US';
+                recognition.start();
+
+                recognition.onresult = function (e) {
+                    document.getElementsByClassName('form-control')[0].value = e.results[0][0].transcript;
+                    recognition.stop();
+                    document.getElementsByClassName('btn-default')[0].submit();
+                };
+
+                recognition.onerror = function (e) {
+                    recognition.stop();
+                };
+            }
+        }
+    </script>
+
+    <div class="speech">
+        <img onclick="startDictation()"
+            src="https://webocreation.com/blog/wp-content/uploads/2022/02/voice-icons.png" />
+    </div>
+      ]]>
+      </add>
+    </operation>
+    
+  </file>
+
+
+</modification>
