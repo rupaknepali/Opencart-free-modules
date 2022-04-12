@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Voice Search</name>
+  <version>1.0</version>
+  <author>Rupak Nepali</author>
+  <link>https://webocreation.com</link>
+  <code>webocreation_cookies_agree_2022</code>
+   <file path="catalog/controller/common/footer.php">
+        <operation>
+            <search><![CDATA[
+            $this->load->language('common/footer');
+            ]]></search>
+            <add position="after"><![CDATA[
+                $data['cookie_status'] = 0;
+                $cookiestexts = $this->config->get('cookie_module');
+
+                if ($cookiestexts['status'] == 1) {
+                    $data['cookie_status'] = 1;
+                    $data['text_cookie'] = trim(html_entity_decode($cookiestexts[$this->config->get('config_language_id')]['description'], ENT_QUOTES, 'UTF-8'));
+                    $data['background_color'] = $cookiestexts['background_color'];
+                    $data['text_color'] = $cookiestexts['text_color'];
+                }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/common/footer.twig">
+        <operation>
+            <search><![CDATA[
+            </footer>
+            ]]></search>
+            <add position="after"><![CDATA[
+                 {% if cookie_status %} 
+                    <script async>
+                    window.addEventListener("load",function(){function e(e,i,t){void 0===t&&(t="360");var o=new Date;o.setDate(o.getDate()+t);var n=escape(i)+(null==t?"":"; expires="+o.toUTCString());document.cookie=e+"="+n}function i(e){var i,t,o,n=document.cookie.split(";");for(i=0;i<n.length;i++)if(t=n[i].substr(0,n[i].indexOf("=")),o=n[i].substr(n[i].indexOf("=")+1),(t=t.replace(/^\s+|\s+$/g,""))==e)return unescape(o);return!1}!function(t,o,n,A){"use strict";var r="cookiefy",s={devMode:!1,zIndex:50,backgroundColor:"#bebebe",color:"#000",borderTop:"1px solid #000",displayedHtml:"We use cookies to ensure that we give you the best experience on our website. If you continue, you agree with <strong>our cookie policy</strong>.",cssPrefix:r+"_",tickButtonUrl:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAABJklEQVR4nO3cvU7CABiF4XNrjk4yaBj0zkkc4DIwwQFcEJCftiemz5N07sf7FZqUQAIAAAAAAAAAAADM0yLJ5nA8l2eZnWWSbZLd4dh0x5mX4/i7JOvqRDNyKv42+48jRvaW3/G/krw3h5oL8YvELxK/SPwi8YvELxK/SPwi8YvELxK/SPwi8YvELxK/SPwi8YvEL5p1/KckqySfSV4K5z/3BfqyMEvFKr0XPvv4yf7KbwQQ/2CR6UOIf+Q1p2+CHyOca9Y33EumWIL4fxhzCeJfaYwliH+jIZcg/p2GWIL4D3pkCeIP5J4liD+wW5Yg/kiuWYL4I7u0BPEncu45jmc7Ezr1TnDlT+zcEsSf0PESxC/4+SuAdfwOFwAAAAAAAAAAAP6pbyT4RvOjEVYMAAAAAElFTkSuQmCC",closeButtonUrl:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABGElEQVRoge2ZTQ6CMBCFn15HjqNhofdgqUvvrAlueJuGEuj8dGr6JSwIyfR9bYApAJ1Op9MCl5bHfAH4AnhoFdzBDcAHwFta6AVgXg4vCYbnuMUSQ1JoXs5HecYsY2bMobTgdaWg1UqkM8+x7tLCHhJm4YmlhHl4YiHhFp5oSriHJxoS1cITiUT18KREIkx4ckQiXHiyRyJseLIlET48yfUx3v2UiLWVCD/zKTkJk/Bn7YIAToXXQrB2w3q04io0fRNvPSo9N0VF7HnOh5U48pIKJ1Hyhg0jIWkPqkto9DbVJDQbM3cJi67STcKyJTaX8OjnzSQ8NyPqEn/xcXeC/cynpCvxlBac4L+TooQ4PGn6F1On0+nY8QN8QVJkL9gdPQAAAABJRU5ErkJggg=="};function c(e,i){this.element=e,this.settings=t.extend(s,i),this._defaults=s,this._name=r,this.init()}t.extend(c.prototype,{init:function(){var o=this.settings,n=this.element,A={width:"100%",display:"none",position:"fixed",bottom:0,left:0,opacity:.9,padding:"15px 0",textAlign:"center",backgroundColor:o.backgroundColor,color:o.color,borderTop:o.borderTop,boxShadow:"0px 1px 4px 1px rgba(64,64,64,1)",zIndex:o.zIndex};void 0!==o.fontFamily&&(A.fontFamily=o.fontFamily),void 0!==o.fontSize&&(A.fontSize=o.fontSize),void 0!==o.fontSize&&(A.fontSize=o.fontSize);var r,s,c,a=t("<div />",{id:o.cssPrefix+"bar",css:A}),d=function(){a.fadeOut(500,function(){t(this).remove()})};!o.devMode&&i(o.cssPrefix+"cookie")||(r=t("<div/>",{html:o.displayedHtml,id:o.cssPrefix+"cookie-text",css:{paddingLeft:"10%",paddingRight:"15%"}}),s=t("<img/>",{id:o.cssPrefix+"close",src:o.closeButtonUrl,css:{textDecoration:"underline",cursor:"pointer",position:"absolute",top:"50%",right:"3%",width:"auto",maxHeight:"2rem",transform:"translateY(-50%)"}}).on("click",function(){d()}),c=t("<img/>",{id:o.cssPrefix+"tick",src:o.tickButtonUrl,css:{textDecoration:"underline",cursor:"pointer",position:"absolute",top:"50%",right:"6%",width:"auto",maxHeight:"3rem",transform:"translateY(-50%)"}}).on("click",function(){d(),e(o.cssPrefix+"cookie",!0)}),a.append(r),a.append(c),a.append(s),a.find("a").css("text-decoration","underline"),t(n).append(a),a.fadeIn(500))}}),t.fn[r]=function(e){return this.each(function(){t.data(this,"plugin_"+r)||t.data(this,"plugin_"+r,new c(this,e))})}}(jQuery,window,document)});
+                    window.addEventListener("load",function(){$("body").cookiefy({displayedHtml:'{{text_cookie}}',backgroundColor:"{{background_color}}",color:"{{ text_color }}",borderTop:"1px solid {{text_color}}"})});
+                    </script>
+                {% endif %}
+            ]]></add>
+        </operation>
+    </file>
+
+</modification>
