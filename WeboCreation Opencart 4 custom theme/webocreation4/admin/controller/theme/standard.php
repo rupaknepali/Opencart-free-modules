@@ -70,4 +70,21 @@ class Standard extends \Opencart\System\Engine\Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    public function install(): void
+    {
+        if ($this->user->hasPermission('modify', 'extension/webocreation4/theme/standard')) {
+            $this->load->model('setting/startup');
+            $this->model_setting_startup->addStartup('theme_standard', 'catalog/extension/webocreation4/startup/standard', 1, 2);
+
+        }
+    }
+
+    public function uninstall(): void
+    {
+        if ($this->user->hasPermission('modify', 'extension/webocreation4/theme/standard')) {
+            $this->load->model('setting/startup');
+
+            $this->model_setting_startup->deleteStartupByCode('theme_standard');
+        }
+    }
 }
