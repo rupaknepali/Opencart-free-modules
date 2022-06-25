@@ -5,7 +5,7 @@ class ThemeStandard extends \Opencart\System\Engine\Controller
 {
     public function index(): void
     {
-        if ($this->config->get('theme_standard_status')) {
+        if ($this->config->get('theme_theme_standard_status')) {
             $this->event->register('view/*/before', new \Opencart\System\Engine\Action('extension/webocreation4/startup/theme_standard|event'));
         }
     }

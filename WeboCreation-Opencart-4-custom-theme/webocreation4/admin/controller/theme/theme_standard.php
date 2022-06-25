@@ -33,13 +33,13 @@ class ThemeStandard extends \Opencart\System\Engine\Controller
         if (isset($this->request->get['store_id'])) {
             $this->load->model('setting/setting');
 
-            $setting_info = $this->model_setting_setting->getSetting('theme_standard', $this->request->get['store_id']);
+            $setting_info = $this->model_setting_setting->getSetting('theme_theme_standard', $this->request->get['store_id']);
         }
 
-        if (isset($setting_info['theme_standard_status'])) {
-            $data['theme_standard_status'] = $setting_info['theme_standard_status'];
+        if (isset($setting_info['theme_theme_standard_status'])) {
+            $data['theme_theme_standard_status'] = $setting_info['theme_theme_standard_status'];
         } else {
-            $data['theme_standard_status'] = '';
+            $data['theme_theme_standard_status'] = '';
         }
 
         $data['header'] = $this->load->controller('common/header');
@@ -62,7 +62,7 @@ class ThemeStandard extends \Opencart\System\Engine\Controller
         if (!$json) {
             $this->load->model('setting/setting');
 
-            $this->model_setting_setting->editSetting('theme_standard', $this->request->post, $this->request->get['store_id']);
+            $this->model_setting_setting->editSetting('theme_theme_standard_status', $this->request->post, $this->request->get['store_id']);
 
             $json['success'] = $this->language->get('text_success');
         }
@@ -74,7 +74,7 @@ class ThemeStandard extends \Opencart\System\Engine\Controller
     {
         if ($this->user->hasPermission('modify', 'extension/webocreation4/theme/theme_standard')) {
             $this->load->model('setting/startup');
-            $this->model_setting_startup->addStartup('theme_standard', 'catalog/extension/webocreation4/startup/theme_standard', 1, 2);
+            $this->model_setting_startup->addStartup('theme_theme_standard', 'catalog/extension/webocreation4/startup/theme_standard', 1, 2);
 
         }
     }
@@ -84,7 +84,7 @@ class ThemeStandard extends \Opencart\System\Engine\Controller
         if ($this->user->hasPermission('modify', 'extension/webocreation4/theme/theme_standard')) {
             $this->load->model('setting/startup');
 
-            $this->model_setting_startup->deleteStartupByCode('theme_standard');
+            $this->model_setting_startup->deleteStartupByCode('theme_theme_standard');
         }
     }
 }
