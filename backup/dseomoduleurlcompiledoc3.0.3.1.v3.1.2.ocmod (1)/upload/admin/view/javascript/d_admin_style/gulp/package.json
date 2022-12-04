@@ -19,7 +19,7 @@
   "homepage": "https://github.com/Dreamvention/2_d_social_share#readme",
   "devDependencies": {
     "browser-sync": "2.24.5",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-clean-css": "^2.0.12",
     "gulp-concat": "^2.6.1",
