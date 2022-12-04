@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Discount You Save show</name>
+    <version>3.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_discount_you_save_v1</code>
+    <description>This will show "You Save" before price</description>
+    
+    
+    
+    <file name="catalog/controller/product/product.php">
+		<operation>
+			<search position="after"><![CDATA[
+			$data['tags'] = $this->language->get('text_tags');
+			]]></search>
+			<add><![CDATA[
+			// Added for discounts
+			$data['text_discounted'] = $this->language->get('text_discounted');
+			$data['text_percent_saved'] = $this->language->get('text_percent_saved');
+			// End discounts addition
+			]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+			$data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+			]]></search>
+			<add><![CDATA[
+			// Added for discounts
+			$data['discount_amount'] = $this->currency->format($this->tax->calculate(($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $this->config->get('config_tax')));
+			$data['percent_savings'] = round((($product_info['price'] - $product_info['special']) / $product_info['price'] * 100));
+			// End discounts addition
+			]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+			foreach ($discounts as $discount) {
+			]]></search>
+			<add><![CDATA[
+			// Added for discounts
+			$discount_amount = $this->currency->format($this->tax->calculate(($product_info['price'] - $discount['price']), $product_info['tax_class_id'], $this->config->get('config_tax')));
+			$discount_amount = $this->currency->format($product_info['price'] - $discount['price']);
+			$percent_savings = round((($product_info['price'] - $discount['price']) / $product_info['price'] * 100));
+			// End discounts addition
+			]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+			'quantity' => $discount['quantity'],
+			]]></search>
+			<add><![CDATA[
+			// Added for discounts
+			'discount_amount' => $discount_amount,
+			'percent_savings' => $percent_savings,
+			// End discounts addition
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/language/en-gb/product/product.php">
+		<operation>
+			<search position="before" index="1"><![CDATA[
+			// Entry
+			]]></search>
+			<add><![CDATA[
+			// Added for discounts
+			$_['text_discounted']     = 'Discount:';
+			$_['text_percent_saved']  = 'Save:';
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/*/template/product/product.tpl">
+		<operation>
+			<search position="after" index="1"><![CDATA[
+			<span class="price-old"><?php echo $price; ?></span> <span class="price-new"><?php echo $special; ?></span>
+			]]></search>
+			<add><![CDATA[
+			<!-- Discounted price -->
+			<table>
+			  <tr>
+			    <td style="width: 80px;"><?php echo $text_discounted; ?></td>
+			    <td><?php echo $discount_amount; ?></td>
+			  </tr>
+			  <tr>
+			    <td><?php echo $text_percent_saved; ?></td>
+			    <td><?php echo $percent_savings; ?>%</td>
+			  </tr>
+			</table>
+			<!-- End discounted price -->
+			]]></add>
+		</operation>
+		<operation>
+			<search position="after" index="1"><![CDATA[
+			<?php echo sprintf($text_discount, $discount['quantity'], $discount['price']); ?><br />
+			]]></search>
+			<add><![CDATA[
+			<!-- Discounted price -->
+			<table>
+			  <tr>
+			    <td style="width: 80px;"><?php echo $text_discounted; ?></td>
+			    <td><?php echo $discount['discount_amount']; ?></td>
+			  </tr>
+			  <tr>
+			    <td><?php echo $text_percent_saved; ?></td>
+			    <td><?php echo $discount['percent_savings']; ?>%</td>
+			  </tr>
+			</table>
+			<!-- End discounted price -->
+			]]></add>
+		</operation>
+	</file>
+
+
+
+
+</modification>

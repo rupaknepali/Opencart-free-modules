@@ -1,0 +1,126 @@
+<modification>
+	<id>Eustacer</id>
+	<version>1.0</version>
+	<vqmver>2.6.1</vqmver>
+	<author>Eustacer></author>
+
+	<file name="catalog/view/theme/*/template/common/header.tpl">
+		<operation error="skip">
+			<search position="before" error="skip"><![CDATA[<section id="page-container">]]></search>
+			<add><![CDATA[
+				<?php
+
+				if(isset($_GET['route'])) {
+				  if($_GET['route']!='checkout/cart' && $_GET['route']!='checkout/checkout' && $_GET['route']!='checkout/success') { ?>
+				    <div class="sticky_cart_block">
+				      <div id="sticky_cart">
+				        <a href="/index.php?route=checkout/cart">
+				        <i class="fa fa-shopping-cart fa-3x" aria-hidden="true"></i>
+				        <?php echo $text_items; ?>
+				        </a>
+				      </div>
+				    </div>
+				  <?php }
+				} else { ?>
+				  <div class="sticky_cart_block">
+				    <div id="sticky_cart">
+				      <a href="/index.php?route=checkout/cart">
+				      <i class="fa fa-shopping-cart fa-3x" aria-hidden="true"></i>
+				      <?php echo $text_items; ?>
+				      </a>
+				    </div>
+				  </div>
+				<?php }
+
+				?>
+				]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/*/template/common/header.tpl" error="skip">
+			<operation error="skip">
+				<search position="before"><![CDATA[<div id="container">]]></search>
+				<add><![CDATA[
+					<?php
+
+					if(isset($_GET['route'])) {
+						if($_GET['route']!='checkout/cart' && $_GET['route']!='checkout/checkout' && $_GET['route']!='checkout/success') { ?>
+							<div class="sticky_cart_block">
+								<div id="sticky_cart">
+									<a href="/index.php?route=checkout/cart">
+									<i class="fa fa-shopping-cart fa-3x" aria-hidden="true"></i>
+									<?php echo $text_items; ?>
+									</a>
+								</div>
+							</div>
+						<?php }
+					} else { ?>
+						<div class="sticky_cart_block">
+							<div id="sticky_cart">
+								<a href="/index.php?route=checkout/cart">
+								<i class="fa fa-shopping-cart fa-3x" aria-hidden="true"></i>
+								<?php echo $text_items; ?>
+								</a>
+							</div>
+						</div>
+					<?php }
+
+					?>
+					]]></add>
+			</operation>
+
+		<operation>
+			<search position="before"><![CDATA[</head>]]></search>
+			<add><![CDATA[
+				<link rel="stylesheet" type="text/css" href="catalog/view/theme/default/stylesheet/sticky_cart.css" />
+				]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[</head>]]></search>
+			<add><![CDATA[
+				<script src="https://use.fontawesome.com/d41dc320f6.js"></script>
+				]]></add>
+		</operation>
+
+
+		<operation>
+			<search position="before"><![CDATA[</head>]]></search>
+			<add><![CDATA[
+				<script src="catalog/view/javascript/sticky_cart.js"></script>
+				]]></add>
+		</operation>
+
+	</file>
+
+
+	<file name="catalog/view/theme/*/stylesheet/stylesheet.css">
+		<operation>
+			<search position="bottom"></search>
+			<add><![CDATA[
+
+				]]></add>
+		</operation>
+	</file>
+
+
+	<file name="catalog/controller/common/header.php">
+		<operation>
+			<search position="after"><![CDATA[$this->data['text_checkout'] = $this->language->get('text_checkout');]]></search>
+			<add><![CDATA[
+				$this->data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($this->cart->getTotal()));
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/language/english/common/header.php">
+		<operation>
+			<search position="before"><![CDATA[?>]]></search>
+			<add><![CDATA[
+				$_['text_items']    = '%s item(s) - %s';
+			]]></add>
+		</operation>
+	</file>
+
+
+</modification>

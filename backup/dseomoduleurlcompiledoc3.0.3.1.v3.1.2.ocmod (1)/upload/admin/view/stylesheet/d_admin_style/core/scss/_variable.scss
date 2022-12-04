@@ -1,0 +1,49 @@
+$background:#f8f9fc;
+$heading_background: #e9ebf4;
+$panel_background: #e9ebf4;
+$color: #000;
+$border_color: #dbdfef;
+$main_blue: #4fb5e7;
+$dark_blue: #3573ee;
+$warning: rgb(244, 107, 66);
+$green: #86ce99;
+$red: rgb(250, 91, 109);
+$some_gray: #e9ebf4;
+$bs-callout-bgc:#fff;
+$bs-callout-brdc-bgc:$warning;
+$code-bgc:$color;
+$code-c:$panel_background;
+$tile:$main_blue;
+$tile-c:#fff;
+
+$nav-color:$color;
+$padding: 30px;
+
+$very_slow_speed: 20.0s;
+$slow_speed: 10.0s;
+$fast_speed: 3.0s;
+$very_fast_speed: 0.5s;
+$whoopsy_background: #e9ebf4;
+
+$very_slow_speed: 20.0s;
+$slow_speed: 10.0s;
+$fast_speed: 3.0s;
+$very_fast_speed: 0.5s;
+
+$info-color: #cfd7e7;
+$info-hover-color: #c6cce4;
+$info-focus-color: #dde4f2;
+$info-active-color: #abb2d8;
+$info-border: 2px solid #c2cde2;
+
+@-webkit-keyframes blinker {
+  from {
+    opacity: 1.0;
+  }
+  to {
+    opacity: 0.0;
+  }
+}
+//set the value for @mixin mq()
+$breakpoints: ("phone": 400px, "phone-wide": 480px, "phablet": 560px, "tablet-small": 640px, "tablet": 768px, "tablet-wide": 991px, "laptop": 1199px, "desktop": 1248px, "desktop-wide": 1440px);
+$z-indexes: ("modal");

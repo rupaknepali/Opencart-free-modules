@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	$('[href="#tab-seo').parent().css('display', 'none');
+	$('#tab-seo').css('display', 'none');
+	$('#input-keyword').parents('.form-group').css('display', 'none');
+
+	$('input[name=\'category_path\']').autocomplete({
+		'source': function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/category/autocomplete&{{ url_token }}&filter_name=' +  encodeURIComponent(request),
+				dataType: 'json',
+				success: function(json) {
+					response($.map(json, function(item) {
+						return {
+							label: item['name'],
+							value: item['category_id']
+						}
+					}));
+				}
+			});
+		},
+		'select': function(item) {
+			$('input[name=\'category_path\']').val(item['label']);
+			$('input[name=\'category_id\']').val(item['value']);
+		}
+	});
+</script>

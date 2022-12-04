@@ -1,0 +1,61 @@
+<div id="{{ codename }}" class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title"><i class="fa fa-key"></i> {{ heading_title }} {{ text_heading_info }}</h3>
+	</div>
+	<div class="panel-body">
+		<ul class="nav nav-tabs stores">
+			{% for store in stores %}
+            <li><a class="nav-store" href="#{{ codename }}_store_{{ store['store_id'] }}" data-toggle="tab">{{ store['name'] }} {% if store['duplicate_url_elements_count'] is defined %}<span class="label label-danger">{{ store['duplicate_url_elements_count'] }}</span>{% endif %} {% if store['empty_url_elements_count'] is defined %}<span class="label label-warning">{{ store['empty_url_elements_count'] }}</span>{% endif %}</a></li>
+            {% endfor %}
+        </ul>
+		<div class="tab-content">
+			{% for store in stores %}
+			<div id="{{ codename }}_store_{{ store['store_id'] }}" class="tab-pane">
+				<div class="table-responsive">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<td class="text-center">{{ column_route }}</td>
+								{% for language in languages %}
+								<td class="text-center">{{ column_url_keyword }}({{ language['code'] }})</td>
+								{% endfor %}
+							</tr>
+						</thead>
+						<tbody>
+							{% if store['url_elements'] %}
+							{% set url_element_row = 0 %}
+							{% for url_element in store['url_elements'] %}
+							<tr>
+								<td class="url-element-cell text-left">
+									<div class="url-field">
+										{% if url_element['link'] %}
+										<a href="{{ url_element['link'] }}" target="_blank"><span class="text-field">{{ url_element['route'] }}</span></a>
+										{% else %}
+										<span class="text-field">{{ url_element['route'] }}</span>
+										{% endif %}
+									</div>
+								</td>
+								{% for language in languages %}
+								<td class="url-element-cell text-left">
+									<div id="url_element_{{ url_element_row }}_url_keyword_{{ store['store_id'] }}_{{ language['language_id'] }}" class="url-element-field" route="{{ url_element['route'] }}" store_id="{{ store['store_id'] }}" language_id="{{ language['language_id'] }}">
+										<span class="text-field {% if url_element['url_keyword_duplicate'][store['store_id']][language['language_id']] %}text-danger{% endif %}">{{ url_element['url_keyword'][store['store_id']][language['language_id']] }}</span>
+										<input type="text" value="{{ url_element['url_keyword'][store['store_id']][language['language_id']] }}" class="input-field form-control hide"/>
+									</div>
+								</td>	
+								{% endfor %}								
+							</tr>
+							{% set url_element_row = url_element_row + 1 %}
+							{% endfor %}
+							{% else %}
+							<tr>
+								<td class="text-center" colspan="{{ languages|length + 1 }}">{{ text_no_results }}</td>
+							</tr>
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>	
+</div>

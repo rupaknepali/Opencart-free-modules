@@ -1,0 +1,21 @@
+@import "../variable";
+
+.panel {
+  background-color: $background;
+  font-family: "Open Sans";
+  color: $color;
+  .panel-body {
+    position: relative;
+    padding-left: $padding;
+    padding-right: $padding;
+  }
+  .panel-heading {
+    background: $heading_background;
+    border-color: $border_color;
+    color: $color;
+  }
+}
+.panel_top_radius {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}

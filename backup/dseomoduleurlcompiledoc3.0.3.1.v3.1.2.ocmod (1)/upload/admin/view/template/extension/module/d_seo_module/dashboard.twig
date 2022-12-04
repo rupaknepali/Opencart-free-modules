@@ -1,0 +1,362 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="form-inline pull-right">
+				{% if (stores|length > 1) %}
+				<select class="form-control" onChange="location='{{ href_dashboard }}&store_id='+$(this).val()">
+				{% for store in stores %}
+				{% if (store['store_id'] == store_id) %}
+					<option value="{{ store['store_id'] }}" selected="selected">{{ store['name'] }}</option>
+				{% else %}
+					<option value="{{ store['store_id'] }}">{{ store['name'] }}</option>
+				{% endif %}
+				{% endfor %}
+				</select>
+				{% endif %}
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			<h1>{{ heading_title }} {{ version }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if error['warning'] %}
+		<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> {{ error['warning'] }}</div>
+		{% endif %}
+		{% if success %}
+		<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> {{ success }}</div>
+		{% endif %}
+		<div class="shopunity-widget-update"></div>
+		{% if d_seo_module_pack %}
+		{{ d_seo_module_pack['info'] }}
+		{% endif %}
+	</div>
+	<div class="container-fluid {% if d_shopunity and d_seo_module_pack %}col-sm-9{% endif %}">
+		<div class="panel panel-default panel-resizable">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="{{ href_dashboard }}"><span class="fa fa-home"></span> {{ text_dashboard }}</a>
+					</li>
+					<li>
+						<a href="{{ href_setting }}"><span class="fa fa-cog"></span> {{ text_settings }}</a>
+					</li>
+					<li>
+						<a href="{{ href_multi_store_field }}"><span class="fa fa-list-alt"></span> {{ text_multi_store_fields }}</a>
+					</li>
+					<li>
+						<a href="{{ href_target_keyword }}"><span class="fa fa-key"></span> {{ text_target_keywords }}</a>
+					</li>
+					<li>
+						<a href="{{ href_export_import }}"><span class="fa fa-exchange"></span> {{ text_export_import }}</a>
+					</li>
+					<li>
+						<a href="{{ href_instruction }}"><span class="fa fa-graduation-cap"></span> {{ text_instructions }}</a>
+					</li>
+				</ul>
+				
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form">
+					<div class="col-md-12 m-b-xl">
+						{% if control_extensions %}
+						<div class="page-header">
+							<h3><strong>{{ text_seo_extensions }}</strong> <span class="info-window-item" data-href="https://opencartseomodule.com/seo-module-dashboard"><i class="fa fa-question"></i></span></h3>
+						</div>
+						<div class="control-extensions">
+							{% for control_extension in control_extensions %}
+							{% if control_extension['installed'] %}
+							<div class="control-extension installed text-center">
+								<img src="view/image/{{ control_extension['image'] }}" title="{{ control_extension['name'] }}" alt="{{ control_extension['name'] }}" class="image"/>
+								<h4 class="name m-b-md">{{ control_extension['name'] }}</h4>
+								<a href="{{ control_extension['href'] }}" class="btn btn-primary"><i class="fa fa-search"></i> {{ button_view }}</a>
+							</div>
+							{% else %}
+							<div class="control-extension text-center">
+								<img src="view/image/{{ control_extension['image'] }}" title="{{ control_extension['name'] }}" alt="{{ control_extension['name'] }}" class="image"/>
+								<h4 class="name m-b-md">{{ control_extension['name'] }}</h4>
+								<a action="{{ control_extension['install_href'] }}" class="button-install btn btn-success"><i class="fa fa-cog"></i><i class="fa fa-refresh rotate hide"></i> {{ button_install }}</a>
+							</div>
+							{% endif %}
+							{% endfor %}
+							<br class="clear"/>
+						</div>
+						{% endif %}
+					</div>
+					<div class="table-responsive col-md-6">
+						<table class="table table-bordered table-hover control-elements">
+							<thead>
+								<tr class="fields">
+									<td class="field">
+										<h4 class="m-b-none"><span class="fa fa-rocket"></span> {{ text_quick_setup }} <span class="info-window-item" data-href="https://opencartseomodule.com/quick-setup"><i class="fa fa-question"></i></span></h4>
+									</td>
+								</tr>
+							</thead>
+							<tbody class="control-elements">
+								{% if quick_setup_total %}
+								{% for control_element in control_elements %}
+								{% if control_element['implemented'] == 0 %}
+								<tr class="control-element">
+									<td class="field">
+										<div class="row">
+											<div class="col-xs-3 text-center">
+												<a action="{{ control_element['edit_href'] }}" confirm="{{ control_element['confirm'] }}" class="button-edit btn btn-sm btn-success"><i class="fa fa-cog"></i><i class="fa fa-refresh rotate hide"></i> {{ button_setup }}</a>
+											</div>
+											<div class="col-xs-9">
+												<h4 class="name m-b-sm"><label class="control-label p-n text-left"><span data-toggle="tooltip" title="{{ control_element['description'] }}">{{ control_element['name'] }}</span></label></h4>
+												<p class="extension-name">{{ control_element['extension_name'] }}</p>
+												<a href="{{ control_element['href'] }}" target="_blank" class="details">{{ text_details }}</a>
+												<br class="clear"/>
+											</div>
+										</div>
+									</td>
+								</tr>
+								{% endif %}
+								{% endfor %}
+								{% else %}
+								<tr class="control-element">
+									<td class="field">{{ text_no_control_elements }}</td>
+								</tr>
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+					<div class="table-responsive col-md-6">
+						<table class="table table-bordered table-hover control-elements">
+							<thead>
+								<tr class="fields">
+									<td class="field">
+										<h4 class="m-b-none"><span class="fa fa-refresh"></span> {{ text_implemented }}</h4>
+									</td>
+								</tr>
+							</thead>
+							<tbody>
+								{% if implemented_total %}
+								{% for control_element in control_elements %}
+								{% if control_element['implemented'] == 1 %}
+								<tr class="control-element">
+									<td class="field">
+										<div class="row">
+											<div class="col-xs-3 text-center">
+												<a action="{{ control_element['edit_href'] }}" confirm="{{ control_element['confirm'] }}" class="button-edit btn btn-sm btn-primary"><i class="fa fa-cog"></i><i class="fa fa-refresh rotate hide"></i> {{ button_reset }}</a>
+											</div>
+											<div class="col-xs-9">
+												<h4 class="name m-b-sm"><label class="control-label p-n text-left"><span data-toggle="tooltip" title="{{ control_element['description'] }}">{{ control_element['name'] }}</span></label></h4>
+												<p class="extension-name">{{ control_element['extension_name'] }}</p>
+												<a href="{{ control_element['href'] }}" target="_blank" class="details">{{ text_details }}</a>
+												<br class="clear"/>
+											</div>
+										</div>
+									</td>
+								</tr>
+								{% endif %}
+								{% endfor %}
+								{% else %}
+								<tr class="control-element">
+									<td class="field">{{ text_no_control_elements }}</td>
+								</tr>
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+				</form>
+				<br class="clear" />
+				<div class="p-lg text-center">{{ text_powered_by }}</div>
+			</div>
+		</div>
+		<div class="info-window">
+			<div class="info-window-wrap">
+				<div class="info-window-block">
+					<div class="info-window-close"><i class="fa fa-close"></i></div>
+					<div class="info-window-description"></div>
+				</div>
+			</div>
+		</div>
+		<br class="clear" />
+	</div>
+	{% if d_shopunity and d_seo_module_pack %}
+	<div class="container-fluid col-sm-3">
+        <div class="shopunity-widget-seo-module-pack"></div>
+    </div>
+	<br class="clear" />
+	{% endif %}
+</div>
+{% if d_shopunity %}
+<script src="view/javascript/d_shopunity/d_shopunity_widget.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+var d_shopunity_widget_update = jQuery.extend(true, {}, d_shopunity_widget);
+        
+d_shopunity_widget_update.init({
+    class: '.shopunity-widget-update',
+    token: '{{ (url_token|split('='))|last }}',
+    action: 'loadUpdate',
+    extension_id: '{{ extension_id }}'
+});
+
+</script>
+{% if d_seo_module_pack %}
+<script type="text/javascript">
+    
+var d_shopunity_widget_seo_module_pack = jQuery.extend(true, {}, d_shopunity_widget);
+
+d_shopunity_widget_seo_module_pack.init({
+    class: '.shopunity-widget-seo-module-pack',
+    token: '{{ (url_token|split('='))|last }}',
+    extension_id: '{{ d_seo_module_pack['extension_id'] }}'
+});
+
+</script>
+{% endif %}
+{% endif %}
+<script type="text/javascript">
+
+var info_window = {
+	'item' : new Array(),
+	'current_url' : ''
+}
+	
+$.each($('.info-window-item'), function(key, value) {
+	var url = $(this).attr('data-href');
+		
+	if (url) {
+		$.getJSON(url + '?format=json&callback=?', function(data) {
+			info_window.item[url] = data['description'];
+		});
+	}
+});
+	
+$('.info-window-item').on('click', function() {
+	var url = $(this).attr('data-href');
+	
+	if (url == info_window.current_url) {
+		info_window.current_url = '';
+		$('.info-window').removeClass('resized');
+		$('.panel-resizable').removeClass('resized');
+	} else {
+		info_window.current_url = url;
+		$('.info-window .info-window-description').html(info_window.item[url]);
+		$('.panel-resizable').addClass('resized');
+		$('.info-window').addClass('resized');
+	}
+});
+	
+$('.info-window .info-window-close').on('click', function() {
+	info_window.current_url = '';
+	$('.info-window').removeClass('resized');
+	$('.panel-resizable').removeClass('resized');
+});
+
+function refresh() {
+	var url = 'index.php?route={{ route }}/dashboard&{{ url_token }}&store_id={{ store_id }}';
+					
+	$('#form').load(url + ' #form >');
+}
+
+function showAlert(json) {
+	$('.alert, .text-danger').remove();
+	$('.form-group').removeClass('has-error');
+						
+	if (json['error']) {
+		if (json['error']['warning']) {
+			$('#content > .container-fluid').first().prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['error']['warning'] + '</div>');
+		}				
+				
+		for (i in json['error']) {
+			var element = $('#input_' + i);
+					
+			if (element.parent().hasClass('input-group')) {
+                $(element).parent().after('<div class="text-danger">' + json['error'][i] + '</div>');
+			} else {
+				$(element).after('<div class="text-danger">' + json['error'][i] + '</div>');
+			}
+		}				
+				
+		$('.text-danger').parents('.form-group').addClass('has-error');
+	}
+			
+	if (json['success']) {
+		$('#content > .container-fluid').first().prepend('<div class="alert alert-success"><i class="fa fa-check-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['success'] + '</div>');
+	}
+}
+
+</script>
+<script type="text/javascript">
+
+$('body').on('click', '.button-install', function() {
+	var button_install = $(this);
+	
+	$.ajax({
+		type: 'post',
+		url: $(this).attr('action'),
+		data: '',
+		dataType: 'json',
+		beforeSend: function() {
+			button_install.children('.fa-refresh').removeClass('hide');
+			button_install.children('.fa-cog').addClass('hide');
+		},
+		complete: function() {
+			button_install.children('.fa-refresh').addClass('hide');
+			button_install.children('.fa-cog').removeClass('hide');
+		},
+		success: function(json) {
+			showAlert(json);
+			
+			if (json['success']) {
+				refresh();
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+    });
+});
+
+$('body').on('click', '.button-edit', function() {
+	var button_edit = $(this);
+	var validate = false;
+	
+	if ($(this).attr('confirm')) {
+		if (confirm($(this).attr('confirm'))) {
+			validate = true;
+		}
+	} else {
+		validate = true;
+	}
+	
+	if (validate) {
+		$.ajax({
+			type: 'post',
+			url: $(this).attr('action'),
+			data: '',
+			dataType: 'json',
+			beforeSend: function() {
+				button_edit.children('.fa-refresh').removeClass('hide');
+				button_edit.children('.fa-cog').addClass('hide');
+			},
+			complete: function() {
+				button_edit.children('.fa-refresh').addClass('hide');
+				button_edit.children('.fa-cog').removeClass('hide');
+			},
+			success: function(json) {
+				showAlert(json);
+			
+				if (json['success']) {
+					refresh();
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	}
+});
+
+</script>
+{{ footer }}

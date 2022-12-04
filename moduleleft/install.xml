@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Module left Column</name>
+    <version>1.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_module_left_column</code>
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search><![CDATA[ if ($this->user->hasPermission('access', 'marketplace/event')) { ]]></search>
+            <add position="before"><![CDATA[
+                if ($this->user->hasPermission('access', 'marketplace/modification')) {
+                    $marketplace[] = array(
+                        'name'	   => $this->language->get('text_module'),
+                        'href'     => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token']."&type=module", true),
+                        'children' => array()		
+                    );
+			    }
+            ]]>            </add>
+        </operation>
+    </file>
+
+    <file path="admin/language/*/common/column_left.php">
+        <operation>
+            <search><![CDATA[$_['text_currency'] ]]></search>
+            <add position="before"><![CDATA[
+            $_['text_module']             = 'Module';
+            ]]>            </add>
+        </operation>
+    </file>
+</modification>

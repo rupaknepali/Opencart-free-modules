@@ -1,0 +1,70 @@
+@import "../scss/variable";
+
+/* Form */
+.panel-default .panel-body, .modal-dialog {
+	label {
+		font-weight: 600;
+	}
+	.form-horizontal {
+		[type="file"] {
+			padding-top: 8px;
+		}
+		.control-label {
+			padding-top: 9px;
+			font-size: 15px;
+		}
+		.bootstrap-switch {
+			margin-top: 3px;
+			border: 2px solid #dbdfef;
+			border-radius: 3px;
+			.bootstrap-switch-label {
+				color: #000;
+				white-space: nowrap;
+			}
+			.bootstrap-switch-handle-on {
+				border-bottom-left-radius: 2px;
+				border-top-left-radius: 2px;
+			}
+			.bootstrap-switch-handle-off {
+				border-bottom-right-radius: 2px;
+				border-top-right-radius: 2px;
+			}
+			.bootstrap-switch-handle-on, .bootstrap-switch-handle-off {
+				&.bootstrap-switch-default {
+					background-color: #e9ebf4;
+				}
+				&.bootstrap-switch-success {
+					background: #86ce99;
+				}
+			}
+		}
+		.bootstrap-tagsinput {
+			width: 100%;
+		}
+		.form-group {
+			border: none;
+		}
+		.input-group-addon {
+			background: #f8f9fc;
+			border: 2px solid #dbdfef;
+			&:first-child {
+				border-right: none;
+			}
+			&:last-child {
+				border-left: none;
+			}
+		}
+		.input-group + .input-group {
+			margin-top: -2px;
+		}
+	}
+	.form-control {
+		min-height: 40px;
+		font-size: 15px;
+		border: 2px solid $border_color;
+		box-shadow: none;
+	}
+	textarea.form-control {
+		height: auto;
+	}
+}

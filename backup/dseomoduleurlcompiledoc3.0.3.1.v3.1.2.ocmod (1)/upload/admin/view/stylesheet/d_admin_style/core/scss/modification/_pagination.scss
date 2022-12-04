@@ -1,0 +1,28 @@
+$pagination-color: #111111;
+$pagination-active-background-color: #dde4f2;
+$pagination-active-hover-background-color: #c6cce4;
+$pagination-active-hover-border-color: #adbcd9;
+$pagination-border-color: #cfd7e7;
+.pagination {
+  font-size: 14px;
+  > li > a, > li > span {
+    color: $pagination-color;
+    border: 2px solid $pagination-border-color;
+    padding:10px 16px;
+  }
+  li:not(:last-child) {
+    > span ,> a {
+      border-right: none;
+    }
+  }
+  > .active > span {
+    color: $pagination-color;
+    background-color: $pagination-active-background-color;
+    border: $info-border;
+    &:hover{
+      color: $pagination-color;
+      background-color: $pagination-active-hover-background-color;
+      border-color:$pagination-active-hover-border-color
+    }
+  }
+}

@@ -1,0 +1,102 @@
+@import "../scss/variable";
+
+/* Tabs */
+.panel-default .panel-body .nav-tabs {
+	padding-bottom: $padding;
+	margin-bottom: 0px;
+	border: none;
+	border-bottom: 2px solid $border_color;
+	> li {
+		> a {
+			font-size: 16px;
+			font-weight: bold;
+			color: $color;
+			border: none;
+			border-radius: 0px;
+			&:hover {
+				background: $panel_background;
+			}
+			> .fa {
+				margin-right: 5px;
+			}
+		}
+		&.active {
+			> a {
+				background: none;
+				color: $color;
+				border: none;
+				&:hover {
+					background: $panel_background;
+				}
+				> .fa:after {
+					content: "";
+					position: absolute;
+					display: block;
+					background-color: $dark_blue;
+					width: 18px;
+					height: 3px;
+					bottom: -4px;
+					left: 50%;
+					transform: translateX(-50%);
+				}
+			}
+		} 
+	}
+}
+
+/* Pills */
+.panel-default .panel-body .nav-pills {
+	display: inline-block;
+	padding-left: 2px;
+	padding-top: 2px;
+	> li {
+		+ li {
+			margin: 0px 0px;
+		}
+		> a {
+			padding: 15px 30px;
+			margin-left: -2px;
+			margin-top: -2px;
+			font-size: 14px;
+			font-weight: bold;
+			background: $background;
+			color: $color;
+			border: 2px solid $border_color;
+			border-radius: 2px;
+			&:hover {
+				background: $panel_background;
+			}
+			> .fa {
+				margin-right: 5px;
+			}
+		}
+		&.active {
+			> a {
+				background: $background;
+				color: $dark_blue;
+				&:hover {
+					background: $panel_background;
+				}
+			}
+		}
+	}
+	&.nav-stacked {
+		width: 100%;
+		border: none;
+		border-right: 2px solid $panel_background;
+		border-radius: 0px;
+		> li {
+			> a {
+				padding: $padding;
+				font-size: 16px;
+				border: none;
+				border-radius: 0px;
+			}
+			+ li {
+				> a {
+					border-top: 2px solid $border_color;
+				}
+			}
+		}
+	}
+}

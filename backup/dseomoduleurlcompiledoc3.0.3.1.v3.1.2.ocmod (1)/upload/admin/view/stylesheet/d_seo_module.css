@@ -1,0 +1,93 @@
+/**************************************************/
+/*                  G E N E R A L                 */
+/**************************************************/
+
+/* Control Extensions */
+.panel-default .panel-body .control-extensions .control-extension {
+	float: left;
+	display: block;
+	width: 180px;
+}
+.panel-default .panel-body .control-extensions .control-extension .image {
+	-webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+	opacity: 0.5;
+}
+.panel-default .panel-body .control-extensions .control-extension.installed .image {
+	-webkit-filter: none;
+    filter: none;
+	opacity: 1;
+}
+.panel-default .panel-body .control-extensions .control-extension .name {
+	font-size: 16px;
+	font-weight: 600;
+	opacity: 0.5;
+}
+.panel-default .panel-body .control-extensions .control-extension.installed .name {
+	opacity: 1;
+}
+
+/* Control Elements */
+.panel-default .panel-body .control-elements .fields .field {
+	padding: 22px 22px;
+}
+.panel-default .panel-body .control-elements .fields .field .fa {
+	margin-right: 5px;
+	color: #8a94bb;
+}
+.panel-default .panel-body .control-elements .control-element .field {
+	padding: 22px 22px;
+}
+.panel-default .panel-body .control-elements .control-element .field .extension-name {
+	float: left;
+	display: block;
+	padding: 5px 10px;
+	font-size: 10px;
+	background: #e8eaf6;
+	color: #6975a2;
+	border-radius: 4px;
+}
+.panel-default .panel-body .control-elements .control-element .field .details {
+	float: left;
+	display: block;
+	padding: 3px 8px;
+	margin-left: 10px;
+}
+
+/* Panel Setup */
+.panel-default .panel-setup {
+	padding-bottom: 0px;
+	background-color: #ecf1fb;
+}
+.panel-default .panel-setup .setup-info {
+    max-width: 500px;
+    margin: auto;
+	text-align: center;
+}
+.panel-default .panel-setup .title {
+	font-size: 30px;
+	font-weight: bold;
+}
+.panel-default .panel-setup .description {
+	font-size: 15px;
+}
+.panel-default .panel-setup .planet {
+	display: block;
+	max-width: 100%;
+	margin: 0px auto;
+}
+.panel-default .panel-setup .features {
+	margin: 30px 0px;
+}
+.panel-default .panel-setup .feature {
+	display: block;
+	float: left;
+	width: 20%;
+	height: 170px;
+}
+.panel-default .panel-setup .feature .feature-wrap {
+	padding: 15px 15px;
+}
+.panel-default .panel-setup .feature .image {
+	margin-bottom: 10px;
+}

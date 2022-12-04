@@ -1,0 +1,26 @@
+
+#low_php {
+
+    // margin-bottom: 50px;
+
+    .lp_welcome {
+        font-size: 40px;
+        color: #fff;
+
+        p {
+            font-size: 70px;
+            color: $main_blue;
+            margin: 0px;
+        }
+    }
+
+    .lp_description {
+        font-size: 20px;
+    }
+
+    .lp_help {
+        margin-top: 30px;
+        margin-bottom: 5px;
+        font-size: 15px;
+    }
+}

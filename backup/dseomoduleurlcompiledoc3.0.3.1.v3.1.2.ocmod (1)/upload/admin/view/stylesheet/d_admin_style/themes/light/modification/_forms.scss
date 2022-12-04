@@ -1,0 +1,11 @@
+@import "../scss/variable";
+
+.form-group {
+  padding-top: 15px;
+}
+
+.panel-default .panel-body .form-control, .modal-dialog .form-control{
+  min-height: 40px;
+  border: 2px solid $border_color;
+  box-shadow: none;
+}

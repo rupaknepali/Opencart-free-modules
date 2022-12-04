@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>d_opencart_patch</name>
+    <code>d_opencart_patch</code>
+    <description>Permission fixes in Opencart 3.x</description>
+    <version>3.0.9</version>
+    <author>Dreamvention</author>
+    <link>http://dreamvention.com</link>
+    
+
+</modification>

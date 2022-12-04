@@ -1,0 +1,99 @@
+<modification>
+    <name>d_oc2_installer_fix</name>
+    <code>d_oc2_installer_fix</code>
+    <version>1.0.0</version>
+    <author>Dreamvention</author>
+    <link>https://dreamvention.zendesk.com</link>
+
+    <file path="admin/controller/extension/installer.php">
+        <operation error="skip">
+            <search ><![CDATA['url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/ftp', 'token=' . $this->session->data['token'],]]></search>
+            <add position="replace"><![CDATA['url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/installerFix', 'token=' . $this->session->data['token'],]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[public function sql() {]]></search>
+            <add position="before"><![CDATA[
+    //d_oc2_installer_fix.xml
+    public function installerFix() {
+        $json = array();
+        $root = dirname(DIR_APPLICATION).'/';
+
+
+        $this->load->language('extension/installer');
+
+        if (!$this->user->hasPermission('modify', 'extension/installer')) {
+            $json['error'] = $this->language->get('error_permission');
+        }
+
+        switch (VERSION) {
+          case '2.0.0.0':
+            $directory = DIR_DOWNLOAD  . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']) . '/upload/';
+            break;
+        
+          default:
+            $directory = DIR_UPLOAD  . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']) . '/upload/';
+            break;
+        }
+
+        if (!is_dir($directory)) {
+            $json['error'] = $this->language->get('error_directory');
+        }
+
+        if (empty($json)) {
+            // Get a list of files ready to upload
+            $files = array();
+
+            $path = array($directory . '*');
+
+            while (count($path) != 0) {
+                $next = array_shift($path);
+
+                foreach (glob($next) as $file) {
+                    if (is_dir($file)) {
+                        $path[] = $file . '/*';
+                    }
+
+                    $files[] = $file;
+                }
+            }
+            foreach ($files as $file) {
+                $destination = substr($file, strlen($directory));
+
+                // Upload everything in the upload directory
+                // Many people rename their admin folder for security purposes which I believe should be an option during installation just like setting the db prefix.
+                // the following code would allow you to change the name of the following directories and any extensions installed will still go to the right directory.
+                if (substr($destination, 0, 5) == 'admin') {
+                    $destination = DIR_APPLICATION . substr($destination, 5);
+                }elseif (substr($destination, 0, 7) == 'catalog') {
+                    $destination = DIR_CATALOG . substr($destination, 7);
+                }elseif (substr($destination, 0, 5) == 'image') {
+                    $destination = DIR_IMAGE . substr($destination, 5);
+                }elseif (substr($destination, 0, 6) == 'system') {
+                    $destination = DIR_SYSTEM . substr($destination, 6);
+                }else{
+                    $destination = $root.$destination;
+                }
+
+                if (is_dir($file)) {
+                    if (!file_exists($destination)) {
+                        if (!mkdir($destination)) {
+                            $json['error'] = sprintf($this->language->get('error_ftp_directory'), $destination);
+                        }
+                    }
+                }
+
+                if (is_file($file)) {
+                    if (!copy($file, $destination)) {
+                        $json['error'] = sprintf($this->language->get('error_ftp_file'), $file);
+                    }
+                }
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+    ///d_oc2_installer_fix.xml]]></add>
+        </operation>
+    </file> 
+</modification>

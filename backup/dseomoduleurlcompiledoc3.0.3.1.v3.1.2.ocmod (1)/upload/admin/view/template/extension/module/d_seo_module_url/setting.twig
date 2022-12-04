@@ -1,0 +1,399 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="form-inline pull-right">
+				{% if (stores|length > 1) %}
+				<select class="form-control" onChange="location='{{ href_setting }}&store_id='+$(this).val()">
+				{% for store in stores %}
+				{% if (store['store_id'] == store_id) %}
+					<option value="{{ store['store_id'] }}" selected="selected">{{ store['name'] }}</option>
+				{% else %}
+					<option value="{{ store['store_id'] }}">{{ store['name'] }}</option>
+				{% endif %}
+				{% endfor %}
+				</select>
+				{% endif %}
+				<button id="button_save_and_stay" data-toggle="tooltip" title="{{ button_save_and_stay }}" class="btn btn-success"><i class="fa fa-save"></i><i class="fa fa-refresh rotate hide"></i></button>
+				<button id="button_save_and_exit" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i><i class="fa fa-refresh rotate hide"></i></button>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			<h1>{{ heading_title }} {{ version }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if error['warning'] %}
+		<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> {{ error['warning'] }}</div>
+		{% endif %}
+		{% if success %}
+		<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> {{ success }}</div>
+		{% endif %}
+		<div class="shopunity-widget-update"></div>
+		<div class="panel panel-default panel-resizable">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="{{ href_setting }}"><span class="fa fa-cog"></span> {{ text_settings }}</a>
+					</li>
+					<li>
+						<a href="{{ href_generator }}"><span class="fa fa-cogs"></span> {{ text_generator }}</a>
+					</li>
+					<li>
+						<a href="{{ href_url_keyword }}"><span class="fa fa-key"></span> {{ text_url_keywords }}</a>
+					</li>
+					<li>
+						<a href="{{ href_redirect }}"><span class="fa fa-random"></span> {{ text_redirects }}</a>
+					</li>
+					<li>
+						<a href="{{ href_export_import }}"><span class="fa fa-exchange"></span> {{ text_export_import }}</a>
+					</li>
+					<li>
+						<a href="{{ href_instruction }}"><span class="fa fa-graduation-cap"></span> {{ text_instructions }}</a>
+					</li>
+				</ul>
+				
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
+					<div class="flex row">
+						<div class="flex col-sm-3">
+							<ul class="nav nav-pills nav-stacked">
+								<li class="active">
+									<a href="#vtab_basic_setting" data-toggle="tab"><span class="fa fa-cog"></span> {{ text_basic_settings }}</a>
+								</li>
+								<li>
+									<a href="#vtab_multi_language_sub_directory" data-toggle="tab"><span class="fa fa-language"></span> {{ text_multi_language_sub_directories }}</a>
+								</li>
+								<li>
+									<a href="#vtab_redirect" data-toggle="tab"><span class="fa fa-random"></span> {{ text_redirects }}</a>
+								</li>
+								{% for sheet in setting['sheet'] %}
+								<li>
+									<a href="#vtab_{{ sheet['code'] }}" data-toggle="tab"><span class="fa {{ sheet['icon'] }}"></span> {{ attribute(_context, sheet['name']) }}</a>
+								</li>
+								{% endfor %}
+							</ul>
+						</div>
+						<div class="col-sm-9">
+							<div class="tab-content">
+								<div id="vtab_basic_setting" class="tab-pane active">
+									<div class="page-header">
+										<h3><strong>{{ text_basic_settings }}</strong></h3>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label" for="input-status">{{ entry_status }}</label>
+										<div class="col-sm-9">
+											<input type="hidden" name="module_{{ codename }}_status" value="0" />
+											<input type="checkbox" name="module_{{ codename }}_status" value="1" class="switch" data-label-text="{{ text_enabled }}" {% if status %}checked="checked"{% endif %} />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label" for="input-list-limit">{{ entry_list_limit }}</label>
+										<div class="col-sm-9">
+											<input type="text" name="module_{{ codename }}_setting[list_limit]" value="{{ setting['list_limit'] }}" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label" for="input-uninstall">{{ entry_uninstall }}</label>
+										<div class="col-sm-9">
+											<a action="{{ uninstall }}" id="button_uninstall" class="btn btn-danger"><i class="fa fa-trash"></i><i class="fa fa-refresh rotate hide"></i> {{ button_uninstall }}</a>
+										</div>
+									</div>	
+								</div>
+								<div id="vtab_multi_language_sub_directory" class="tab-pane">
+									<div class="page-header">
+										<h3><strong>{{ text_multi_language_sub_directories }}</strong> <span class="info-window-item" data-href="https://opencartseomodule.com/multilanguage-subdirectories"><i class="fa fa-question"></i></span></h3>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label" for="input-status"><span data-toggle="tooltip" title="{{ help_multi_language_sub_directory_status }}">{{ entry_status }}</span></label>
+										<div class="col-sm-9">
+											<input type="hidden" name="module_{{ codename }}_setting[multi_language_sub_directory][status]" value="0" />
+											<input type="checkbox" name="module_{{ codename }}_setting[multi_language_sub_directory][status]" value="1" class="switch" data-label-text="{{ text_enabled }}" {% if setting['multi_language_sub_directory']['status'] %}checked="checked"{% endif %} />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span data-toggle="tooltip" title="{{ help_multi_language_sub_directory_name }}">{{ entry_multi_language_sub_directory_name }}</span></label>
+										<div class="col-sm-9">
+											{% for language in languages %}
+											<div class="input-group">
+												<span class="input-group-addon"><img src="{{ language['flag'] }}" title="{{ language['name'] }}" /></span>
+												<input type="text" name="module_{{ codename }}_setting[multi_language_sub_directory][name][{{ language['language_id'] }}]" value="{{ setting['multi_language_sub_directory']['name'][language['language_id']] }}" class="form-control" />
+											</div>
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+								<div id="vtab_redirect" class="tab-pane">
+									<div class="page-header">
+										<h3><strong>{{ text_redirects }}</strong> <span class="info-window-item" data-href="https://opencartseomodule.com/redirect-404-with-multilanguage-support"><i class="fa fa-question"></i></span></h3>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label" for="input-status"><span data-toggle="tooltip" title="{{ help_redirect_status }}">{{ entry_status }}</span></label>
+										<div class="col-sm-9">
+											<input type="hidden" name="module_{{ codename }}_setting[redirect][status]" value="0" />
+											<input type="checkbox" name="module_{{ codename }}_setting[redirect][status]" value="1" class="switch" data-label-text="{{ text_enabled }}" {% if setting['redirect']['status'] %}checked="checked"{% endif %} />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label" for="input-exception-data"><span data-toggle="tooltip" title="{{ help_redirect_exception_data }}">{{ entry_exception_data }}</span></label>
+										<div class="col-sm-9">
+											<textarea name="module_{{ codename }}_setting[redirect][exception_data]" class="form-control">{{ setting['redirect']['exception_data'] }}</textarea>
+										</div>
+									</div>
+								</div>
+								{% for sheet in setting['sheet'] %}
+								<div id="vtab_{{ sheet['code'] }}" class="tab-pane">
+									<div class="page-header">
+										<h3><strong>{{ attribute(_context, sheet['name']) }}</strong></h3>
+									</div>
+									{% if sheet['unique_url'] is defined %}
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span data-toggle="tooltip" for="input-unique-url" title="{{ help_unique_url }}">{{ entry_unique_url }}</span></label>
+										<div class="col-sm-9">
+											<input type="hidden" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][unique_url]" value="0" />
+											<input type="checkbox" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][unique_url]" value="1" class="switch" data-label-text="{{ text_enabled }}" {% if sheet['unique_url'] %}checked="checked"{% endif %} />
+											&nbsp;<span class="info-window-item" data-href="https://opencartseomodule.com/unique-urls-for-all-pages"><i class="fa fa-question"></i></span>
+										</div>
+									</div>
+									{% endif %}
+									{% if sheet['exception_data'] is defined %}
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span data-toggle="tooltip" for="input-exception-data" title="{{ help_exception_data }}">{{ entry_exception_data }}</span></label>
+										<div class="col-sm-9">
+											<textarea name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][exception_data]" class="form-control">{{ sheet['exception_data'] }}</textarea>
+										</div>
+									</div>
+									{% endif %}
+									{% if sheet['short_url'] is defined %}
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span data-toggle="tooltip" for="input-short-url" title="{{ help_short_url }}">{{ entry_short_url }}</span></label>
+										<div class="col-sm-9">
+											<input type="hidden" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][short_url]" value="0" />
+											<input type="checkbox" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][short_url]" value="1" class="switch" data-label-text="{{ text_enabled }}" {% if sheet['short_url'] %}checked="checked"{% endif %} />
+											&nbsp;<span class="info-window-item" data-href="https://opencartseomodule.com/long-or-short-urls-for-category-and-product"><i class="fa fa-question"></i></span>
+										</div>
+									</div>
+									{% endif %}
+									{% if sheet['canonical_link_search'] is defined %}
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span data-toggle="tooltip" for="input-canonical-link-search" title="{{ help_canonical_link_search }}">{{ entry_canonical_link_search }}</span></label>
+										<div class="col-sm-9">
+											<input type="hidden" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][canonical_link_search]" value="0" />
+											<input type="checkbox" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][canonical_link_search]" value="1" class="switch" data-label-text="{{ text_enabled }}" {% if sheet['canonical_link_search'] %}checked="checked"{% endif %} />
+										</div>
+									</div>
+									{% endif %}
+									{% if sheet['canonical_link_tag'] is defined %}
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span data-toggle="tooltip" for="input-canonical-link-tag" title="{{ help_canonical_link_tag }}">{{ entry_canonical_link_tag }}</span></label>
+										<div class="col-sm-9">
+											<input type="hidden" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][canonical_link_tag]" value="0" />
+											<input type="checkbox" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][canonical_link_tag]" value="1" class="switch" data-label-text="{{ text_enabled }}" {% if sheet['canonical_link_tag'] %}checked="checked"{% endif %} />
+										</div>
+									</div>
+									{% endif %}
+									{% if sheet['canonical_link_page'] is defined %}
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span data-toggle="tooltip" for="input-canonical-link-page" title="{{ help_canonical_link_page }}">{{ entry_canonical_link_page }}</span></label>
+										<div class="col-sm-9">
+											<input type="hidden" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][canonical_link_page]" value="0" />
+											<input type="checkbox" name="module_{{ codename }}_setting[sheet][{{ sheet['code'] }}][canonical_link_page]" value="1" class="switch" data-label-text="{{ text_enabled }}" {% if sheet['canonical_link_page'] %}checked="checked"{% endif %} />
+										</div>
+									</div>
+									{% endif %}
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="p-lg text-center">{{ text_powered_by }}</div>
+			</div>
+		</div>
+		<div class="info-window">
+			<div class="info-window-wrap">
+				<div class="info-window-block">
+					<div class="info-window-close"><i class="fa fa-close"></i></div>
+					<div class="info-window-description"></div>
+				</div>
+			</div>
+		</div>
+		<br class="clear"/>
+	</div>
+</div>
+{% if d_shopunity %}
+<script src="view/javascript/d_shopunity/d_shopunity_widget.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+var d_shopunity_widget_update = jQuery.extend(true, {}, d_shopunity_widget);
+        
+d_shopunity_widget_update.init({
+    class: '.shopunity-widget-update',
+    token: '{{ (url_token|split('='))|last }}',
+    action: 'loadUpdate',
+    extension_id: '{{ extension_id }}'
+});
+
+</script>
+{% endif %}
+<script type="text/javascript">
+
+var info_window = {
+	'item' : new Array(),
+	'current_url' : ''
+}
+	
+$.each($('.info-window-item'), function(key, value) {
+	var url = $(this).attr('data-href');
+		
+	if (url) {
+		$.getJSON(url + '?format=json&callback=?', function(data) {
+			info_window.item[url] = data['description'];
+		});
+	}
+});
+	
+$('.info-window-item').on('click', function() {
+	var url = $(this).attr('data-href');
+	
+	if (url == info_window.current_url) {
+		info_window.current_url = '';
+		$('.info-window').removeClass('resized');
+		$('.panel-resizable').removeClass('resized');
+	} else {
+		info_window.current_url = url;
+		$('.info-window .info-window-description').html(info_window.item[url]);
+		$('.panel-resizable').addClass('resized');
+		$('.info-window').addClass('resized');
+	}
+});
+	
+$('.info-window .info-window-close').on('click', function() {
+	info_window.current_url = '';
+	$('.info-window').removeClass('resized');
+	$('.panel-resizable').removeClass('resized');
+});
+
+$('.switch').bootstrapSwitch({
+    'onColor': 'success',
+	'labelWidth': '50',
+    'onText': '{{ text_yes }}',
+    'offText': '{{ text_no }}'
+});
+
+function showAlert(json) {
+	$('.alert, .text-danger').remove();
+	$('.form-group').removeClass('has-error');
+						
+	if (json['error']) {
+		if (json['error']['warning']) {
+			$('#content > .container-fluid').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['error']['warning'] + '</div>');
+		}				
+				
+		for (i in json['error']) {
+			var element = $('#input_' + i);
+					
+			if (element.parent().hasClass('input-group')) {
+                $(element).parent().after('<div class="text-danger">' + json['error'][i] + '</div>');
+			} else {
+				$(element).after('<div class="text-danger">' + json['error'][i] + '</div>');
+			}
+		}				
+				
+		$('.text-danger').parents('.form-group').addClass('has-error');
+	}
+			
+	if (json['success']) {
+		$('#content > .container-fluid').prepend('<div class="alert alert-success"><i class="fa fa-check-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['success'] + '</div>');
+	}
+}
+</script> 
+<script type="text/javascript">
+
+$('body').on('click', '#button_uninstall', function(event) {
+	if (confirm("{{ text_uninstall_confirm }}")) {		
+		$.ajax({
+			type: 'post',
+			url: $(this).attr('action'),
+			data: '',
+			dataType: 'json',
+			beforeSend: function() {
+				$('#button_uninstall .fa-refresh').removeClass('hide');
+				$('#button_uninstall .fa-trash').addClass('hide');
+			},
+			complete: function() {
+				$('#button_uninstall .fa-refresh').addClass('hide');
+				$('#button_uninstall .fa-trash').removeClass('hide');
+			},
+			success: function(json) {
+				showAlert(json);
+				
+				if (json['success']) {
+					location = '{{ module_link|replace({"&amp;" : "&"}) }}';
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});  
+	}
+});
+
+$('body').on('click', '#button_save_and_stay', function() {
+    $.ajax({
+		type: 'post',
+		url: $('#form').attr('action'),
+		data: $('#form').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button_save_and_stay .fa-refresh').removeClass('hide');
+			$('#button_save_and_stay .fa-save').addClass('hide');
+		},
+		complete: function() {
+			$('#button_save_and_stay .fa-refresh').addClass('hide');
+			$('#button_save_and_stay .fa-save').removeClass('hide');
+		},
+		success: function(json) {
+			showAlert(json);
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+    });  
+});
+	
+$('body').on('click', '#button_save_and_exit', function() {
+    $.ajax({
+		type: 'post',
+		url: $('#form').attr('action'),
+		data: $('#form').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button_save_and_exit .fa-refresh').removeClass('hide');
+			$('#button_save_and_exit .fa-save').addClass('hide');
+		},
+		complete: function() {
+			$('#button_save_and_exit .fa-refresh').addClass('hide');
+			$('#button_save_and_exit .fa-save').removeClass('hide');
+		},
+		success: function(json) {
+			showAlert(json);
+			
+			if (json['success']) {
+				location = '{{ cancel|replace({"&amp;" : "&"}) }}';
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+    });  
+});
+
+</script>
+{{ footer }}

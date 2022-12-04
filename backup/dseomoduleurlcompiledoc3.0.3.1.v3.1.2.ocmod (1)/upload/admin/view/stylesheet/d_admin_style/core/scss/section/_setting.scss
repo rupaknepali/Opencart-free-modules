@@ -1,0 +1,115 @@
+
+.setting {
+
+    font-size: 17px;
+
+    .nav-pills {
+        display: inline-block;
+        border: 2px solid #DBDFEF;
+        border-radius: 3px;
+
+        & > li + li {
+            margin: 0px 0px;
+
+            & > a {
+                border-left: 1px solid $border_color;
+            }
+        }
+
+        & > li {
+
+            & > a {
+                padding: 15px 20px;
+                font-size: 14px;
+                font-weight: bold;
+                background: none;
+                color: $color;
+                border: none;
+                border-radius: 0px;
+
+                &:hover {
+                    color: #fff;
+                    background: rgba($color, 0.17);
+                }
+
+                .fa {
+                    margin-right: 5px;
+                }
+            }
+
+            &.active > a {
+
+                color: #fff;
+
+                .fa {
+                    color: $main_blue;
+                }
+            }
+
+        }
+
+        &.nav-stacked {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-right: 1px solid $border_color;
+            border-radius: 0px;
+
+            & > li {
+
+                & > a {
+                    padding: 15px 15px;
+                    font-size: 16px;
+                    border: none;
+                }
+
+            }
+
+            & > li + li > a {
+                border-top: 1px solid $border_color;
+            }
+        }
+    }
+
+    .page-header {
+
+        border-bottom: 1px solid rgba($border_color, 0.7);
+
+        h3 {
+            font-weight: bold;
+            color: #fff;
+        }
+    }
+
+    button {
+        // font-size: 18px;
+    }
+
+    .btn {
+        // border: 2px solid #e4e9f3;
+    }
+
+    #setting_protections {
+
+        margin-left: -8px;
+
+        .s_protection {
+            cursor: pointer;
+            color: rgb(176, 177, 184);
+
+            i {
+                font-size: 56px;
+                padding: 10px;
+            }
+
+            &.enabled {
+                color: #fff;
+
+                i {
+                    color: $main_blue;
+                }
+            }
+        }
+    }
+
+}

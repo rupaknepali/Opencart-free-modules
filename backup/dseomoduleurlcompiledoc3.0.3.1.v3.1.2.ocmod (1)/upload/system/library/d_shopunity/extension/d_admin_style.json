@@ -1,0 +1,90 @@
+{
+  "codename": "d_admin_style",
+  "version": "1.0.8", 
+  "name": "Admin Style",
+  "description": "Admin style: dark or light.",
+  "author": {
+    "name": "Dreamvention",
+    "email": "info@dreamvention.com",
+    "url": "https://dreamvention.com/"
+  },
+  "opencart_version": [
+    "2.0.1.0",
+    "2.0.1.1",
+    "2.0.2.0",
+    "2.0.3.1",
+    "2.1.0.1",
+    "2.1.0.2",
+    "2.2.0.0",
+    "2.3.0.0",
+    "2.3.0.1",
+    "2.3.0.2",
+    "3.0.0.0",
+    "3.0.1.1",
+    "3.0.1.2",
+    "3.0.2.0",
+    "3.0.3.1"
+  ],
+  "type": "library",
+  "license": {
+    "type": "free",
+    "url": "https://shopunity.net/licenses/free"
+  },
+  "support": {
+    "email": "support@dreamvention.com",
+    "url": "https://dreamvention.ee/support"
+  },
+  "required": {
+    "d_bootstrap_extra": ">= 1.0.1",
+    "d_bootstrap_switch": ">= 3.3.5"
+  },
+  "files": [
+    "admin/view/template/extension/d_admin_style/setup.twig",
+    "system/library/d_shopunity/extension/d_admin_style.json",
+    "admin/model/extension/d_admin_style/style.php",
+    "admin/language/en-gb/extension/d_admin_style/style.php"
+  ],
+  "dirs": [
+    "admin/view/javascript/d_admin_style",
+	"admin/view/stylesheet/d_admin_style",
+    "admin/view/image/d_admin_style"
+  ],
+  "changelog": [
+    {
+      "version": "1.0.8",
+      "change": "Added support oc v3.0.3.1"
+    },
+    {
+      "version": "1.0.7",
+      "change": "Bugs fixed"
+    },
+	{
+      "version": "1.0.6",
+      "change": "Add Gulp"
+    },
+	{
+      "version": "1.0.5",
+      "change": "Add welcome functionality in admin style.; Add Vuex; Add lodash; "
+    },
+    {
+      "version": "1.0.4",
+      "change": "fixing many issues with modules (blog, social, checkout7,visual designer, ajax_filter) pavel 7/10/2018 2:55 PM "
+    },
+    {
+      "version": "1.0.3",
+      "change": "Change view for navigation panel fix switch buttons"
+    },
+    {
+      "version": "1.0.2",
+      "change": "Add add fixes for soc_login"
+    },
+    {
+      "version": "1.0.1",
+      "change": "Add light default and dark theme"
+    },
+    {
+      "version": "1.0.0",
+      "change": "Initial commit."
+    }
+  ]
+}

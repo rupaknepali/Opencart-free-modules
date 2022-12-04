@@ -1,0 +1,302 @@
+
+
+.scan_protection_panel {
+    @extend .protection_panel;
+    height: 350px;
+}
+
+#scan_section {
+
+    .protection_button {
+        font-size: 14px;
+        margin-top: 0px;
+        padding-left: 2%;
+        padding-right: 2%;
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+    .scan_protection_panel {
+
+
+        #issues_stats {
+            margin-top: 50px;
+            font-size: 35px;
+            color: #fff;
+
+            @media screen and (min-width: 1570px) {
+                & {
+                    font-size: 40px;
+                }
+            }
+        }
+
+        #last_scan_text {
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+
+        #show_detected_threats {
+            margin-top: 10px;
+            margin-bottom: 10px;
+
+            #show_threats_button {
+                margin-left: 20px;
+            }
+
+            @media screen and (min-width: 1200px) and (max-width: 1400px) {
+
+                .protection_button {
+                    font-size: 12px;
+                }
+
+                #show_threats_button {
+                    margin-left: 5px;
+                }
+            }
+        }
+    }
+}
+
+#no_issues_text {
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+#scan_progress {
+    font-size: 14px;
+
+    .routine_preloader {
+        height: 260px;
+        line-height: 260px;
+    }
+
+    .routine {
+        color: #666;
+        font-weight: bold;
+
+        @media screen and (min-width: 1200px) and (max-width: 1400px) {
+            font-size: 11px;
+        }
+
+        @media screen and (max-width: 992px) {
+            display: none;
+        }
+    }
+
+    i + i {
+        margin-left: 5px;
+    }
+}
+
+.thread_protection_panel {
+    @extend .protection_panel;
+
+    .panel-heading {
+        padding: 12px 15px;
+
+        .filename {
+            font-size: 12px;
+            margin-left: 10px;
+
+            @media screen and (max-width: 1400px) {
+                display: none;
+            }
+        }
+    }
+
+    .diff {
+        hr {
+            margin-bottom: 6.5px;
+        }
+    }
+
+    .q_extra {
+        font-size: 15px;
+    }
+
+    .q_extra_string {
+        padding: 1px 2px;
+        font-family: Consolas, monospace;
+        font-size: 12px;
+        color: #e9e4e5;
+        background: #333;
+    }
+}
+
+.issues_description {
+    font-size: 14px;
+}
+
+.ignore_controll {
+    cursor: pointer;
+    font-size: 10px;
+}
+
+
+/* SCAN BUTTON */
+
+@include keyframes(main_scan_button) {
+    @include transform_2(rotate(0deg), rotate(360deg));
+}
+@include keyframes(main_scan_button_reverse) {
+    @include transform_2(rotate(0deg), rotate(-360deg));
+}
+
+// SCAN BUTTON
+
+$big_circle: 260px;
+$medium_circle: 236px;
+$small_circle: 212px;
+
+#scan_button_handler {
+    width: 95%;
+    height: $big_circle + 30px;
+}
+
+.main_scan_button {
+
+    position: relative;
+    margin: 0 auto;
+    cursor: pointer;
+
+    width: $big_circle !important;
+    height: $big_circle !important;
+    -webkit-transform: translate(- $big_circle / 2, - $big_circle / 2) scale(1) translate($big_circle / 2, $big_circle / 2);
+    transform: translate(- $big_circle / 2, - $big_circle / 2) scale(1) translate($big_circle / 2, $big_circle / 2);
+
+    div {
+        position: absolute;
+        border-radius: 50%;
+        border: 6px solid #000;
+
+        &:nth-child(1) {
+            width: $big_circle;
+            height: $big_circle;
+            top: 20px;
+            left: 20px;
+            border-color: $protected;
+
+            &.animate {
+                @include scan_button_speed_gradation($protected);
+            }
+        }
+
+        &:nth-child(2) {
+            width: $medium_circle;
+            height: $medium_circle;
+            top: 32px;
+            left: 32px;
+            border-color: $main_blue;
+
+            &.animate {
+                @include scan_button_speed_gradation($main_blue);
+            }
+        }
+
+        &:nth-child(3) {
+            width: $small_circle;
+            height: $small_circle;
+            top: 44px;
+            left: 44px;
+            background: #fff;
+            border: 0px solid #fff;
+            text-align: center;
+            vertical-align: middle;
+            line-height: $small_circle;
+            color: $main_blue;
+            font-weight: bold;
+            font-size: 26px;
+
+            &:hover {
+                color: #666;
+                @include shadow(0px, 0px, 10px, 3px, #ABABAB);
+            }
+        }
+    }
+
+}
+
+// PROGRESS BAR
+.progress_bar {
+    height: 8px;
+}
+
+#modules_progress_bar {
+    // @extend .progress_bar;
+}
+
+#scan_issues_count {
+    font-size: 24px;
+}
+
+// ACTION BUTTONS
+.action_buttons {
+    button {
+        font-size: 13px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    i {
+        padding-right: 0px !important;
+    }
+
+    .btn-ignore {
+        color: #666;
+    }
+}
+
+// SCAN INFO MODAL
+.security_modal {
+
+    .modal-content {
+        border-color: $border_color;
+        background-color: $panel_background;
+        border-radius: 0px;
+
+        .modal-header {
+            border-color: $border_color;
+            background-color: $heading_background;
+            color: #fff;
+            padding: 23.5px;
+
+            i {
+                font-size: 18px;
+                padding-right: 8px;
+            }
+
+            .close {
+                color: #fff;
+                opacity: 0.7;
+
+                &:hover {
+                    opacity: 1.0;
+                }
+            }
+        }
+
+        .modal-body {
+            padding-left: 30px;
+            padding-right: 30px;
+            background-color: $background;
+
+            .routine {
+                color: #666;
+                font-weight: bold;
+            }
+
+            i + i {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+.spam_url {
+    padding: 1px 2px;
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    color: #e9e4e5;
+    background: #333;
+}

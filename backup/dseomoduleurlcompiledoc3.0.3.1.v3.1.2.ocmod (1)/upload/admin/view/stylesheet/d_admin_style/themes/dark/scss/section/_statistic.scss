@@ -1,0 +1,47 @@
+
+#visitors_analytics {
+
+    .statistic_protection_panel {
+        @extend .protection_panel;
+        height: 450px;
+
+        .panel-body {
+            @media screen and (min-width: 1380px) {
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+.visitors_addition_info {
+    font-size: 13px;
+
+    i {
+        padding-right: 1px !important;
+    }
+
+    .v_info_users {
+        color: $main_blue;
+    }
+
+    .v_info_bots {
+        color: $some_gray;
+    }
+
+    .v_info_blocked {
+        color: $unprotected;
+    }
+
+    .v_info_text {
+        display: none;
+        margin-right: 6px;
+    }
+}
+
+#detailed-info {
+
+    .statistic_protection_detailed_panel {
+        @extend .protection_panel;
+    }
+
+}

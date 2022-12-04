@@ -1,0 +1,102 @@
+/* Panel Resizable */
+.panel-resizable {
+  position: relative;
+  display: block;
+  float: left;
+  width: 100%;
+  height: auto;
+  -webkit-transition: width 500ms;
+  transition: width 500ms;
+}
+
+.panel-resizable.resized {
+  width: 70%;
+}
+
+@media only screen and (max-width: 1260px) {
+  .panel-resizable.resized {
+    width: 50%;
+
+  }
+}
+
+.panel-resizable .panel-body .info-window-item {
+  position: relative;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 767px) {
+  .panel-resizable .panel-body .info-window-item {
+    display: none;
+  }
+}
+
+.panel-resizable .panel-body .info-window-item .fa {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 55%;
+  padding: 6px 8px;
+  margin-left: 10px;
+  margin-top: -12px;
+  font-size: 12px;
+  background: #e8eaf6;
+  color: #8a94bb;
+  border-radius: 12px;
+}
+
+.panel-resizable .panel-body .form-horizontal .bootstrap-switch + .info-window-item .fa {
+  margin-top: -9px;
+}
+
+/* Info Window */
+.info-window {
+  position: relative;
+  display: block;
+  float: left;
+  width: 0px;
+  height: auto;
+  overflow: hidden;
+  -webkit-transition: width 500ms;
+  transition: width 500ms;
+}
+
+.info-window.resized {
+  width: 30%;
+}
+
+@media only screen and (max-width: 1260px) {
+  .info-window.resized {
+    width: 50%;
+
+  }
+}
+
+.info-window .info-window-wrap {
+  padding-left: 20px;
+}
+
+.info-window .info-window-block {
+  display: block;
+  padding: 40px 20px;
+  overflow: hidden;
+  background: #f8f9fc;
+  color: #000;
+  border: 1px solid #dbdfef;
+  border-radius: 3px;
+  ol {
+    padding-left: 20px
+  }
+  .bs-callout.bs-callout-warning {
+    word-break: break-all;
+  }
+}
+
+.info-window .info-window-close {
+  position: absolute;
+  display: block;
+  top: 15px;
+  right: 20px;
+  font-size: 15px;
+  cursor: pointer;
+}

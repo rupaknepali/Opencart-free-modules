@@ -1,0 +1,18 @@
+<style>
+    .product-thumb .caption{
+        min-height: auto;
+    }
+</style>
+<h3>{{ box_title }}</h3>
+<div class="row">
+  {% for category in categories %}
+    <div class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">
+      <div class="product-thumb transition">
+        <div class="image"><a href="{{ category.href }}"><img src="{{ category.thumb }}" alt="{{ category.name }}" title="{{ category.name }}" class="img-responsive"/></a></div>
+        <div class="caption categoryname">
+          <h4><a href="{{ category.href }}">{{ category.name }}</a></h4>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

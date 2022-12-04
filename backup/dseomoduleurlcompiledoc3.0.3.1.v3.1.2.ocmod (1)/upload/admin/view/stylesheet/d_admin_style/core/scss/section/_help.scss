@@ -1,0 +1,20 @@
+
+.help_protection_panel {
+    @extend .protection_panel;
+}
+
+#help_section {
+
+    .help_description {
+        font-size: 16px;
+    }
+
+    .help_button {
+
+        margin: 18px;
+
+        a {
+            font-size: 24px;
+        }
+    }
+}

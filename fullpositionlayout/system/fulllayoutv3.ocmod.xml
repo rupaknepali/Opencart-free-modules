@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Full layout added</name>
+    <version>3.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_full_layout_v7</code>
+    <description>Full layout</description>
+    <file path="catalog/controller/*/*.php">
+        <operation>
+            <search><![CDATA[ $data['column_left'] = $this->load->controller('common/column_left'); ]]></search>
+            <add position="after"><![CDATA[
+                $data['content_full'] = $this->load->controller('common/content_full');
+            ]]>            </add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/*/*.twig">
+        <operation>
+            <search><![CDATA[ {{ header }} ]]></search>
+            <add position="after"><![CDATA[
+                {{ content_full }}
+            ]]>            </add>
+        </operation>
+    </file>
+
+    <file path="admin/language/*/design/layout.php">
+        <operation>
+            <search><![CDATA[ $_['text_column_right'] ]]></search>
+            <add position="before"><![CDATA[ $_['text_content_top_full_width']   = 'Content Top Full Width '; ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/view/template/design/layout_form.twig">
+        <operation>
+            <search><![CDATA[ 
+            {% set module_row = 0 %}
+             ]]>            </search>
+            <add position="after"><![CDATA[ 
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+<table id="module-content-full" class="table table-striped table-bordered table-hover">
+<thead>
+<tr>
+<td class="text-center">{{text_content_top_full_width}}</td>
+</tr>
+</thead>
+<tbody>
+                    {% for layout_module in layout_modules %}
+                    {% if layout_module.position == 'content_full' %}
+                        <tr id="module-row{{ module_row }}">
+<td class="text-left">
+<div class="input-group">
+<select name="layout_module[{{ module_row }}][code]" class="form-control input-sm">
+                            {% for extension in extensions %}
+                                        <optgroup label="{{ extension.name }}">
+                            {% if not extension.module %}
+                            {% if extension.code == layout_module.code %}
+                                            <option value="{{ extension.code }}" selected="selected">{{ extension.name }}</option>
+                            {% else %}
+                                            <option value="{{ extension.code }}">{{ extension.name }}</option>
+                            {% endif %}
+                            {% else %}
+                            {% for module in extension.module %}
+                            {% if module.code == layout_module.code %}
+                                            <option value="{{ module.code }}" selected="selected">{{ module.name }}</option>
+                            {% else %}
+                                            <option value="{{ module.code }}">{{ module.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                                        </optgroup>
+                            {% endfor %}
+                                    </select>
+<input type="hidden" name="layout_module[{{ module_row }}][position]" value="{{ layout_module.position }}" />
+<input type="hidden" name="layout_module[{{ module_row }}][sort_order]" value="{{ layout_module.sort_order }}" />
+<div class="input-group-btn">
+<a href="{{ layout_module.edit }}" type="button" data-toggle="tooltip" title="{{ button_edit }}" target="_blank" class="btn btn-primary btn-sm">
+<i class="fa fa-pencil"></i>
+</a>
+<button type="button" onclick="$('#module-row{{ module_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger btn-sm">
+<i class="fa fa fa-minus-circle"></i>
+</button>
+</div>
+</div>
+</td>
+</tr>
+                    {% set module_row = module_row + 1 %}
+                    {% endif %}
+                    {% endfor %}
+                    </tbody>
+<tfoot>
+<tr>
+<td class="text-left">
+<div class="input-group">
+<select class="form-control input-sm">
+<option value=""></option>
+                            {% for extension in extensions %}
+                                        <optgroup label="{{ extension.name }}">
+                            {% if not extension.module %}
+                                            <option value="{{ extension.code }}">{{ extension.name }}</option>
+                            {% else %}
+                            {% for module in extension.module %}
+                                            <option value="{{ module.code }}">{{ module.name }}</option>
+                            {% endfor %}
+                            {% endif %}
+                                        </optgroup>
+                            {% endfor %}
+                                    </select>
+<div class="input-group-btn">
+<button type="button" onclick="addModule('content-full');" data-toggle="tooltip" title="{{ button_module_add }}" class="btn btn-primary btn-sm">
+<i class="fa fa-plus-circle"></i>
+</button>
+</div>
+</div>
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+             ]]>            </add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[ $('#module-column-left, #module-column-right, #module-content-top, #module-content-bottom').delegate('select[name*=\'code\']', 'change', function() {
+	var part = this.value.split('.'); ]]></search>
+            <add position="replace"><![CDATA[ 
+            $('#module-content-full, #module-column-left, #module-column-right, #module-content-top, #module-content-bottom').delegate('select[name*=\'code\']', 'change', function() {
+	var part = this.value.split('.');
+             ]]>            </add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[ $('#module-column-left, #module-column-right, #module-content-top, #module-content-bottom').trigger('change'); ]]></search>
+            <add position="replace"><![CDATA[ $('#module-content-full, #module-column-left, #module-column-right, #module-content-top, #module-content-bottom').trigger('change');
+             ]]>            </add>
+        </operation>
+
+
+
+    </file>
+
+
+
+</modification>

@@ -1,0 +1,24 @@
+@import "../variable";
+
+
+.label {
+  font-size: 88%;
+  margin: 4px;
+  display: inline-block;
+}
+
+.label-danger {
+  background-color: $red;
+}
+
+.label-warning {
+  background-color: $warning;
+}
+
+.form-group {
+  padding-top: 15px;
+}
+
+.form-group + .form-group {
+  border-top: 1px solid rgba($border_color, 0.7);
+}

@@ -1,0 +1,41 @@
+ <div class="panel-body">
+     <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+            </div>
+            <div class="setup">
+                <style>
+                    .setup-back {
+                        background-image: url('{{ setup_bottom_image }}');
+                    }
+                </style>
+                <div class="setup-back">
+                    <div class="setup-into">
+                        <div class="setup-into-logo">
+                                <img src="{{ setup_into_logo }}"/>
+                        </div>
+                        <div class="setup-into-heading">{{ text_setup_title }}</div>
+                        <div class="setup-into-text">{{ text_setup_description }}</div>
+                        <div class="setup-into-start">
+                            <a class="btn btn-primary btn-lg" href="{{ button_setup }}">{{ text_button_setup }}</a>
+                        </div>
+                    </div>
+                    <div class="setup-features">
+                        <div class="row">
+                            {% for feature in features %}
+                                <div class="col-md-3">
+                                    <div class="setup-features-icon">
+                                        <img src="{{ feature.icon }}"/>
+                                    </div>
+                                    <div class="setup-features-text">{{ feature.text }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+     </div>
+
+ </div>

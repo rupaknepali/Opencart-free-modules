@@ -1,0 +1,175 @@
+{
+    "codename": "d_seo_module",
+	"extension_id": "10",
+    "version": "3.1.2",
+    "name": "SEO Module",
+    "description": "SEO Module is the core platform, necessary for the installation of other SEO modules.",
+	"index": "extension/module/d_seo_module",
+	"readme": "system/mbooth/readme/d_seo_module.md",
+    "author": {
+        "name": "Dreamvention",
+        "email": "info@dreamvention.com",
+        "url": "https://dreamvention.com"
+    },
+    "opencart_version": [
+        "2.0.0.0",
+		"2.0.1.0",
+        "2.0.1.1",
+        "2.0.2.0",
+        "2.0.3.1",
+        "2.1.0.1",
+        "2.1.0.2",
+        "2.2.0.0",
+		"2.3.0.0",
+		"2.3.0.1",
+        "2.3.0.2",
+		"3.0.0.0",
+        "3.0.1.1",
+        "3.0.1.2",
+        "3.0.2.0"
+    ],
+    "type": "module",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "install": {
+        "url": "extension/module/install&extension=d_seo_module" 
+    },
+	"uninstall": {
+        "url": "extension/module/uninstall&extension=d_seo_module"
+    },
+    "support": {
+        "email": "support@dreamvention.com",
+        "url": "https:/dreamvention.com/support"
+    },
+    "required": {
+		"d_opencart_patch": ">= 1.0.11",
+		"d_bootstrap_extra": ">= 1.0.1",
+		"d_bootstrap_switch": ">= 3.3.5",
+		"d_tinysort": ">= 2.3.7",
+		"d_rubaxa_sortable": ">= 1.4.1",
+		"d_admin_style": ">= 1.0.7",
+		"d_excel_reader_writer": ">= 1.0.0",
+        "d_robots_txt_parser": ">= 2.0.0",
+	    "d_simple_html_dom": ">= 2.0.0",
+		"d_twig_manager": ">= 1.5.7",
+		"d_event_manager": ">= 1.3.1"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_seo_module.json",
+		"system/library/d_shopunity/install/d_seo_module.xml",
+		"system/library/d_shopunity/readme/d_seo_module.md",
+		"system/config/d_seo_module.php",
+		"system/config/d_seo_module_target_keyword.php",
+						
+		"admin/controller/extension/module/d_seo_module.php",
+		"admin/model/extension/module/d_seo_module.php",
+		"admin/language/en-gb/extension/module/d_seo_module.php",
+		"admin/view/stylesheet/d_seo_module.css",
+		
+		"admin/controller/extension/d_seo_module/d_seo_module.php",
+		"admin/model/extension/d_seo_module/d_seo_module.php",
+		"admin/language/en-gb/extension/d_seo_module/d_seo_module.php",
+		
+		"admin/controller/extension/dashboard/d_seo_module_target_keyword.php",
+		"admin/model/extension/dashboard/d_seo_module_target_keyword.php",
+		"admin/language/en-gb/extension/dashboard/d_seo_module_target_keyword.php",
+		"admin/view/template/extension/dashboard/d_seo_module_target_keyword.twig",
+		"admin/view/template/extension/dashboard/d_seo_module_target_keyword_info.twig",
+		"admin/view/template/extension/dashboard/d_seo_module_target_keyword_refresh.twig",
+						
+		"admin/controller/extension/d_seo_module_target_keyword/d_seo_module_target_keyword.php",
+		"admin/model/extension/d_seo_module_target_keyword/d_seo_module_target_keyword.php",
+		
+		"admin/controller/extension/d_seo_module_manager/d_seo_module.php",
+		"admin/model/extension/d_seo_module_manager/d_seo_module.php",
+		"admin/language/en-gb/extension/d_seo_module_manager/d_seo_module.php",
+		
+		"admin/controller/extension/d_seo_module_adviser/d_seo_module.php",
+		"admin/model/extension/d_seo_module_adviser/d_seo_module.php",
+		"admin/language/en-gb/extension/d_seo_module_adviser/d_seo_module.php",
+				
+		"catalog/controller/extension/module/d_seo_module.php",
+		"catalog/model/extension/module/d_seo_module.php",
+		
+		"catalog/controller/extension/d_seo_module/d_seo_module.php",
+		"catalog/model/extension/d_seo_module/d_seo_module.php",
+		"catalog/language/en-gb/extension/d_seo_module/d_seo_module.php",
+		
+		"catalog/controller/extension/d_seo_module_adviser/d_seo_module.php",
+		"catalog/model/extension/d_seo_module_adviser/d_seo_module.php",
+		"catalog/language/en-gb/extension/d_seo_module_adviser/d_seo_module.php"
+    ],
+	"dirs": [
+        "admin/view/template/extension/module/d_seo_module",
+		"admin/view/template/extension/d_seo_module/d_seo_module",
+		"admin/view/image/d_seo_module"
+    ],
+    "changelog": [
+        {
+            "version": "3.1.2",
+            "change": "Add Full Setup"
+        },
+		{
+            "version": "3.1.1",
+            "change": "Twig Validation"
+        },
+		{
+            "version": "3.0.9",
+            "change": "Bugs fixed"
+        },
+		{
+            "version": "3.0.8",
+            "change": "New URL Cache"
+        },
+		{
+            "version": "3.0.7",
+            "change": "Bugs fixed"
+        },
+		{
+            "version": "3.0.6",
+            "change": "New Design"
+        },
+		{
+            "version": "3.0.5",
+            "change": "Opencart 3.0.2 compatibility"
+        },
+		{
+            "version": "3.0.4",
+            "change": "Fix Opencart Language for old versions"
+        },
+		{
+            "version": "3.0.3",
+            "change": "Add Excel Reader Writer"
+        },
+		{
+            "version": "3.0.2",
+            "change": "Add Dashboard"
+        },
+		{
+            "version": "3.0.1",
+            "change": "Update Confirm"
+        },
+		{
+            "version": "3.0.0",
+            "change": "Opencart 3.0.0 compatibility"
+        },
+		{
+            "version": "2.3.0",
+            "change": "Opencart 2.3.0 compatibility"
+        },
+		{
+            "version": "1.0.3",
+            "change": "Quick Install SEO Module"
+        },
+		{
+            "version": "1.0.2",
+            "change": "Bugs fixed. Simple HTML Dom validation"
+        },
+		{
+            "version": "1.0.0",
+            "change": ""
+        }
+    ]
+}

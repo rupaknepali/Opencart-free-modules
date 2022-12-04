@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>d_twig_manager</name>
+    <code>d_twig_manager</code>
+    <description>Adds support for twig templating engine</description>
+    <version>2.0.0</version>
+    <author>Dreamvention</author>
+    <link>http://dreamvention.com</link>
+    <file path="system/engine/loader.php">
+        <operation error="skip" info="">
+            <search><![CDATA[$template = new Template($this->registry->get('config')->get('template_engine'));]]></search>
+            <add position="replace"><![CDATA[
+            //d_twig_manager.xml
+            $template = new Template($this->registry->get('config')->get('template_engine'), $this->registry);
+            ]]></add>
+        </operation>
+    </file>
+    <file path="system/library/template.php">
+        <operation error="skip" info="">
+            <search><![CDATA[public function __construct($adaptor) {]]></search>
+            <add position="replace"><![CDATA[
+            //d_twig_manager.xml
+            public function __construct($adaptor, $registry) {
+            ]]></add>
+        </operation>
+        <operation error="skip" info="">
+            <search><![CDATA[$this->adaptor = new $class();]]></search>
+            <add position="replace"><![CDATA[
+            //d_twig_manager.xml
+            $this->adaptor = new $class($registry);
+            ]]></add>
+        </operation>
+    </file>
+    <file path="system/library/template/twig.php">
+        <operation error="skip" info="">
+            <search><![CDATA[private $data = array();]]></search>
+            <add position="after"><![CDATA[
+            //d_twig_manager.xml
+            private $registry = array();
+            ]]></add>
+        </operation>
+        <operation error="skip" info="">
+            <search><![CDATA[public function __construct() {]]></search>
+            <add position="replace"><![CDATA[
+            //d_twig_manager.xml
+            public function __construct($registry) {
+            ]]></add>
+        </operation>
+        <operation error="skip" info="">
+            <search><![CDATA[\Twig_Autoloader::register();]]></search>
+            <add position="after"><![CDATA[
+            //d_twig_manager.xml
+            $this->registry = $registry;
+            ]]></add>
+        </operation>
+        <operation error="skip" info="">
+            <search><![CDATA[$this->twig = new \Twig_Environment($loader, $config);]]></search>
+            <add position="after"><![CDATA[
+            //d_twig_manager.xml
+            if (file_exists(DIR_SYSTEM . 'library/template/Twig/Extension/DTwigManager.php')) {
+                $this->twig->addExtension(new \Twig_Extension_DTwigManager($this->registry));
+            }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/event/theme.php">
+        <operation error="skip" info="">
+            <search><![CDATA[$twig = new \Twig_Environment($loader, $config);]]></search>
+            <add position="after"><![CDATA[
+            //d_twig_manager.xml
+            if (file_exists(DIR_SYSTEM . 'library/template/Twig/Extension/DTwigManager.php')) {
+                $twig->addExtension(new Twig_Extension_DTwigManager($this->registry));
+            }
+            ]]></add>
+        </operation>
+    </file>
+</modification>

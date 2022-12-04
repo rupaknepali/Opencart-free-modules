@@ -1,0 +1,30 @@
+@import "../scss/variable";
+
+/* Panel Default */
+.panel-default {
+	font-size: 13px;
+	border: 1px solid $border_color;
+	border-radius: 3px;
+	.panel-heading {
+		background: $panel_background;
+		border-bottom: 1px solid $border_color;
+		color: $color;
+		.panel-title {
+			font-size: 15px;
+		}
+	}
+	.panel-body {
+		padding: $padding;
+		background-color: $background;
+		color: $color;
+		h3 {
+			font-size: 18px;
+		}
+		h4 {
+			font-size: 16px;
+		}
+		a {
+			color: #2478cd;
+		}
+	}
+}

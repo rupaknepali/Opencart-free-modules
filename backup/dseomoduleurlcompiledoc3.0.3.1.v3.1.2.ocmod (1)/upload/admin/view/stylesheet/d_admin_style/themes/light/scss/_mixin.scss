@@ -1,0 +1,62 @@
+
+// keyframes mixin
+@mixin keyframes($name) {
+    @-webkit-keyframes #{$name} {
+        @content;
+    }
+    @-moz-keyframes #{$name} {
+        @content;
+    }
+    @-ms-keyframes #{$name} {
+        @content;
+    }
+    @keyframes #{$name} {
+        @content;
+    }
+}
+
+// transform (2 states) mixin
+@mixin transform_2($transform1, $transform2) {
+    0% {
+        -webkit-transform: $transform1;
+        transform: $transform1;
+    }
+    100% {
+        -webkit-transform: $transform2;
+        transform: $transform2;
+    }
+}
+
+// animate 'main_scan_button'
+@mixin scan_button_animation($color, $seconds) {
+    border-color: $color transparent $color transparent;
+    -webkit-animation: main_scan_button $seconds linear infinite;
+    animation: main_scan_button $seconds linear infinite;
+}
+
+// spped gradation for 'main_scan_button'
+@mixin scan_button_speed_gradation($color) {
+    &.very-slow {
+        @include scan_button_animation($color, $very_slow_speed);
+    }
+
+    &.slow {
+        @include scan_button_animation($color, $slow_speed);
+    }
+
+    &.fast {
+        @include scan_button_animation($color, $fast_speed);
+    }
+
+    &.very-fast {
+        @include scan_button_animation($color, $very_fast_speed);
+    }
+}
+
+// shadow mixin
+@mixin shadow($hor_lenght, $ver_lenght, $blur, $spread, $color) {
+    box-shadow: inset $hor_lenght $ver_lenght $blur $spread $color;
+    -webkit-box-shadow: inset $hor_lenght $ver_lenght $blur $spread $color;
+    -moz-box-shadow: inset $hor_lenght $ver_lenght $blur $spread $color;
+    -o-box-shadow: inset $hor_lenght $ver_lenght $blur $spread $color;
+}

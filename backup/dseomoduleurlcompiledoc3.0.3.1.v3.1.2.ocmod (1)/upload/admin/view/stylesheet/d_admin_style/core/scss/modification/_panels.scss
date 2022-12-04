@@ -1,0 +1,51 @@
+@import "../variable";
+.panel{
+  background-color: $background;
+  font-family: "Open Sans", sans-serif;
+  color: $color;
+  .panel-body {
+    position: relative;
+    padding-left: $padding;
+    padding-right: $padding;
+  }
+  .panel-heading {
+    background: $heading_background;
+    border-color: $border_color;
+    color: $color;
+    &:not(.note-toolbar){
+      display: flex;
+    }
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    @media screen and (max-width: 500px) {
+      .panel-title {
+        min-width: 100%;
+      }
+      .status-wrap {
+        margin-top: 20px;
+        min-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        label{
+          margin-right: 20px;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+}
+
+.panel_top_radius {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.panel-default .panel-body [data-toggle="tooltip"]::after,
+.modal-dialog [data-toggle="tooltip"]::after {
+  margin-left: 8px;
+}
+.panel-default .panel-body .form-horizontal .form-group, .modal-dialog .form-horizontal .form-group{
+ border: 0;
+}

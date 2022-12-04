@@ -1,0 +1,46 @@
+@import "../variable";
+@import "checkbox";
+.label {
+  font-size: 88%;
+  margin: 4px;
+  display: inline-block;
+}
+
+.label-danger {
+  background-color: $red;
+}
+
+.label-warning {
+  background-color: $warning;
+}
+
+.panel-body {
+  .form-control{
+    height: 41px; //fix for height
+    font-size: 15px;
+    box-shadow: none;
+    border: 2px solid #cfd7e7;
+    &.active,&:hover{
+      border-color:#cfd7e7;
+    }
+    &:active:focus,&:focus{
+      border-color:#9eaecb;
+      ~ .input-group-addon{
+        border-color:#9eaecb;
+      }
+    }
+  }
+  .input-group-addon{
+    border-width:2px;
+    border-color:#cfd7e7;
+  }
+  textarea {
+    min-height:auto !important;
+  }
+  select.form-control{
+  }
+  .form-group {
+    padding-top: 15px;
+
+  }
+}

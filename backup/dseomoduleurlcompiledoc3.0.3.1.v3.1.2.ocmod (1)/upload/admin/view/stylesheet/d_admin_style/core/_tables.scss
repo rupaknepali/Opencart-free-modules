@@ -1,0 +1,31 @@
+.admin-table {
+  font-size: 13px;
+  .table {
+    thead {
+      background-color: rgba($background, 0.5);
+      tr {
+        th {
+          border: 1px solid rgba($border_color, 0.7) !important;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        th {
+          border-top: 1px solid rgba($border_color, 0.7);
+          font-weight: normal;
+        }
+
+        &:hover {
+          background-color: rgba($background, 0.5);
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 850px) {
+    img {
+      margin-right: 5px;
+    }
+  }
+}

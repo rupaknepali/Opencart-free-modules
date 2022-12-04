@@ -1,0 +1,284 @@
+<modification>
+	<id>Edit Products In Admin Products List 155x-156x</id>
+	<version>1.2</version>
+	<vqmver>2.3.2</vqmver>
+	<author>www.best-byte.com</author>
+<file name="admin/language/english/english.php">
+  <operation>
+    <search position="after"><![CDATA[
+    $_['button_copy']
+    ]]></search>
+    <add trim="true"><![CDATA[
+    $_['button_edit_list']      = 'Update Selected';
+    $_['text_special']          = '<strong>Special:</strong>';
+		]]></add>
+  </operation>
+</file>
+<file name="admin/controller/catalog/product.php">
+  <operation>
+    <search position="before"><![CDATA[			
+  	protected function getList() {
+    ]]></search>
+    <add trim="true"><![CDATA[
+	  public function edit_list() {
+
+    $this->document->setTitle($this->language->get('heading_title'));
+	
+		$this->language->load('catalog/product');
+    
+		$this->load->model('catalog/product');
+		
+		if (isset($this->request->post['selected']) && $this->validateEditList()) {
+			$url = '';
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			if (isset($this->request->get['filter_name'])) {
+				$url .= '&filter_name=' . $this->request->get['filter_name'];
+			}
+
+			if (isset($this->request->get['filter_model'])) {
+				$url .= '&filter_model=' . $this->request->get['filter_model'];
+			}
+
+			if (isset($this->request->get['filter_price'])) {
+				$url .= '&filter_price=' . $this->request->get['filter_price'];
+			}
+
+			if (isset($this->request->get['filter_quantity'])) {
+				$url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+			}
+
+			if (isset($this->request->get['filter_status'])) {
+				$url .= '&filter_status=' . $this->request->get['filter_status'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+			
+			foreach ($this->request->post['selected'] as $product_id) {
+
+      $special = false;		
+			$price_str = $product_id.'_price';
+      if(isset($_POST[$product_id.'_special'])) {
+			$special_str = $product_id.'_special';
+      }		
+			$quantity_str = $product_id.'_quantity';
+			$model_str = $product_id.'_model';
+			$name_str = $product_id.'_name';
+			$status_str = $product_id.'_status';
+			
+			$price = $this->request->post[$price_str]; 
+      if(isset($_POST[$product_id.'_special'])) {    		
+			$special = $this->request->post[$special_str]; 
+      } 			
+			$quantity = $this->request->post[$quantity_str];
+			$model = $this->request->post[$model_str];
+			$name = $this->request->post[$name_str];
+			$status = $this->request->post[$status_str];
+			
+			$el_data = array('price' => $price, 'special' => $special, 'quantity' => $quantity, 'model' => $model, 'name' => $name, 'status' => $status);
+			
+			$this->model_catalog_product->editList($product_id, $el_data);
+	  	}			
+
+			$this->redirect($this->url->link('catalog/product', 'token=' . $this->session->data['token'] . $url, 'SSL'));			
+		  }
+
+    	$this->getList();
+  	  }
+    ]]></add>
+  </operation>
+	<operation>
+    <search position="after"><![CDATA[
+		$this->data['delete'] = $this->url->link('catalog/product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');			
+    ]]></search>
+    <add trim="true"><![CDATA[
+		$this->data['edit_list'] = $this->url->link('catalog/product/edit_list', 'token=' . $this->session->data['token'] . $url, 'SSL');			
+    ]]></add>
+  </operation>
+	<operation>
+    <search position="after"><![CDATA[
+		$this->data['button_delete'] = $this->language->get('button_delete');
+    ]]></search>
+    <add trim="true"><![CDATA[
+		$this->data['button_edit_list'] = $this->language->get('button_edit_list');
+		$this->data['text_special'] = $this->language->get('text_special');
+		]]></add>
+  </operation>
+	<operation>
+    <search position="before"><![CDATA[
+  	protected function validateCopy() {
+    ]]></search>
+    <add trim="true"><![CDATA[
+    private function validateEditList() {
+    if (!$this->user->hasPermission('modify', 'catalog/product')) {
+      $this->error['warning'] = $this->language->get('error_permission');
+    }
+		if (!$this->error) {
+	  	return TRUE;
+		} else {
+	  	return FALSE;
+		}
+  	}
+		]]></add>
+  </operation>
+</file>
+<file name="admin/model/catalog/product.php">
+  <operation>
+    <search position="before"><![CDATA[			
+	  public function editProduct($product_id, $data) {
+    ]]></search>
+    <add trim="true"><![CDATA[
+    public function editList($product_id, $el_data) { 
+		if (isset($el_data['price']) && isset($el_data['quantity']) && isset($el_data['model']) && isset($el_data['status'])) {		
+			$this->db->query("UPDATE " . DB_PREFIX . "product SET price = '" . (float)$el_data['price'] . "', quantity = '" . (int)$el_data['quantity'] . "', model = '" . $this->db->escape($el_data['model']) . "', status = '" . (int)$el_data['status'] . "' WHERE product_id = '" . (int)$product_id . "'");
+		}
+		if (isset($el_data['name'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "product_description SET name = '" . $this->db->escape($el_data['name']) . "' WHERE product_id = '" . (int)$product_id . "'");
+		}	
+		if (isset($el_data['special'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "product_special SET price = '" . (float)$el_data['special'] . "' WHERE product_id = '" . (int)$product_id . "'");
+		}    	
+	  }
+		]]></add>
+  </operation>
+</file>
+<file name="admin/view/template/catalog/product_list.tpl">
+  <operation>
+    <search position="replace"><![CDATA[
+    <div class="buttons"><a href="<?php echo $insert; ?>" class="button"><?php echo $button_insert; ?></a><a onclick="$('#form').attr('action', '<?php echo $copy; ?>'); $('#form').submit();" class="button"><?php echo $button_copy; ?></a><a onclick="$('form').submit();" class="button"><?php echo $button_delete; ?></a></div>            
+    ]]></search>
+    <add trim="true"><![CDATA[
+    <div class="buttons"><a href="<?php echo $insert; ?>" class="button"><?php echo $button_insert; ?></a><a onclick="$('#form').attr('action', '<?php echo $edit_list; ?>'); $('#form').submit();" class="button"><?php echo $button_edit_list; ?></a><a onclick="$('#form').attr('action', '<?php echo $copy; ?>'); $('#form').submit();" class="button"><?php echo $button_copy; ?></a><a onclick="$('form').submit();" class="button"><?php echo $button_delete; ?></a></div>
+		]]></add>
+  </operation>
+	<operation>
+    <search position="replace"><![CDATA[
+    <input type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>" checked="checked" />
+		]]></search>
+    <add trim="true"><![CDATA[
+    <input type="checkbox" name="selected[]" id="<?php echo $product['product_id']; ?>_select" value="<?php echo $product['product_id']; ?>" checked="checked" />
+		]]></add>
+  </operation>
+	<operation>
+    <search position="replace"><![CDATA[
+    <input type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>" />
+		]]></search>
+    <add trim="true"><![CDATA[
+    <input type="checkbox" name="selected[]" id="<?php echo $product['product_id']; ?>_select" value="<?php echo $product['product_id']; ?>" />
+		]]></add>
+  </operation>
+	<operation>
+    <search position="replace"><![CDATA[
+		<?php echo $product['price']; ?>
+		]]></search>
+    <add trim="true"><![CDATA[
+		<input type="text" class="<?php echo strtolower($column_price); ?> editable" name="<?php echo $product['product_id']; ?>_price" id="<?php echo $product['product_id']; ?>_price" value="<?php echo $product['price']; ?>" size="8" onclick='document.getElementById("<?php echo $product['product_id']; ?>_select").setAttribute("checked","checked");' />
+		]]></add>
+  </operation>
+  <operation>
+    <search position="replace"><![CDATA[
+    <?php echo $product['special']; ?>
+		]]></search>
+    <add trim="true"><![CDATA[    
+	  <?php echo $text_special; ?><input type="text" class="<?php echo strtolower($column_price); ?> editable" name="<?php echo $product['product_id']; ?>_special" id="<?php echo $product['product_id']; ?>_special" value="<?php echo $product['special']; ?>" size="8" onclick='document.getElementById("<?php echo $product['product_id']; ?>_select").setAttribute("checked","checked");' />
+		]]></add>
+  </operation>    		
+	<operation>
+    <search position="replace"><![CDATA[
+		<?php echo $product['quantity']; ?>
+		]]></search>
+    <add trim="true"><![CDATA[
+		<input type="text" class="<?php echo strtolower($column_quantity); ?> editable" name="<?php echo $product['product_id']; ?>_quantity" id="<?php echo $product['product_id']; ?>_quantity" value="<?php echo $product['quantity']; ?>" size="8" onclick='document.getElementById("<?php echo $product['product_id']; ?>_select").setAttribute("checked","checked");' />
+		]]></add>
+  </operation>
+	<operation>
+    <search position="replace"><![CDATA[
+		<?php echo $product['model']; ?>
+		]]></search>
+    <add trim="true"><![CDATA[
+		<input type="text" class="<?php echo strtolower($column_model); ?> editable" name="<?php echo $product['product_id']; ?>_model" id="<?php echo $product['product_id']; ?>_model" value="<?php echo $product['model']; ?>" size="16" onclick='document.getElementById("<?php echo $product['product_id']; ?>_select").setAttribute("checked","checked");' />
+		]]></add>
+  </operation>
+	<operation>
+    <search position="replace"><![CDATA[
+    <td class="left"><?php echo $product['name']; ?></td>
+		]]></search>
+    <add trim="true"><![CDATA[
+		<td class="left name"><input type="text" class="<?php echo strtolower($column_name); ?> editable" name="<?php echo $product['product_id']; ?>_name" id="<?php echo $product['product_id']; ?>_name" value="<?php echo $product['name']; ?>" size="50" onclick='document.getElementById("<?php echo $product['product_id']; ?>_select").setAttribute("checked","checked");' /></td>
+		]]></add>
+  </operation>
+	<operation>
+    <search position="replace"><![CDATA[
+    <td class="left"><?php echo $product['status']; ?></td>
+		]]></search>
+    <add trim="true"><![CDATA[
+		<td class="left status"><select name="<?php echo $product['product_id']; ?>_status" id="<?php echo $product['product_id']; ?>_status" onclick='document.getElementById("<?php echo $product['product_id']; ?>_select").setAttribute("checked","checked");'> 
+      <?php if ($product['status'] == $text_enabled) { ?>
+      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+      <option value="0"><?php echo $text_disabled; ?></option>
+      <?php } else { ?>
+      <option value="1"><?php echo $text_enabled; ?></option>
+      <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+      <?php } ?>
+    </select></td>
+		]]></add>
+  </operation>
+  <operation>
+    <search position="after"><![CDATA[
+    <div class="heading">
+    ]]></search>
+    <add trim="true"><![CDATA[
+<script type="text/javascript"> 			
+$(document).ready(function() {
+	$('.editable').focus(function() {
+		$(this).addClass("focusField");		
+      if (this.value == this.defaultValue){
+        this.select();
+    	}
+      if(this.value != this.defaultValue){
+	    	this.select();
+      }
+    });
+    $('.editable').change(function() {
+    	$(this).removeClass("focusField");				
+      if (this.value == ''){
+        this.value = (this.defaultValue ? this.defaultValue : '');			
+    	}				
+   });	
+});
+</script>
+		]]></add>
+  </operation>
+  <operation>
+    <search position="after"><![CDATA[
+    <div class="heading">
+    ]]></search>
+    <add trim="true"><![CDATA[
+<style type="text/css">		
+.focusField {
+	color: #000;
+	border: solid 2px #EEEEEE !important;
+	background: #FFEEEE !important;
+}
+.editable {
+	color: #000;
+	border: none;	
+	background: none;
+	cursor: pointer;
+}
+</style>
+		]]></add>
+  </operation>
+</file>
+</modification>

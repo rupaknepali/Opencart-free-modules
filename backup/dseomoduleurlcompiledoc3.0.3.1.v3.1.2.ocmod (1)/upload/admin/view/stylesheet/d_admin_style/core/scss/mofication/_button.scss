@@ -1,0 +1,33 @@
+@import "../variable";
+
+button {
+  outline-color: rgba(255, 255, 255, 0) !important;
+  outline: 0px solid white !important;
+  -moz-outline: 0px solid white !important;
+  -webkit-outline: 0px solid white !important;
+}
+
+button + button {
+  margin-left: 3px;
+}
+
+#cancel-button {
+  margin-left: 3px;
+}
+
+// B-SWITCH
+.bootstrap-switch {
+  border: none;
+
+  .bootstrap-switch-handle-on.bootstrap-switch-success,
+  .bootstrap-switch-handle-off.bootstrap-switch-success {
+    background: #43ebab;
+    border-color: #43ebab;
+    color: #1f2338;
+  }
+}
+
+// B-TAGS-INPUT
+.bootstrap-tagsinput {
+  width: 100%;
+}

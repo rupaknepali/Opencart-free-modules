@@ -1,0 +1,13 @@
+{% for field in fields %}
+{% if (field['code'] == 'url_keyword') %}
+<div class="form-group sort-item" data-sort-order="{{ field['sort_order'] }}">
+    <label class="col-sm-2 control-label" for="input_url_keyword_{{ store_id }}_{{ language_id }}"><span data-toggle="tooltip" title="{{ field['description'] }}">{{ field['name'] }}</span></label>
+    <div class="col-sm-10">
+        <input type="text" name="url_keyword[{{ store_id }}][{{ language_id }}]" value="{{ url_keyword[store_id][language_id] }}" placeholder="{{ field['name'] }}" id="input_url_keyword_{{ store_id }}_{{ language_id }}" class="form-control" />
+		{% if (error['url_keyword'][store_id][language_id]) %}
+        <div class="text-danger">{{ error['url_keyword'][store_id][language_id] }}</div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endfor %}

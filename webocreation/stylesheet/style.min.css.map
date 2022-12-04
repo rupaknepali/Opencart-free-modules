@@ -1,0 +1,1 @@
+{"version":3,"sources":["base/_typography.scss","app.scss"],"names":[],"mappings":"AAAA,KACE,sBAAuB,CACxB,AACD,WACE,UAAW,CACZ,ACHD,KACE,qBAAsB,CACvB","file":"style.min.css","sourcesContent":["body {\n  font-family: sans-serif;\n}\n#logo h1 a{\n  color: blue;\n}\n","@import 'base/typography';\n\nbody {\n  background-color: blue;\n}\n"]}

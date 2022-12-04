@@ -1,0 +1,19 @@
+@import "../variable";
+body {
+  line-height: 1.42857;
+}
+
+hr {
+  border-top: 1px solid $border_color;
+  margin-top: 6.5px;
+}
+code{
+  background-color: $code-bgc;
+  color:$code-c;
+}
+.tile {
+  background-color: $tile;
+  .tile-body{
+    color: $tile-c;
+  }
+}

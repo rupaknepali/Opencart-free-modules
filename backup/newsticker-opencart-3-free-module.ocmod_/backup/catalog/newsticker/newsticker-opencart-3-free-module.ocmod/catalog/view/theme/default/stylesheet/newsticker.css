@@ -1,0 +1,49 @@
+@charset "utf-8";
+/* CSS Document */
+.newsticker{
+    height: 50px;
+}
+
+
+.newstickers {
+    height: 33px;
+    background: #FFF;
+    position: relative;
+    border: solid 1px #2096cd;
+    overflow: hidden;
+}
+
+.newstickers > ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    position: absolute;
+    left: 10px;
+    top: 0;
+    right: 40px;
+    height: 33px;
+    font-size: 14px;
+}
+
+.newstickers > ul > li {
+    position: absolute;
+    height: 33px;
+    width: 100%;
+    line-height: 33px;
+    display: none;
+}
+
+.newstickers > ul > li > a {
+    text-decoration: none;
+    color: #333;
+    overflow: hidden;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: normal;
+}
+
+.newstickers > ul > li > a:hover {
+    color: #2096cd;
+}
+

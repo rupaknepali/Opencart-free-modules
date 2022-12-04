@@ -1,0 +1,38 @@
+@import "../scss/variable";
+
+/* Pagination */
+.panel-default .panel-body .pagination {
+	padding: 2px 2px;
+	margin: 0px 0px;
+	li {
+		> a, > span {
+			width: 50px;
+			height: 50px;
+			padding: 13px 0px;
+			margin-left: -2px;
+			margin-top: -2px;
+			text-align: center;
+			font-size: 14px;
+			background-color: $pagination-background-color;
+			color: $pagination-color;
+			border: 2px solid $pagination-border-color;
+			border-radius: 2px;
+			&:hover, &:focus {
+				background-color: $pagination-hover-background-color;
+				color: $pagination-color;
+			}
+		}
+		&.active {
+			> a, > span {
+				background-color: $pagination-active-background-color;
+				color: $pagination-color;
+				border: 2px solid $pagination-border-color;
+				&:hover, &:focus {
+					background-color: $pagination-active-hover-background-color;
+					color: $pagination-color;
+					border-color: $pagination-active-hover-border-color
+				}
+			}
+		}
+	}
+}

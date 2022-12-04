@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<name>Powered by Opencart</name>
+	<code>webocreationpoweredbyopencart</code>
+	<version>1.0</version>
+	<author>Webocreation</author>
+
+	<file path="catalog/language/*/common/footer.php">
+		<operation>
+			<search><![CDATA[
+				$_['text_powered']
+			]]>			</search>
+			<add position="replace" trim="true"><![CDATA[
+				$_['text_powered']      = 'This is Test';//
+			]]>			</add>
+		</operation>
+	</file>
+
+	<file path="catalog/view/theme/*/template/common/footer.tpl">
+		<operation>
+			<search><![CDATA[
+				<!-- Theme created by Welford Media for OpenCart 2.0 www.welfordmedia.co.uk -->
+			]]>			</search>
+			<add position="replace"><![CDATA[]]></add>
+		</operation>
+		<operation>
+			<search trim="true"><![CDATA[
+				OpenCart is open source software and you are free to remove the powered by OpenCart if you want, but its generally accepted practise to make a small donation.
+			]]>			</search>
+			<add position="replace" offset="-1"><![CDATA[]]></add>
+		</operation>
+		<operation>
+			<search trim="true"><![CDATA[
+				Please donate via PayPal to donate@opencart.com
+			]]>			</search>
+			<add position="replace" offset="1"><![CDATA[]]></add>
+		</operation>
+	</file>
+
+</modification>

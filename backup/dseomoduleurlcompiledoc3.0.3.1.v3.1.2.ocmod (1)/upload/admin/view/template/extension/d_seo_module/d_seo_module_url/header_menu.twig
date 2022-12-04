@@ -1,0 +1,47 @@
+<li><a style="cursor: pointer" onclick="refreshSEOURLCache()"><span class="label label-success pull-right"><i class="fa fa-refresh"></i></span>{{ button_refresh_url_cache }}</a></li>
+<li><a style="cursor: pointer" onclick="clearSEOURLCache()"><span class="label label-danger pull-right"><i class="fa fa-trash-o"></i></span>{{ button_clear_url_cache }}</a></li>
+<script type="text/javascript">
+
+function refreshSEOURLCache() {
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route=extension/module/d_seo_module_url/refreshURLCache&{{ url_token }}',
+		data: '',
+		dataType: 'json',
+		beforeSend: function() {
+			$('#content').fadeTo('slow', 0.5);
+		},
+		complete: function() {
+			$('#content').fadeTo('slow', 1);   
+		},
+		success: function(json) {
+			
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+
+function clearSEOURLCache() {
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route=extension/module/d_seo_module_url/clearURLCache&{{ url_token }}',
+		data: '',
+		dataType: 'json',
+		beforeSend: function() {
+			$('#content').fadeTo('slow', 0.5);
+		},
+		complete: function() {
+			$('#content').fadeTo('slow', 1);   
+		},
+		success: function(json) {
+			
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+
+</script>

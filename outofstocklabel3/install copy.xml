@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Out of Stock</name>
+    <version>1.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_outofstock</code>
+    <file path="catalog/controller/product/product.php">
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[$data['points'] = $product_info['points'];]]></search>
+            <add><![CDATA[
+                
+                if ($this->config->get('outofstock_enabled')) {
+                    $this->load->model('extension/module/outofstock');
+                    $data['quantity'] = $this->model_extension_module_outofstock->getQuantity($product_info);
+                    if ($data['quantity']<1){
+                        $this->load->model('extension/module/outofstock');
+                        $data['text_out_of_stock'] = $this->model_extension_module_outofstock->get((int) $this->config->get('config_language_id'));
+                        $data['outofstock_style'] = htmlspecialchars_decode($this->config->get('outofstock_style'));
+                        $data['outofstock_show_marker_in_product_page'] = $this->config->get('outofstock_show_marker_in_product_page');
+                        $data['button_cart_outOfStock'] = "Out Of Stock";
+                    }
+                }
+                
+                ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock">
+            <search position="before"><![CDATA[foreach ($results as $result) {]]></search>
+            <add><![CDATA[
+                
+        if ($this->config->get('outofstock_enabled')) {
+            $this->load->model('extension/module/outofstock');
+            $data['text_out_of_stock'] = $this->model_extension_module_outofstock->getLabel((int) $this->config->get('config_language_id'));
+            $data['outofstock_style'] = htmlspecialchars_decode($this->config->get('outofstock_style'));
+        }
+        
+        
+                ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[$data['products'][] = array(]]></search>
+            <add><![CDATA[
+                
+                    'quantity' => ($this->config->get('outofstock_enabled'))?$this->model_extension_module_outofstock->getQuantity($result),
+                    
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+
+
+    <file path="catalog/controller/product/" name="search.php,category.php,special.php,manufacturer.php">
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[$data['products'] = array();]]></search>
+            <add><![CDATA[         
+            $data['outofstock_style'] = false;
+            ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock">
+            <search position="before"><![CDATA[foreach ($results as $result) {]]></search>
+            <add><![CDATA[
+                
+        if ($this->config->get('outofstock_enabled')) {
+            $this->load->model('extension/module/outofstock');
+            $data['text_out_of_stock'] = $this->model_extension_module_outofstock->get((int) $this->config->get('config_language_id'));
+            $data['outofstock_style'] = htmlspecialchars_decode($this->config->get('outofstock_style'));
+        }
+        
+        
+                ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[$data['products'][] = array(]]></search>
+            <add><![CDATA[
+                
+                    'quantity' => ($this->config->get('outofstock_enabled'))?$this->model_extension_module_outofstock->getQuantity($result),
+                    
+                ]]>
+            </add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/" name="search.twig,special.twig,category.twig,manufacturer_info.twig">
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[{{ header }}]]></search>
+            <add><![CDATA[
+                
+                    {% if outofstock_style %}
+                    <style>{{ outofstock_style }}</style> 
+                    {% endif %}
+
+                ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[<div class="product-layout product-list col-xs-12">]]></search>
+            <add><![CDATA[
+                            
+                {% (product.quantity<1) and text_out_of_stock %}
+                    <div class="product-not-available">
+<p>{{ text_out_of_stock }}</p>
+</div>
+                {% endif %}
+
+                ]]>
+            </add>
+        </operation>
+
+    </file>
+
+    <file path="catalog/view/theme/*/template/product/product.twig">
+        <operation info="Out Of Stock">
+            <search position="before"><![CDATA[<ul class="thumbnails">]]></search>
+            <add><![CDATA[
+                
+                        {% if outofstock_style and outofstock_show_marker_in_product_page and outofstock_show_marker_in_product_page %}
+                            <style>
+                                {{outofstock_style}}</style>
+                        {% endif %}
+                        {% if  (quantity < 1) and text_out_of_stock and outofstock_show_marker_in_product_page %}
+                            <div class="not-available-mark">{{text_out_of_stock}}</div>
+                        {% endif %}
+
+
+                ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[ {{ header }}]]></search>
+            <add><![CDATA[
+                
+                    {% if outofstock_style and outofstock_style %}
+                        <style>
+                            {{outofstock_style}}</style>
+                    {% endif %}
+
+                ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[<div class="product-thumb transition">]]></search>
+            <add><![CDATA[
+               
+{% if (product['quantity']<1) and text_out_of_stock %}
+                                <div class="product-not-available">
+<p>{{text_out_of_stock}}</p>
+</div>
+                            {% endif %}
+                ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock" error="skip">
+            <search position="replace" index='3'><![CDATA[<div class="{{ class }}">]]></search>
+            <add><![CDATA[<div class="{{ class }} product-layout"'>]]>
+            </add>
+        </operation>
+    </file>
+
+
+    <file path="catalog/controller/module/" name="bestseller.php,latest.php,special.php">
+        <operation info="Out Of Stock">
+            <search position="before"><![CDATA[foreach ($results as $result) {]]></search>
+            <add><![CDATA[
+              
+        if ($this->config->get('outofstock_enabled')) {
+            $this->load->model('extension/module/outofstock');
+            $data['text_out_of_stock'] = $this->model_extension_module_outofstock->get((int) $this->config->get('config_language_id'));
+            $data['outofstock_style'] = htmlspecialchars_decode($this->config->get('outofstock_style'));
+        } else{ 
+                $data['outofstock_style'] = false;
+                }
+        
+        
+                ]]>
+            </add>
+        </operation>
+
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[$data['products'][] = array(]]></search>
+            <add><![CDATA[
+                 
+                    'quantity' => ($this->config->get('outofstock_enabled'))?$this->model_extension_module_outofstock->getQuantity($result),
+                    
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/module/" name="featured.php">
+        <operation info="Out Of Stock">
+            <search position="before"><![CDATA[foreach ($products as $product_id) {]]></search>
+            <add><![CDATA[
+                
+        if ($this->config->get('outofstock_enabled')) {
+            $this->load->model('extension/module/outofstock');
+            $data['text_out_of_stock'] = $this->model_extension_module_outofstock->get((int) $this->config->get('config_language_id'));
+            $data['outofstock_style'] = htmlspecialchars_decode($this->config->get('outofstock_style'));
+        } else{ 
+                $data['outofstock_style'] = false;
+                }
+        
+        
+                ]]>
+            </add>
+        </operation>
+
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[$data['products'][] = array(]]></search>
+            <add><![CDATA[
+                 
+                    'quantity' => ($this->config->get('outofstock_enabled'))?$this->model_extension_module_outofstock->getQuantity($product_info),
+                    
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/view/theme/*/template/module/" name="bestseller.twig,featured.twig,latest.twig,special.twig">
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[<h3><?php echo $heading_title; ?></h3>]]></search>
+            <add><![CDATA[
+              
+<?php if (isset($outofstock_style)) { echo "<style>$outofstock_style</style>";} ?>
+
+                ]]>
+            </add>
+        </operation>
+        <operation info="Out Of Stock">
+            <search position="after"><![CDATA[<div class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">]]></search>
+            <add><![CDATA[
+               
+<?php if ($product['quantity']<1 and isset($text_out_of_stock) ) { ?>
+<div class="product-not-available">
+<p><?php echo $text_out_of_stock; ?></p>
+</div>
+<?php } ?>
+
+                ]]>
+            </add>
+        </operation>
+
+    </file>
+
+
+</modification>

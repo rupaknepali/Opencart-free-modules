@@ -1,0 +1,64 @@
+@import "../variable";
+
+.nav.nav-tabs {
+  a {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.5;
+    color:  $nav-color;// #b0b1b8;
+  }
+
+  & > li {
+    display: inline-block;
+    padding: 0;
+    & > a {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 15px;
+      padding-right: 0px;
+      @media screen and (min-width: 1200px) {
+        & {
+          padding-right: 10px;
+        }
+      }
+
+
+      &:hover, &:focus {
+        text-decoration: none;
+        background-color: $background;
+        border-color: $background;
+        color: $color;
+      }
+
+      & > i {
+        padding-bottom: 4px;
+      }
+    }
+
+    &.active > a {
+      color: $color;
+      background-color: $background;
+      border: 1px solid transparent;
+      & > i, & > span {
+        position: relative;
+        &:after{
+          content: "";
+          position: absolute;
+          display: block;
+          background-color:  $dark_blue;
+          width:18px;
+          height:3px;
+          bottom: -5px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
+
+    }
+  }
+}
+
+.nav-tabs {
+  padding-bottom: 20px;
+  border-bottom: 1px solid $border_color;
+}

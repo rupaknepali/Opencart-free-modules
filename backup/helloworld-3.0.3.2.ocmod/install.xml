@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <code>webocreationhelloworld</code>
+    <name>Hello World Module</name>
+    <version>3.0.3.2</version>
+    <author>Webocreation</author>
+    <link>https://webocreation.com</link>
+
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search index="0"><![CDATA[if ($marketplace) {]]></search>
+            <ignoreif><![CDATA[$this->url->link('extension/module/cron',]]></ignoreif>
+            <add position="before"><![CDATA[if ($this->user->hasPermission('access', 'extension/module/helloworld')) {
+   $marketplace[] = array(
+      'name' => $this->language->get('text_helloworld'),
+      'href' => $this->url->link('extension/module/helloworld', 'user_token=' . $this->session->data['user_token'], true),
+      'children' => array()
+   );
+}]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/language/*/common/column_left.php">
+        <operation>
+            <search index="0"><![CDATA[<?php]]></search>
+            <add position="after"><![CDATA[$_['text_helloworld'] = 'Hello World Link';]]></add>
+        </operation>
+    </file>
+
+</modification>

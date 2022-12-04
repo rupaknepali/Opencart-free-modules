@@ -1,0 +1,190 @@
+
+#protection_modules {
+    max-width: 1040px;
+}
+
+.protection_module {
+
+    color: rgb(176, 177, 184);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    cursor: pointer;
+
+    i {
+        color: rgb(75, 76, 92);
+        font-size: 48px;
+        padding-bottom: 10px;
+    }
+
+    & > span {
+        font-size: 14px;
+    }
+
+    &.enabled {
+        color: #fff;
+
+        i {
+            color: $main_blue;
+        }
+    }
+
+    &.active {
+        color: #fff;
+
+        i {
+            color: #fff;
+        }
+
+        &:hover i {
+            color: #fff;
+        }
+    }
+
+    &:hover {
+        color: #fff;
+
+        i {
+            color: #fff;
+        }
+    }
+}
+
+.protection_panel {
+
+    border-color: $border_color;
+    background-color: $panel_background;
+
+    .panel-heading {
+        font-size: 16px;
+        border-color: $border_color;
+        background-color: $heading_background;
+        color: #fff;
+        padding: 23.5px;
+
+        i {
+            font-size: 18px;
+            padding-right: 8px;
+        }
+    }
+
+    .panel-body {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .protection_icon {
+        font-size: 120px;
+    }
+
+    .protection_text {
+        font-size: 30px;
+        font-weight: bold;
+    }
+}
+
+.dashboard_protection_panel {
+    @extend .protection_panel;
+    height: 450px;
+}
+
+// .more_info_protection_panel {
+//     @extend .protection_panel;
+
+//     .panel-heading {
+//         padding: 7px 14px;
+//         // text-align: right;
+
+//         .name {
+//             text-align: left;
+//             font-size: 15px;
+//             color: $unprotected;
+//         }
+//     }
+// }
+
+.protection_button {
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 2px;
+    color: rgb(54, 116, 238);
+    background-color: #fff;
+    box-shadow: 0px 3px 10px 0px rgba(31, 35, 56, 0.4);
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 13%;
+    padding-right: 13%;
+    margin-top: 35px;
+
+    &:hover {
+
+    }
+
+    &:focus, &.focus {
+        color: rgb(54, 116, 238);
+    }
+}
+
+.protection_info {
+    font-size: 16px;
+}
+
+
+.sm_bage {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    color: #fff;
+    margin: auto;
+    position: absolute;
+}
+
+.notify_bage {
+    @extend .sm_bage;
+    width: 18.5px;
+    height: 18.5px;
+    border-radius: 50%;
+    background-color: rgb(250, 91, 109);
+    margin: auto;
+    position: absolute;
+    top: 0px;
+    left: 50px;
+    bottom: 80px;
+    right: 0px;
+}
+
+.pro_bage {
+    @extend .sm_bage;
+    width: 35px;
+    height: 16px;
+    font-size: 10px;
+    border-radius: 2px;
+    background-color: $main_blue;
+    top: 0px;
+    left: 60px;
+    bottom: 100px;
+    right: 0px;
+}
+
+.coming_soon_bage {
+    @extend .sm_bage;
+    width: 35px;
+    height: 14px;
+    font-size: 10px;
+    border-radius: 2px;
+    background-color: $main_blue;
+    top: 0px;
+    left: 44px;
+    bottom: 41px;
+    right: 0px;
+}
+
+.hope_you_happy_now_jeka {
+    font-size: 21px !important;
+}
+
+#protection_info_modal {
+    .label {
+        cursor: pointer;
+        padding: 0.5em 0.5em 0.5em;
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "codename": "d_tinysort",
+    "version": "2.3.8",
+    "name": "TinySort",
+    "description": "Implementation of tinysort https://github.com/Sjeiti/TinySort",
+    "author": {
+        "name": "Shopunity",
+        "email": "info@shopunity.com",
+        "url": "https://github.com/Sjeiti/TinySort"
+    },
+    "opencart_version": [
+        "2.0.0.0",
+        "2.0.1.0",
+        "2.0.1.1",
+        "2.0.2.0",
+        "2.0.3.1",
+        "2.1.0.1",
+        "2.1.0.2",
+        "2.2.0.0",
+        "2.3.0.0",
+        "2.3.0.1",
+        "2.3.0.2",
+        "3.0.0.0",
+        "3.0.1.1",
+        "3.0.1.2",
+        "3.0.2.0",
+        "3.0.3.1"
+    ],
+    "type": "library",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "support": {
+        "email": "support@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_tinysort.json"
+    ],
+    "dirs": [
+        "admin/view/javascript/d_tinysort",
+        "catalog/view/javascript/d_tinysort"
+    ],
+    "changelog": [
+        {
+            "version":"2.3.8",
+            "change": "Added support OC v3.0.3.1"
+        },
+        {
+            "version":"2.3.7",
+            "change": "added new opencart versions"
+        },
+        {
+            "version":"2.3.6",
+            "change": "new version. bug fixes"
+        },
+        {
+            "version":"1.4.29",
+            "change": "initial commit"
+        }
+    ]
+}

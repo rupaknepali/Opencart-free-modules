@@ -1,0 +1,109 @@
+{
+    "codename": "d_opencart_patch",
+    "version": "3.1.5",
+    "name": "Opencart Patch 3.x",
+    "description": "Adds support for new Extension Module folder and reduces compatibility issues",
+    "author": {
+        "name": "Shopunity",
+        "email": "info@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "opencart_version": [
+        "3.0.0.0",
+        "3.0.1.1",
+        "3.0.1.2",
+        "3.0.2.0",
+        "3.0.3.1"
+    ],
+    "type": "library",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "support": {
+        "email": "support@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "install": {
+        "url": "extension/d_shopunity/modification/install&codename=d_opencart_patch",
+        "xml": "system/library/d_shopunity/install/d_opencart_patch.xml"
+    },
+    "uninstall": {
+       "url": "extension/d_shopunity/modification/uninstall&codename=d_opencart_patch"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_opencart_patch.json",
+        "system/library/d_shopunity/install/d_opencart_patch.xml",
+        "system/library/d_shopunity/readme/d_opencart_patch.md"
+    ],
+    "dirs": [
+        "admin/model/extension/d_opencart_patch",
+        "catalog/model/extension/d_opencart_patch"
+    ],
+    "changelog": [
+        {
+            "version":"3.1.5",
+            "change": "support OC v3.0.3.1 "
+        },
+        {
+            "version":"3.1.4",
+            "change": "fix lang event; fix settinValue "
+        },
+        {
+            "version":"3.1.3",
+            "change": "fix cache clear."
+        },
+        {
+            "version":"3.1.2",
+            "change": "fix model settings ; add svg support by default;add getCustomerGroups"
+        },
+        {
+            "version":"3.1.1",
+            "change": "remove readme"
+        },
+        {
+            "version":"3.1.0",
+            "change": "added cache model"
+        },
+        {
+            "version":"3.0.9",
+            "change": "fix uninstall path conflict for compiled extensions"
+        },
+        {
+            "version":"3.0.8",
+            "change": "bugfix for events"
+        },
+        {
+            "version":"3.0.7",
+            "change": "Remvoved check for modifications with d_"
+        },
+        {
+            "version":"3.0.6",
+            "change": "model/extension bugfix"
+        },
+        {
+            "version":"3.0.5",
+            "change": "Updated Url and Load model"
+        },
+        {
+            "version":"3.0.4",
+            "change": "Added url->ajax model"
+        },
+        {
+            "version":"3.0.3",
+            "change": "Added url model"
+        },
+        {
+            "version":"3.0.2",
+            "change": "Hotfix. fix conflict with thrid-party Modification"
+        },
+        {
+            "version":"3.0.1",
+            "change": "Hotfix. Modification"
+        },
+        {
+            "version":"3.0.0",
+            "change": "Initial release."
+        }
+    ]
+}

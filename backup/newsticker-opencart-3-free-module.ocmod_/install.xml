@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Remove Index Route</name>
+    <version>3.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com/blog/remove-route-in-opencart-for-contact-home-and-other</link>
+    <code>webocreation_remove-route-in-opencart</code>
+    <description>Remove index route</description>
+    <file path="catalog/controller/startup/seo_url.php">
+        <operation>
+            <search><![CDATA[ parse_str($url_info['query'], $data); ]]></search>
+            <add position="after"><![CDATA[
+                if ($data['route'] == 'common/home'){
+                    $url .= '/';
+                }
+                if ($data['route'] == 'information/contact'){
+                    $url .= '/contact';
+                }
+                if ($data['route'] == 'account/return/add'){
+                    $url .= '/returnadd';
+                }
+                if ($data['route'] == 'information/sitemap'){
+                    $url .= '/sitemap';
+                }
+                if ($data['route'] == 'product/manufacturer'){
+                    $url .= '/manufacturer';
+                }
+                 if ($data['route'] == 'product/special'){
+                    $url .= '/special';
+                }
+                if ($data['route'] == 'account/voucher'){
+                    $url .= '/voucher';
+                }
+                if ($data['route'] == 'affiliate/login'){
+                    $url .= '/affiliatelogin';
+                }
+                if ($data['route'] == 'product/special'){
+                    $url .= '/special';
+                }
+                if ($data['route'] == 'account/login'){
+                    $url .= '/login';
+                }
+                if ($data['route'] == 'checkout/cart'){
+                    $url .= '/cart';
+                }
+            ]]>            
+            </add>
+        </operation>
+    </file>
+</modification>

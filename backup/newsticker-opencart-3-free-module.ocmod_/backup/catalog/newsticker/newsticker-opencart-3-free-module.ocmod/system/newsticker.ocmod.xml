@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Newsticker</name>
+    <version>1.0</version>
+    <author>WebOCreation</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_newsticker_1_1</code>
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search><![CDATA[
+            if ($this->user->hasPermission('access', 'design/layout')) {
+            ]]></search>
+            <add position="before"><![CDATA[
+            if ($this->user->hasPermission('access', 'design/newsticker')) {
+				$design[] = array(
+					'name'	   => "NewsTicker",
+					'href'     => $this->url->link('design/newsticker', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()
+				);
+			}
+            ]]></add>
+        </operation>
+    </file>
+</modification>

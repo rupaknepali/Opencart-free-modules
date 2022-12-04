@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name></name>
+    <version></version>
+    <author></author>
+    <link></link>
+    <code></code>
+    <description></description>
+    <file path="">
+        <operation>
+            <search><![CDATA[]]></search>
+            <add position=""><![CDATA[]]></add>
+        </operation>
+    </file>
+</modification>

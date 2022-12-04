@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>d_opencart_patch</name>
+    <code>d_opencart_patch</code>
+    <description>Permission fixes in Opencart 3.x</description>
+    <version>3.0.9</version>
+    <author>Dreamvention</author>
+    <link>http://dreamvention.com</link>
+    <file path="admin/controller/user/user_permission.php">
+        <operation error="skip">
+            <search><![CDATA[$path[] = $file . '/*';]]></search>
+            <add position="after"><![CDATA[
+            //d_opencart_patch.xml 1
+            $files[] = $file;
+            ]]></add>
+        </operation>
+        <operation error="skip">
+            <search><![CDATA[$permission = substr($controller, 0, strrpos($controller, '.'));]]></search>
+            <add position="replace"><![CDATA[
+            //d_opencart_patch.xml 2
+            $permission = (strrpos($controller, '.') !== false) ? substr($controller, 0, strrpos($controller, '.')) : $controller;
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/extension/installer.php">
+        <operation error="skip">
+            <search><![CDATA[$modification_info = $this->model_setting_modification->getModificationByCode($code);]]></search>
+            <add position="after"><![CDATA[
+            //d_opencart_patch.xml 1
+            if (strpos($code, 'd_') === 0 && $modification_info) {
+                $this->model_setting_modification->deleteModification($modification_info['modification_id']);
+                $modification_info = false; 
+            }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/model/setting/extension.php">
+        <operation error="skip">
+            <search><![CDATA[$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_path` WHERE `extension_install_id` = '" . (int)$extension_install_id . "' ORDER BY `date_added` ASC");]]></search>
+            <add position="replace"><![CDATA[
+        //d_opencart_patch.xml 1
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_install` WHERE `extension_install_id` = '" . (int)$extension_install_id . "'");
+
+        $extension = $query->row;
+
+        if(isset($extension['filename']) && strpos($extension['filename'], '_compiled_')){
+
+
+            $parts = explode('_compiled_', $extension['filename']);
+            $extension_name = $parts[0];
+            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_path` WHERE `extension_install_id` = '" . (int)$extension_install_id . "' AND path LIKE '%".$this->db->escape($extension_name)."%' ORDER BY `date_added` ASC");
+        }else{
+            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_path` WHERE `extension_install_id` = '" . (int)$extension_install_id . "' ORDER BY `date_added` ASC");
+        }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/model/setting/modification.php">
+        <operation error="skip">
+            <search><![CDATA[$this->db->query("DELETE FROM `" . DB_PREFIX . "modification` WHERE `extension_install_id` = '" . (int)$extension_install_id . "'");]]></search>
+            <add position="replace"><![CDATA[
+        //d_opencart_patch.xml 1
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_install` WHERE `extension_install_id` = '" . (int)$extension_install_id . "'");
+
+        $extension = $query->row;
+
+        if(isset($extension['filename']) && strpos($extension['filename'], '_compiled_') !== false){
+
+
+            $parts = explode('_compiled_', $extension['filename']);
+            $extension_name = $parts[0];
+            $this->db->query("DELETE FROM `" . DB_PREFIX . "modification` WHERE `extension_install_id` = '" . (int)$extension_install_id . "' AND `name` LIKE '%".$this->db->escape($extension_name)."%'");
+
+        }else{
+            $this->db->query("DELETE FROM `" . DB_PREFIX . "modification` WHERE `extension_install_id` = '" . (int)$extension_install_id . "'");
+        }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/marketplace/install.php">
+        <operation error="skip">
+            <search><![CDATA[$this->model_setting_extension->deleteExtensionInstall($extension_install_id);]]></search>
+            <add position="replace"><![CDATA[//d_opencart_patch.xml 1 moved down]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/marketplace/install.php">
+        <operation error="skip">
+            <search><![CDATA[$this->model_setting_modification->deleteModificationsByExtensionInstallId($extension_install_id);]]></search>
+            <add position="after"><![CDATA[
+                //d_opencart_patch.xml 2
+                $this->model_setting_extension->deleteExtensionInstall($extension_install_id);]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/common/filemanager.php">
+        <operation>
+            <search><![CDATA[$files = glob($directory . '/' . $filter_name . '*.{jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF}', GLOB_BRACE);]]></search>
+            <add position="replace"><![CDATA[$files = glob($directory . '/' . $filter_name . '*.{jpg,jpeg,svg,png,gif,JPG,JPEG,PNG,GIF}', GLOB_BRACE);]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA['jpg',]]></search>
+            <add position="after"><![CDATA['svg',]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA['image/jpeg',]]></search>
+            <add position="after"><![CDATA['image/svg+xml',]]></add>
+        </operation>
+    </file>
+    <file path="admin/view/template/common/filemanager.twig">
+        <operation>
+            <search><![CDATA[<img src="{{ image.thumb }}" alt="{{ image.name }}" title="{{ image.name }}" />]]></search>
+            <add position="replace"><![CDATA[<img src="{{ image.thumb }}" alt="{{ image.name }}" title="{{ image.name }}" width="100" height="100" />]]></add>
+        </operation>
+    </file>
+    <file path="admin/view/template/common/header.twig">
+        <operation>
+            <search><![CDATA[</header>]]></search>
+            <add position="before"><![CDATA[
+                <style type="text/css">
+                    a.img-thumbnail{
+                        min-width:100px;
+                    }
+                </style>
+                ]]></add>
+        </operation>
+    </file>
+    <file path="admin/model/tool/image.php">
+        <operation>
+            <search><![CDATA[public function resize($filename, $width, $height) {]]></search>
+            <add position="after"><![CDATA[
+                if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+                    $server = HTTPS_CATALOG;
+                } else {
+                    $server = HTTP_CATALOG;
+                }
+
+                if ($filename) {
+                    $image_info = @getimagesize(DIR_IMAGE . $filename);
+                    if (!$image_info) {
+                        return $server . 'image/' . $filename;
+                    }
+                } else {
+                    $filename = "no_image.png";
+                }
+                ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/model/tool/image.php">
+        <operation>
+            <search><![CDATA[public function resize($filename, $width, $height) {]]></search>
+            <add position="after"><![CDATA[
+                if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+                    $server = HTTPS_SERVER;
+                } else {
+                    $server = HTTP_SERVER;
+                }
+
+                if ($filename) {
+                    $image_info = @getimagesize(DIR_IMAGE . $filename);
+                    if (!$image_info) {
+                        return $server . 'image/' . $filename;
+                    }
+                } else {
+                    $filename = "no_image.png";
+                }
+                ]]></add>
+        </operation>
+    </file>
+    <file path="system/config/catalog.php">
+        <operation>
+            <search index="1" ><![CDATA['view/*/before' => array(]]></search>
+            <add position="replace" offset="2"><![CDATA[
+                   //    "view/*/before" => array(
+                   //        1000  => 'event/debug/before'
+                   //    ),
+                ]]></add>
+        </operation>
+        <operation>
+            <search ><![CDATA['controller/*/after'  => array(]]></search>
+            <add position="replace" offset="2"><![CDATA[
+                    //	'controller/*/after'  => array(
+                    //'event/debug/after'
+                    //)
+                ]]></add>
+        </operation>
+    </file>
+
+</modification>

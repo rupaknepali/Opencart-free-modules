@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>d_seo_module</name>
+	<code>d_seo_module</code>
+	<description>SEO Engine</description>
+	<version>3.0.0</version>
+	<author>Dreamvention</author>
+	<link>http://dreamvention.com</link>
+	
+	<!-- VALIDATE & SAVE FORM -->
+	<file path="admin/controller/setting/setting.php">
+		<operation error="skip">
+            <search><![CDATA[$this->model_setting_setting->editSetting('config', $this->request->post);]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				$this->load->controller('extension/module/d_seo_module/setting_edit_setting');
+				///d_seo_module
+            ]]></add>
+        </operation>
+		<operation error="skip">
+            <search><![CDATA[if ($this->error && !isset($this->error['warning'])) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				$this->error = $this->load->controller('extension/module/d_seo_module/setting_validate', $this->error);
+				///d_seo_module
+            ]]></add>
+        </operation>
+	</file>
+	
+	<file path="admin/controller/setting/store.php">
+		<operation error="skip">
+            <search><![CDATA[if ($this->error && !isset($this->error['warning'])) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				$this->error = $this->load->controller('extension/module/d_seo_module/store_validate_form', $this->error);
+				///d_seo_module
+            ]]></add>
+        </operation>
+	</file>
+	
+	<file path="admin/controller/catalog/category.php">
+		<operation error="skip">
+            <search><![CDATA[if ($this->error && !isset($this->error['warning'])) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				$this->error = $this->load->controller('extension/module/d_seo_module/category_validate_form', $this->error);
+				///d_seo_module
+            ]]></add>
+        </operation>
+	</file>
+	
+	<file path="admin/controller/catalog/product.php">
+		<operation error="skip">
+            <search><![CDATA[if ($this->error && !isset($this->error['warning'])) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				$this->error = $this->load->controller('extension/module/d_seo_module/product_validate_form', $this->error);
+				///d_seo_module
+            ]]></add>
+        </operation>
+	</file>
+	
+	<file path="admin/controller/catalog/manufacturer.php">
+		<operation error="skip">
+            <search><![CDATA[return !$this->error;]]></search>
+            <add position="before" index="1"><![CDATA[				
+				//d_seo_module
+				$this->error = $this->load->controller('extension/module/d_seo_module/manufacturer_validate_form', $this->error);
+				///d_seo_module
+            ]]></add>
+        </operation>
+	</file>
+	
+	<file path="admin/controller/catalog/information.php">
+		<operation error="skip">
+            <search><![CDATA[if ($this->error && !isset($this->error['warning'])) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				$this->error = $this->load->controller('extension/module/d_seo_module/information_validate_form', $this->error);
+				///d_seo_module
+            ]]></add>
+        </operation>
+	</file>
+		
+	<!-- SEO URL -->
+	<file path="catalog/controller/common/seo_url.php">
+		<operation error="skip">
+			<search><![CDATA[if ($this->config->get('config_seo_url')) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				$route_status = isset($this->request->get['route']);
+				
+				$this->load->controller('extension/module/d_seo_module/seo_url');
+				///d_seo_module
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search><![CDATA[if (isset($this->request->get['_route_'])) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				if (!$route_status && isset($this->request->get['route'])) return new Action($this->request->get['route']);
+				///d_seo_module
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search><![CDATA[parse_str($url_info['query'], $data);]]></search>
+            <add position="replace"><![CDATA[				
+				//d_seo_module
+				if (isset($url_info['query'])) parse_str($url_info['query'], $data);
+				///d_seo_module
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="catalog/controller/startup/seo_url.php">
+		<operation error="skip">
+			<search><![CDATA[if ($this->config->get('config_seo_url')) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				$route_status = isset($this->request->get['route']);
+				
+				$this->load->controller('extension/module/d_seo_module/seo_url');
+				///d_seo_module
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search><![CDATA[if (isset($this->request->get['_route_'])) {]]></search>
+            <add position="before"><![CDATA[				
+				//d_seo_module
+				if (!$route_status && isset($this->request->get['route'])) {
+					if (VERSION >= '2.3.0.0') {
+						return true;
+					} else {
+						return new Action($this->request->get['route']);
+					}
+				}
+				///d_seo_module
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search><![CDATA[parse_str($url_info['query'], $data);]]></search>
+            <add position="replace"><![CDATA[				
+				//d_seo_module
+				if (isset($url_info['query'])) parse_str($url_info['query'], $data);
+				///d_seo_module
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="catalog/controller/common/language.php">
+		<operation error="skip">
+            <search><![CDATA[if (isset($this->request->post['redirect'])) {]]></search>
+            <add position="before"><![CDATA[
+				//d_seo_module
+				$this->load->controller('extension/module/d_seo_module/language_language');
+				///d_seo_module
+			 ]]></add>
+        </operation>
+	</file>
+		
+	<!-- FIX Language -->
+	<file path="catalog/controller/common/language.php">
+		<operation error="skip">
+            <search><![CDATA[unset($url_data['_route_']);]]></search>
+            <add position="replace"><![CDATA[]]></add>
+        </operation>
+	</file>
+	
+	<!-- FIX Startup -->
+	<file path="catalog/controller/startup/startup.php">
+		<operation error="skip">
+			<search><![CDATA[$this->config->set('config_url', HTTP_SERVER);]]></search>
+            <add position="after"><![CDATA[
+				$this->config->set('config_ssl', HTTPS_SERVER);
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- FIX Pagination -->
+	<file path="system/library/pagination.php">
+		<operation error="skip">
+			<search><![CDATA[str_replace('&amp;page={page}', '', $this->url)]]></search>
+            <add position="replace"><![CDATA[str_replace(array('&amp;page={page}', '&page={page}', '?page={page}'), '', $this->url)]]></add>
+		</operation>
+		<operation error="skip">
+			<search><![CDATA[str_replace(array('&amp;page={page}', '&page={page}'), '', $this->url)]]></search>
+            <add position="replace"><![CDATA[str_replace(array('&amp;page={page}', '&page={page}', '?page={page}'), '', $this->url)]]></add>
+		</operation>
+	</file>
+						
+</modification>

@@ -1,0 +1,96 @@
+
+
+.firewall_protection_panel {
+    @extend .protection_panel;
+    min-height: 450px;
+
+    .panel-body {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+.firewall_small_protection_panel {
+    @extend .protection_panel;
+    min-height: 300px;
+
+    .panel-body {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+
+#f-map {
+    width: 100%;
+    height: 347px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ccs {
+    cursor: pointer;
+}
+
+#firewall_form {
+    label {
+        font-size: 16px;
+    }
+
+    .second-section {
+        margin-top: 15px;
+    }
+}
+
+.two_auth_description {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.ta_confirm_btn {
+    margin-right: 10px;
+}
+
+.qr-confirm-input {
+    width: 150px;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+.qr-code-handler {
+
+    .qr {
+        display: inline-block;
+
+        img {
+
+        }
+
+        .qr-sticker {
+            position: absolute;
+            top: 41%;
+            right: 29%;
+            background: $protected;
+            padding: 7px;
+            z-index: 100;
+            color: #000;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        .lil-hide {
+            opacity: 0.6;
+        }
+    }
+
+    .preload {
+        height: 150px;
+
+        i {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+
+}

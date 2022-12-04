@@ -1,0 +1,65 @@
+a#button-menu {
+    -webkit-appearance: none !important;
+}
+
+.setup {
+    padding: 0;
+    .setup-back{
+        background-position: bottom;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        min-height: 1025px;
+        padding-top: 50px;
+        padding-bottom: 525px;
+    }
+    .setup-into {
+        text-align: center;
+        max-width: 500px;
+        margin: auto;
+    }
+
+    .setup-into-logo {
+        padding-bottom: 15px;
+    }
+
+    .setup-into-heading {
+        font-size: 30px;
+        font-weight: bold;
+        padding-bottom: 15px;
+    }
+
+    .setup-into-text {
+        font-size: 18px;
+        padding-bottom: 30px;
+    }
+
+    .setup-into-start {
+        padding-bottom: 30px;
+    }
+
+    .setup-features {
+        padding: 30px;
+    }
+
+    .setup-features-icon {
+        padding: 20px;
+        height: 130px;
+        text-align: center;
+    }
+
+    .setup-features-text {
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .panel-body {
+        padding: 0px;
+    }
+
+    .setup-features-icon {
+        img {
+            max-height: 100%;
+        }
+    }
+}

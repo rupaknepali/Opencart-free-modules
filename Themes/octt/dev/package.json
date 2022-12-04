@@ -1,0 +1,64 @@
+{
+	"name": "opencart-gulp-4-es6",
+	"version": "1.1.0",
+	"description": "Opencart theme development with Gulp 4 file setup for Javascript ES6 compiling, plus SCSS, images, and fonts",
+	"author": "Rupak Nepali <webocreation.com@gmail.com> (https://webocreation.com)",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/rupaknepali"
+	},
+	"keywords": [
+		"opencart",
+		"gulp",
+		"es6",
+		"scss"
+	],
+	"devDependencies": {
+		"@babel/core": "^7.5.5",
+		"@babel/preset-env": "^7.5.5",
+		"babelify": "^10.0.0",
+		"browser-sync": "^2.26.7",
+		"browserify": "^16.3.0",
+		"browserify-shim": "^3.8.14",
+		"gulp": "^4.0.2",
+		"gulp-autoprefixer": "^6.1.0",
+		"gulp-concat": "^2.5.2",
+		"gulp-if": "^3.0.0",
+		"gulp-notify": "^3.0.0",
+		"gulp-options": "^1.1.1",
+		"gulp-plumber": "^1.2.1",
+		"gulp-rename": "^1.2.0",
+		"gulp-sass": "^4.0.2",
+		"gulp-sourcemaps": "^2.6.5",
+		"gulp-strip-debug": "^3.0.0",
+		"gulp-uglify": "^3.0.2",
+		"gulp-uglifycss": "^1.0.9",
+		"vinyl-buffer": "^1.0.0",
+		"vinyl-source-stream": "^2.0.0"
+	},
+	"babel": {
+		"presets": [
+			"@babel/preset-env"
+		]
+	},
+	"browserify": {
+		"transform": [
+			"browserify-shim"
+		]
+	},
+	"browser": {
+		"jquery": "./node_modules/jquery/dist/jquery.js"
+	},
+	"browserify-shim": {
+		"jquery": "$"
+	},
+	"browserslist": [
+		"last 2 version",
+		"> 2%"
+	],
+	"license": "GPL-3.0",
+	"dependencies": {
+		"gulp-clean-css": "^4.2.0",
+		"gulp-concat-css": "^3.1.0"
+	}
+}

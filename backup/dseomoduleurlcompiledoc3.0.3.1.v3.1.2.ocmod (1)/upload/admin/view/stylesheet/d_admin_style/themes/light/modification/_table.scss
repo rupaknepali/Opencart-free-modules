@@ -1,0 +1,34 @@
+@import "../scss/variable";
+
+/* Table */
+.panel-default .panel-body {
+	.table {
+		border-collapse: separate;
+		border-spacing: 0;
+		> thead {
+			> tr > td {
+				background: $background;
+			}
+		}
+		> tbody {
+			> tr > td {
+				background: #ffffff;
+			}
+		}
+	}
+	.table-responsive {
+		border: none;
+	}
+	.table-bordered {
+		border: 1px solid $border_color;
+		border-radius: 3px;
+		> thead, > tbody, > tfoot {
+			> tr {
+				> th, > td {
+					padding: 10px 10px;
+					border: 1px solid $border_color;
+				}
+			}
+		}
+	}
+}

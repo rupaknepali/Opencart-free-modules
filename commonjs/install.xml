@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Common JS</name>
+    <version>1.1</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_module_commonjs</code>
+    <file path="catalog/view/theme/*/template/common/menu.twig">
+        <operation>
+            <search><![CDATA[{% for category in categories %}]]></search>
+            <add position="before"><![CDATA[
+                <li><a href="{{ allproductsurl }}">{{ text_heading_title }}</a></li>
+            ]]>            </add>
+        </operation>
+    </file>
+    <file path="catalog/view/javascript/common.js">
+        <operation>
+            <search position="after"><![CDATA[$(document).ready(function() {]]></search>
+            <add><![CDATA[
+                alert('Changed');
+                 ]]>
+            </add>
+        </operation>
+    </file>
+
+
+
+</modification>

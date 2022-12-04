@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>d_opencart_patch</name>
+    <code>d_opencart_patch</code>
+    <description>Permission fixes in Opencart 3.x</description>
+    <version>3.0.9</version>
+    <author>Dreamvention</author>
+    <link>http://dreamvention.com</link>
+    <file path="admin/controller/user/user_permission.php">
+        <operation error="skip">
+            <search><![CDATA[$path[] = $file . '/*';]]></search>
+            <add position="after"><![CDATA[
+            //d_opencart_patch.xml 1
+            $files[] = $file;
+            ]]></add>
+        </operation>
+        <operation error="skip">
+            <search><![CDATA[$permission = substr($controller, 0, strrpos($controller, '.'));]]></search>
+            <add position="replace"><![CDATA[
+            //d_opencart_patch.xml 2
+            $permission = (strrpos($controller, '.') !== false) ? substr($controller, 0, strrpos($controller, '.')) : $controller;
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/extension/installer.php">
+        <operation error="skip">
+            <search><![CDATA[$modification_info = $this->model_setting_modification->getModificationByCode($code);]]></search>
+            <add position="after"><![CDATA[
+            //d_opencart_patch.xml 1
+            if (strpos($code, 'd_') === 0 && $modification_info) {
+                $this->model_setting_modification->deleteModification($modification_info['modification_id']);
+                $modification_info = false; 
+            }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/model/setting/extension.php">
+        <operation error="skip">
+            <search><![CDATA[$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_path` WHERE `extension_install_id` = '" . (int)$extension_install_id . "' ORDER BY `date_added` ASC");]]></search>
+            <add position="replace"><![CDATA[
+        //d_opencart_patch.xml 1
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_install` WHERE `extension_install_id` = '" . (int)$extension_install_id . "'");
+
+        $extension = $query->row;
+
+        if(isset($extension['filename']) && strpos($extension['filename'], '_compiled_')){
+
+
+            $parts = explode('_compiled_', $extension['filename']);
+            $extension_name = $parts[0];
+            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_path` WHERE `extension_install_id` = '" . (int)$extension_install_id . "' AND path LIKE '%".$this->db->escape($extension_name)."%' ORDER BY `date_added` ASC");
+        }else{
+            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_path` WHERE `extension_install_id` = '" . (int)$extension_install_id . "' ORDER BY `date_added` ASC");
+        }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/model/setting/modification.php">
+        <operation error="skip">
+            <search><![CDATA[$this->db->query("DELETE FROM `" . DB_PREFIX . "modification` WHERE `extension_install_id` = '" . (int)$extension_install_id . "'");]]></search>
+            <add position="replace"><![CDATA[
+        //d_opencart_patch.xml 1
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension_install` WHERE `extension_install_id` = '" . (int)$extension_install_id . "'");
+
+        $extension = $query->row;
+
+        if(isset($extension['filename']) && strpos($extension['filename'], '_compiled_') !== false){
+
+
+            $parts = explode('_compiled_', $extension['filename']);
+            $extension_name = $parts[0];
+            $this->db->query("DELETE FROM `" . DB_PREFIX . "modification` WHERE `extension_install_id` = '" . (int)$extension_install_id . "' AND `name` LIKE '%".$this->db->escape($extension_name)."%'");
+
+        }else{
+            $this->db->query("DELETE FROM `" . DB_PREFIX . "modification` WHERE `extension_install_id` = '" . (int)$extension_install_id . "'");
+        }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/marketplace/install.php">
+        <operation error="skip">
+            <search><![CDATA[$this->model_setting_extension->deleteExtensionInstall($extension_install_id);]]></search>
+            <add position="replace"><![CDATA[//d_opencart_patch.xml 1 moved down]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/marketplace/install.php">
+        <operation error="skip">
+            <search><![CDATA[$this->model_setting_modification->deleteModificationsByExtensionInstallId($extension_install_id);]]></search>
+            <add position="after"><![CDATA[
+                //d_opencart_patch.xml 2
+                $this->model_setting_extension->deleteExtensionInstall($extension_install_id);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/product/category.php">
+        <operation>
+            <search><![CDATA[$this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);]]></search>
+            <add position="after"><![CDATA[
+                $savewithoutcurrency = preg_replace("/[^0-9.]/", "", $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency'])) - preg_replace("/[^0-9.]/", "", $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
+                $special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency'])."<br><span style='color:red;'> You Save ".$this->currency->format($this->tax->calculate($savewithoutcurrency, $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency'])."!</span><br>";
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+</modification>

@@ -1,0 +1,54 @@
+.preloader {
+  width: 100%;
+  height: 90%;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  top: 0;
+  box-sizing: border-box;
+  margin-left: -$padding;
+  margin-right: -$padding;
+  icon {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    color: $main_blue;
+    transform: translate(-50%, -50%);
+  }
+}
+.tooltip {
+  &.top {
+
+    .tooltip-inner {
+      color: #000;
+      background-color: #fff;
+    }
+
+    .tooltip-arrow {
+      border-top-color: #fff;
+    }
+  }
+}
+.true_success {
+  background-color: $green;
+  border-color: $green;
+  color: $background;
+  font-size: 14px;
+  font-weight: bold;
+}
+.warning {
+  color: $warning;
+
+  &:focus, &.focus {
+    color: $warning;
+  }
+}
+.error {
+  font-size: 14px;
+  color: $red;
+}
+.extension-show-thumb .alert{
+  overflow: hidden;
+}

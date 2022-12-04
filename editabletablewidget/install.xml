@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Edit directly from Products list</name>
+    <version>3.0</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_edit_products_in_admin</code>
+    <description>Edit products directly from the list in Opencart 3</description>
+
+    <file path="admin/controller/catalog/product.php">
+        <operation>
+            <search><![CDATA[public function autocomplete()]]></search>
+            <add position="before"><![CDATA[
+                public function editableTableUpdate()
+                {
+                    $updated = "Please edit the right column";
+                    $id = explode("___", $_POST['value']['id']);
+                    $product_id = $id[1];
+                    $columnToUpdate = $id[0];
+                    if (in_array($columnToUpdate, array('name', 'model', 'price', 'quantity', 'status'))) {
+                        $valueToUpdate = $_POST['value']['value'];
+                        $lang = $_POST['value']['lang'];
+                        $this->load->model('catalog/product');
+                        $updated = $this->model_catalog_product->updateEditableTable($columnToUpdate, $product_id, $valueToUpdate, $lang);
+                    }
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($updated));
+                }
+            ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[$data['products'] = array();]]></search>
+            <add position="before"><![CDATA[
+          $data['active_language'] = $this->config->get('config_language_id');    
+        ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="admin/model/catalog/product.php">
+        <operation>
+            <search><![CDATA[public function getTotalProductsByLayoutId($layout_id)]]></search>
+            <add position="before"><![CDATA[ 
+            public function updateEditableTable($columnToUpdate, $product_id, $valueToUpdate, $lang)
+            {
+                try {
+                    if ($columnToUpdate == "name") {
+                        $this->db->query("UPDATE " . DB_PREFIX . "product_description SET " . $columnToUpdate . " = '" . $valueToUpdate . "' WHERE product_id = '" . (int) $product_id . "' and language_id = '" . $lang . "'");
+                    } else {
+                        $this->db->query("UPDATE " . DB_PREFIX . "product SET " . $columnToUpdate . " = '" . $valueToUpdate . "' WHERE product_id = '" . (int) $product_id . "'");
+                    }
+                    return "Product ID " . $product_id . "'s " . $columnToUpdate . " is updated with value " . $valueToUpdate;
+
+                } catch (ConnectionException $e) {
+                    return $e->getMessage();
+                } catch (\RuntimeException $e) {
+                    return $e->getMessage();
+                }
+            }
+            
+            ]]>            </add>
+        </operation>
+    </file>
+
+    <file path="admin/view/template/catalog/product_list.twig">
+        <operation>
+            <search><![CDATA[{{ footer }} ]]></search>
+            <add position=" "><![CDATA[ 
+
+          <script type="text/javascript" src="view/javascript/jquery/mindmup-editabletable.js"></script>
+<script>
+            $('#editable').editableTableWidget();
+            $('#editable td').on('change', function (evt, newValue) {
+              var targetid = evt.target.id;
+              if (['', 'name', 'status', 'quantity', 'price'].indexOf(targetid.split('___')[0])) {
+              }else{return false;}
+              if (targetid.split('___')[0] == 'name') {
+                var lang = prompt(
+                  'The active language is' +
+                    {{active_language}} +
+                    '. If you want to update different language then please enter here',
+                  {{active_language}}
+                );
+              }
+              if (targetid.split('___')[0] == 'status') {
+                var statusenter = 1;
+                if (newValue == 0 || newValue == 1) {
+                  statusenter = 0;
+                }
+                if (statusenter) {
+                  alert('The value need to be 0 or 1');
+                  exit();
+                }
+              }
+              if (targetid.split('___')[0] == 'quantity') {
+                if (isNaN(newValue)) {
+                  alert('Please enter the numeric value');
+                  exit();
+                }
+              }
+              if (targetid.split('___')[0] == 'price') {
+                if (isNaN(newValue)) {
+                  alert('Please enter the numeric value');
+                  exit();
+                }
+              }
+              const postvalue = { id: targetid, value: newValue, lang: {{active_language}} };
+              $.post( 'index.php?route=catalog/product/editableTableUpdate&user_token={{ user_token }}',
+                { value: postvalue }
+              ).done(function (data) {
+                alert(data);
+              });
+            });
+
+            $('#editable td.uneditable').on('change', function (evt, newValue) {
+              return false;
+            });         
+          </script>
+            ]]>            </add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<td class="text-left">{{ product.status }}]]></search>
+            <add position="replace"><![CDATA[<td class="text-left" id="status___{{product.product_id}}">{{ product.status }}]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<td class="text-right">{% if product.quantity <= 0 %}]]></search>
+            <add position="replace"><![CDATA[<td class="text-right" id="quantity___{{product.product_id}}">{% if product.quantity <= 0 %}]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<td class="text-right">{% if product.special %}]]></search>
+            <add position="replace"><![CDATA[<td class="text-right" id="price___{{product.product_id}}">{% if product.special %}]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<td class="text-left">{{ product.model }}]]></search>
+            <add position="replace"><![CDATA[<td class="text-left" id="model___{{product.product_id}}">{{ product.model }}]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<td class="text-left">{{ product.name }}]]></search>
+            <add position=" "><![CDATA[<td class="text-left" id="name___{{product.product_id}}">{{ product.name }}]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<td class="text-center">{% if product.image %}]]></search>
+            <add position=" "><![CDATA[<td class="text-center uneditable">{% if product.image %}]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<td class="text-center">{% if product.product_id in selected %}]]></search>
+            <add position=" "><![CDATA[<td class="text-center uneditable">{% if product.product_id in selected %}]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<table class="table table-bordered table-hover">]]></search>
+            <add position=" "><![CDATA[<table id="editable" class="table table-bordered table-hover">]]></add>
+        </operation>
+    </file>
+    
+</modification>

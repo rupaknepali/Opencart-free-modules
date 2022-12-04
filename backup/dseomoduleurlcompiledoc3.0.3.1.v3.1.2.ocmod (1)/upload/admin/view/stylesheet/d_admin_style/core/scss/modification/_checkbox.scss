@@ -1,0 +1,22 @@
+$checkbox-height: 20px;
+$checkbox-width: 20px;
+input[type="checkbox"] {
+  width: $checkbox-width;
+  height: $checkbox-height;
+  border: $info-border;
+  border-radius: 3px;
+  &:hover, &:focus {
+    border: $info-border;
+    border-color: $info-active-color;
+    background: $info-focus-color;
+    box-shadow: none;
+  }
+  &:checked {
+    background: $info-focus-color;
+    &:after {
+      top:0px;
+      left:3px;
+      content: url('../../../../image/d_admin_style/checkmark.svg');
+    }
+  }
+}

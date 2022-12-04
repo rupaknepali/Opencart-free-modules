@@ -1,0 +1,130 @@
+@import "../scss/variable";
+
+/* Alert */
+.alert-danger {
+	background-color: #fff0f0;
+	border-color: #f4dada;
+	color: #f56b6b;
+	hr {
+		border-top-color: #f4dada;
+	}
+	.alert-link {
+		color: #f56b6b;
+	}
+}
+.alert-warning {
+	background-color: #fcf0d6;
+	border-color: #ead6ac;
+	color: #d2a647;
+	hr {
+		border-top-color: #ead6ac;
+	}
+	.alert-link {
+		color: #d2a647;
+	}
+}
+.alert-success {
+	background-color: #e5f4e9;
+	border-color: #c1e6cb;
+	color: #62a975;
+	hr {
+		border-top-color: #c1e6cb;
+	}
+	.alert-link {
+		color: #62a975;
+	}
+}
+.alert-info {
+	background-color: #d9edf7;
+	border-color: #bce8f1;
+	color: #31708f;
+	hr {
+		border-top-color: #c1e6cb;
+	}
+	.alert-link {
+		color: #62a975;
+	}
+}
+
+/* Ñallout */
+.bs-callout-danger {
+	background-color: #ffffff;
+	border-color: #cf4949;
+	h4 {
+		color: #cf4949;
+	}
+}
+.bs-callout-warning {
+	background-color: #ffffff;
+	border-color: #f0b840;
+	h4 {
+		color: #f0b840;
+	}
+}
+.bs-callout-success {
+	background-color: #ffffff;
+	border-color: #86ce99;
+	h4 {
+		color: #86ce99;
+	}
+}
+.bs-callout-info {
+	background-color: #ffffff;
+	border-color: #4fb5e7;
+	h4 {
+		color: #4fb5e7;
+	}
+}
+
+/* Tooltip */
+.panel-default .panel-body, .modal-dialog {
+	[data-toggle="tooltip"] {
+		position: relative;
+		&::after {
+			margin-left: 8px;
+			color: #f0b840;
+		}
+	}
+}
+.tooltip {
+	&.in {
+		opacity: 1.0;
+		filter: alpha(opacity=100);
+	}
+	&.top, &.top-left, &.top-right {
+		.tooltip-inner {
+			background-color: $panel_background;
+			color: $color;
+		}
+		.tooltip-arrow {
+			border-top-color: $panel_background;
+		}
+	}
+	&.right {
+		.tooltip-inner {
+			background-color: $panel_background;
+			color: $color;
+		}
+		.tooltip-arrow {
+			border-right-color: $panel_background;
+		}
+	}
+	&.left {
+		.tooltip-inner {
+			background-color: $panel_background;
+			color: $color;
+		}
+		.tooltip-arrow {
+			border-left-color: $panel_background;
+		}
+	}
+	&.bottom, &.bottom-left, &.bottom-right {
+		.tooltip-inner {
+			background-color: $panel_background;
+			color: $color;
+		}
+		.tooltip-arrow {
+			border-bottom-color: $panel_background;
+		}
+	}
+}

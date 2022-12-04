@@ -1,0 +1,10 @@
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'checkout/cart', 'cart');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'account/login', 'login');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'affiliate/login', 'affiliatelogin');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'account/voucher', 'voucher');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'product/manufacturer', 'manufacturer');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'information/sitemap', 'sitemap');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'account/return/add', 'returnadd');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'information/contact', 'contact');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'checkout/checkout', 'checkout');
+INSERT INTO 'oc_seo_url' ('seo_url_id', 'store_id', 'language_id', 'query', 'keyword') VALUES (NULL, '0', '1', 'product/special', 'special');

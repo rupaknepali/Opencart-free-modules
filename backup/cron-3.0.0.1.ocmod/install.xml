@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <code>cron</code>
+  <name>Admin Cron Jobs</name>
+  <version>3.0.0.1</version>
+  <author>Opencart-Templates</author>
+  <link>http://www.opencart-templates.co.uk/cron-jobs</link>
+  
+  <file path="admin/controller/common/column_left.php">
+    <operation>
+       <search index="0"><![CDATA[if ($marketplace) {]]></search>
+       <ignoreif><![CDATA[$this->url->link('extension/module/cron',]]></ignoreif>
+       <add position="before"><![CDATA[if ($this->user->hasPermission('access', 'extension/module/cron')) {
+   $marketplace[] = array(
+      'name' => $this->language->get('text_cron'),
+      'href' => $this->url->link('extension/module/cron', 'user_token=' . $this->session->data['user_token'], true),
+      'children' => array()
+   );
+}]]></add>
+     </operation>
+   </file>
+
+   <file path="admin/language/*/common/column_left.php">
+      <operation>
+         <search index="0"><![CDATA[<?php]]></search>
+         <add position="after"><![CDATA[$_['text_cron'] = 'Cron Jobs';]]></add>
+      </operation>
+   </file>
+
+   <file path="admin/controller/startup/login.php">
+      <operation>
+         <search index="0,1"><![CDATA[$ignore = array(]]></search>
+         <add position="after"><![CDATA[			'extension/cron',]]></add>
+      </operation>
+   </file>
+
+   <file path="admin/controller/startup/permission.php">
+      <operation>
+         <search index="0"><![CDATA[$ignore = array(]]></search>
+         <add position="after"><![CDATA[				'extension/cron',]]></add>
+      </operation>
+   </file>
+</modification>

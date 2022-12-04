@@ -1,0 +1,29 @@
+@import "../scss/variable";
+
+/* Modal Dialog */
+.modal-dialog {
+	font-size: 13px;
+	.modal-header {
+		background-color: $panel_background;
+		color: #000;
+		border-bottom: 1px solid $border_color;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+	}
+	.modal-body {
+		background: $background;
+		color: $color;
+	}
+	.form-horizontal {
+		.row:not(:last-child) {
+			margin-bottom: 15px;
+		}
+	}
+	.modal-footer {
+		background-color: $panel_background;
+		color: #000;
+		border-top: 1px solid $border_color;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+	}
+}

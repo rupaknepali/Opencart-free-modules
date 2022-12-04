@@ -1,0 +1,140 @@
+<div id="{{ codename }}" class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title"><i class="fa fa-key"></i> {{ heading_title }}</h3>
+	</div>
+	<div class="panel-body"></div>	
+</div>
+<script type="text/javascript">
+
+var {{ codename }}_store_tab;
+
+{{ codename }}_refresh();
+
+function {{ codename }}_update() {
+	if ({{ codename }}_store_tab) {
+		$('#{{ codename }} .stores .nav-store[href="' + {{ codename }}_store_tab + '"]').tab('show');
+	} else {
+		$('#{{ codename }} .stores .nav-store:first').tab('show');
+	}
+}
+
+function {{ codename }}_refresh() {
+	var url = 'index.php?route={{ route }}/refresh&{{ url_token }}';
+			
+	$('#{{ codename }}').load(url + ' #{{ codename }} >', function() {
+		{{ codename }}_update();
+	});
+}
+
+function {{ codename }}_showAlert(json) {
+	$('#{{ codename }} .alert').remove();
+	$('#{{ codename }} .form-group').removeClass('has-error');
+						
+	if (json['error']) {
+		if (json['error']['warning']) {
+			$('#{{ codename }} .panel-body').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['error']['warning'] + '</div>');
+		}				
+				
+		for (i in json['error']) {
+			var element = $('#{{ codename }} #input_' + i);
+					
+			if (element.parent().hasClass('input-group')) {
+                $(element).parent().after('<div class="text-danger">' + json['error'][i] + '</div>');
+			} else {
+				$(element).after('<div class="text-danger">' + json['error'][i] + '</div>');
+			}
+		}				
+				
+		$('#{{ codename }} .text-danger').parents('.form-group').addClass('has-error');
+	}
+			
+	if (json['success']) {
+		$('#{{ codename }} .panel-body').prepend('<div class="alert alert-success"><i class="fa fa-check-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['success'] + '</div>');
+	}
+}
+</script>
+<script type="text/javascript">
+
+$('#{{ codename }}').on('shown.bs.tab', '.nav-store[data-toggle="tab"]', function (e) {
+    {{ codename }}_store_tab = $(this).attr('href');
+});
+
+$('#{{ codename }}').on('click', '.target-element-cell', function() {
+	var target_element = $(this).children('.target-element-field');
+		
+	if ($(target_element).children('.input-field').hasClass('hide') && ($(target_element).children('.input-field').attr('type') != 'hidden')) {
+		$('.popover').popover('hide', function() {
+			$('.popover').remove();
+		});
+	
+		$('.text-field').removeClass('hide');
+		$('.input-field').addClass('hide');
+
+		$(target_element).popover({
+			html: true,
+			placement: 'top',
+			trigger: 'manual',
+			content: function() {
+				return '<button type="button" id="button_save" class="btn btn-primary" target_element_field_id="' + target_element.attr('id') + '"><i class="fa fa-save"></i></button> <button type="button" id="button_cancel" class="btn btn-danger" target_element_field_id="' + target_element.attr('id') + '"><i class="fa fa-remove"></i></button>';
+			}
+		});
+
+		$(target_element).popover('show');
+	
+		$(target_element).children('.text-field').addClass('hide');
+		$(target_element).children('.input-field').removeClass('hide');
+	}
+});
+
+$('#{{ codename }}').on('click', '#button_save', function() {
+	var target_element = $('#' + $(this).attr('target_element_field_id'));
+	var route = $(target_element).attr('route');
+	var store_id = $(target_element).attr('store_id');
+	var language_id = $(target_element).attr('language_id');
+	var target_keyword = $(target_element).children('.input-field').val();
+		
+	$.ajax({
+		url: 'index.php?route={{ route }}/editTargetElement&{{ url_token }}',
+		type: 'post',
+		data: 'route=' + route + '&store_id=' + store_id + '&language_id=' + language_id + '&target_keyword=' + encodeURIComponent(target_keyword),
+		dataType: 'json',
+		success: function(json) {
+			{{ codename }}_showAlert(json);
+						
+			$(target_element).popover('hide', function() {
+				$('.popover').remove();
+			});
+			
+			setTimeout(function() {
+				if (json['error'].length == 0) {
+					$(target_element).children('.text-field').text($(target_element).children('.input-field').val());
+					{{ codename }}_refresh();
+				} else {
+					$(target_element).children('.input-field').val($(target_element).children('.text-field').text().replace(/<.*?>/g, ''));
+				}
+				
+				$(target_element).children('.text-field').removeClass('hide');
+				$(target_element).children('.input-field').addClass('hide');
+			}, 200);
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+		
+$('#{{ codename }}').on('click', '#button_cancel', function() {
+	var target_element = $('#' + $(this).attr('target_element_field_id'));
+		
+	$(target_element).popover('hide', function() {
+		$('.popover').remove();
+	});
+			
+	setTimeout(function() {
+		$(target_element).children('.input-field').val($(target_element).children('.text-field').text().replace(/<.*?>/g, ''));
+		$(target_element).children('.text-field').removeClass('hide');
+		$(target_element).children('.input-field').addClass('hide');
+	}, 200);
+});
+
+</script>

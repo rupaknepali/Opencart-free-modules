@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.2" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" width="70px" height="70px" viewBox="0 0 70 70" xml:space="preserve">
+<g id="Translit_symbols_and_letters_to_latin">
+	<g id="XMLID_574_">
+		<g id="XMLID_587_">
+			<path id="XMLID_590_" fill="#FFFFFF" stroke="#020303" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="
+				M59.1,23v19.7c0,1.5-1.2,2.8-2.8,2.8H40c-1.5,0-2.8-1.2-2.8-2.8V19.2c0-1.5,1.2-2.8,2.8-2.8h12.5L59.1,23z"/>
+			<path id="XMLID_589_" fill="#C1E1C7" stroke="#000000" stroke-width="2" stroke-linejoin="bevel" stroke-miterlimit="10" d="
+				M52.6,16.4l0,4.2c0,1.5,0.8,2.3,2.3,2.3l4.2,0L52.6,16.4z"/>
+			<text id="XMLID_588_" transform="matrix(1 0 0 1 42.9984 36.9658)" font-family="'BloggerSans-Bold'" font-size="12px">Ff</text>
+		</g>
+		<g id="XMLID_579_">
+			<path id="XMLID_586_" fill="#FFFFFF" stroke="#020303" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="
+				M32.8,41.1v19.7c0,1.5-1.2,2.8-2.8,2.8H13.7c-1.5,0-2.8-1.2-2.8-2.8V37.4c0-1.5,1.2-2.8,2.8-2.8h12.5L32.8,41.1z"/>
+			<path id="XMLID_585_" fill="#C1E1C7" stroke="#000000" stroke-width="2" stroke-linejoin="bevel" stroke-miterlimit="10" d="
+				M26.2,34.6l0,4.2c0,1.5,0.8,2.3,2.3,2.3l4.2,0L26.2,34.6z"/>
+			<text id="XMLID_580_" transform="matrix(1 0 0 1 13.1912 55.0815)" font-family="'BloggerSans-Bold'" font-size="12px">Фф</text>
+		</g>
+		<g id="XMLID_575_">
+			<path id="XMLID_578_" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="
+				M30.6,19.7c-6.7-1-12.8,3.6-13.8,10.3"/>
+			
+				<polyline id="XMLID_576_" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" points="
+				28.4,22.3 31.8,19.7 28.6,16.7 			"/>
+		</g>
+	</g>
+	<ellipse id="XMLID_573_" fill="#D3D3D3" cx="35" cy="68.6" rx="28.7" ry="1.4"/>
+</g>
+</svg>

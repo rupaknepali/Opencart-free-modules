@@ -1,0 +1,21 @@
+.hide, .hidden {
+	display: none;
+}
+.show {
+	display: block;
+}
+.invisible {
+	visibility: hidden;
+}
+.flex {
+	display: flex;
+}
+.clear {
+	clear: both;
+}
+.disable_link {
+	pointer-events: none;
+}
+.ignore {
+	opacity: 0.5;
+}

@@ -1,0 +1,461 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="form-inline pull-right">
+				{% if (stores|length > 1) %}
+				<select class="form-control" onChange="location='{{ href_generator }}&store_id='+$(this).val()">
+				{% for store in stores %}
+				{% if (store['store_id'] == store_id) %}
+					<option value="{{ store['store_id'] }}" selected="selected">{{ store['name'] }}</option>
+				{% else %}
+					<option value="{{ store['store_id'] }}">{{ store['name'] }}</option>
+				{% endif %}
+				{% endfor %}
+				</select>
+				{% endif %}
+				<button id="button_save_and_stay" data-toggle="tooltip" title="{{ button_save_and_stay }}" class="btn btn-success"><i class="fa fa-save"></i><i class="fa fa-refresh rotate hide"></i></button>
+				<button id="button_save_and_exit" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i><i class="fa fa-refresh rotate hide"></i></button>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			<h1>{{ heading_title }} {{ version }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if error['warning'] %}
+		<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> {{ error['warning'] }}</div>
+		{% endif %}
+		{% if success %}
+		<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> {{ success }}</div>
+		{% endif %}
+		<div class="panel panel-default panel-resizable">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-tabs">
+					<li>
+						<a href="{{ href_setting }}"><span class="fa fa-cog"></span> {{ text_settings }}</a>
+					</li>
+					<li class="active">
+						<a href="{{ href_generator }}"><span class="fa fa-cogs"></span> {{ text_generator }}</a>
+					</li>
+					<li>
+						<a href="{{ href_url_keyword }}"><span class="fa fa-key"></span> {{ text_url_keywords }}</a>
+					</li>
+					<li>
+						<a href="{{ href_redirect }}"><span class="fa fa-random"></span> {{ text_redirects }}</a>
+					</li>
+					<li>
+						<a href="{{ href_export_import }}"><span class="fa fa-exchange"></span> {{ text_export_import }}</a>
+					</li>
+					<li>
+						<a href="{{ href_instruction }}"><span class="fa fa-graduation-cap"></span> {{ text_instructions }}</a>
+					</li>
+				</ul>
+					
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
+					<div class="flex row">
+						<div class="flex col-sm-3">
+							<ul class="nav nav-pills nav-stacked">
+								{% for sheet in generator_setting['sheet'] %}
+								<li {% if (sheet == generator_setting['sheet']|first) %}class="active"{% endif %}>
+									<a href="#vtab_generator_{{ sheet['code'] }}" data-toggle="tab"><span class="fa {{ sheet['icon'] }}"></span> {{ sheet['name'] }}</a>
+								</li>
+								{% endfor %}
+							</ul>
+						</div>
+						<div class="col-sm-9">
+							<div class="tab-content">
+								{% for sheet in generator_setting['sheet'] %}
+								<div id="vtab_generator_{{ sheet['code'] }}" class="tab-pane {% if (sheet == generator_setting['sheet']|first) %}active{% endif %}">
+									<div class="page-header">
+										<h3><strong>{{ sheet['name'] }}</strong></h3>
+									</div>
+									<div id="generator_sheet_{{ sheet['code'] }}_fields" class="panel-group m-b-none">
+										{% for field in sheet['field'] %}
+										<div class="panel panel-default">
+											<div class="panel-heading" data-target="#generator_sheet_{{ sheet['code'] }}_field_{{ field['code'] }}" data-parent="#generator_sheet_{{ sheet['code'] }}_fields" data-toggle="collapse" role="button">
+												<h4 class="panel-title">{{ field['name'] }}</h4>
+											</div>
+											<div id="generator_sheet_{{ sheet['code'] }}_field_{{ field['code'] }}" class="panel-collapse collapse {% if (field == sheet['field']|first) %}in{% endif %}">
+												<div class="panel-body">
+													<div class="page-header">
+														<h3><strong>{{ field['description'] }}</strong></h4>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-3 control-label" for="input-template"><span data-toggle="tooltip" title="{{ help_template }}">{{ entry_template }}</span></label>
+														<div class="col-sm-9">
+															{% if field['multi_language'] %}
+															{% for language in languages %}
+															{% if field['template_button'] %}
+															<div class="buttons">
+																{% for button in field['template_button'] %}
+																<button type="button" sheet_code="{{ sheet['code'] }}" button_code="{{ button }}" template_id="generator_{{ sheet['code'] }}_field_{{ field['code'] }}_template_{{ language['language_id'] }}" class="btn btn-xs btn-default m-b-xs"><i class="fa fa-plus-circle"></i> {{ button }}</button>
+																{% endfor %}
+															</div>
+															{% endif %}
+															<div class="input-group m-b">
+																<input type="text" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][template][{{ language['language_id'] }}]" value="{% if field['template'][language['language_id']] is defined %}{{ field['template'][language['language_id']] }}{% elseif field['template_default'] is defined %}{{ field['template_default'] }}{% endif %}" id="generator_{{ sheet['code'] }}_field_{{ field['code'] }}_template_{{ language['language_id'] }}" class="form-control" />
+																<span class="input-group-addon"><img src="{{ language['flag'] }}" title="{{ language['name'] }}"></span>
+															</div>
+															{% endfor %}
+															{% else %}
+															{% if field['template_button'] %}
+															<div class="buttons">
+																{% for button in field['template_button'] %}
+																<button type="button" sheet_code="{{ sheet['code'] }}" button_code="{{ button }}" template_id="generator_{{ sheet['code'] }}_field_{{ field['code'] }}_template" class="btn btn-xs btn-default m-b-xs"><i class="fa fa-plus-circle"></i> {{ button }}</button>
+																{% endfor %}
+															</div>
+															{% endif %}
+															<input type="text" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][template]" value="{% if field['template'] is defined %}{{ field['template'] }}{% elseif field['template_default'] is defined %}{{ field['template_default'] }}{% endif %}" id="generator_{{ sheet['code'] }}_field_{{ field['code'] }}_template" class="form-control m-b" />
+															{% endif %}
+														</div>
+													</div> 
+													{% if field['transform_language_symbol_id'] is defined %}
+													<div class="form-group">
+														<label class="col-sm-3 control-label" for="input-transform-language-symbol"><span data-toggle="tooltip" title="{{ help_transform_language_symbol }}">{{ entry_transform_language_symbol }}</span></label>
+														<div class="col-sm-9">
+															<select name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][transform_language_symbol_id]" class="form-control">
+															{% for transform_language_symbol in generator_setting['transform_language_symbol'] %}
+															{% if (transform_language_symbol['id'] == field['transform_language_symbol_id']) %}								
+																<option value="{{ transform_language_symbol['id'] }}" selected="selected">{{ attribute(_context, transform_language_symbol['name']) }}</option>
+															{% else %}
+																<option value="{{ transform_language_symbol['id'] }}">{{ attribute(_context, transform_language_symbol['name']) }}</option>
+															{% endif %}
+															{% endfor %}
+															</select>
+														</div>
+													</div>
+													{% endif %}
+													{% if field['translit_symbol_status'] is defined %}
+													<div class="form-group">
+														<label class="col-sm-3 control-label" for="input-translit-symbol-status"><span data-toggle="tooltip" title="{{ help_translit_symbol }}">{{ entry_translit_symbol }}</span></label>
+														<div class="col-sm-9">
+															<input type="hidden" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][translit_symbol_status]" value="0" />
+															<input type="checkbox" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][translit_symbol_status]" value="{% if field['translit_symbol_status'] %}1{% else %}0{% endif %}" class="switch" data-label-text="{{ text_enabled }}" {% if field['translit_symbol_status'] %}checked="checked"{% endif %} />
+														</div>
+													</div>
+													{% endif %}
+													{% if field['translit_language_symbol_status'] is defined %}
+													<div class="form-group">
+														<label class="col-sm-3 control-label" for="input-translit-language-symbol-status"><span data-toggle="tooltip" title="{{ help_translit_language_symbol }}">{{ entry_translit_language_symbol }}</span></label>
+														<div class="col-sm-9">
+															<input type="hidden" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][translit_language_symbol_status]" value="0" />
+															<input type="checkbox" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][translit_language_symbol_status]" value="{% if field['translit_language_symbol_status'] %}1{% else %}0{% endif %}" class="switch" data-label-text="{{ text_enabled }}" {% if field['translit_language_symbol_status'] %}checked="checked"{% endif %} />
+															&nbsp;<span class="info-window-item" data-href="https://opencartseomodule.com/translit-meta-symbols-and-letters-to-latin"><i class="fa fa-question"></i></span>
+														</div>
+													</div>
+													{% endif %}
+													{% if field['trim_symbol_status'] is defined %}
+													<div class="form-group">
+														<label class="col-sm-3 control-label" for="input-trim-symbol-status"><span data-toggle="tooltip" title="{{ help_trim_symbol }}">{{ entry_trim_symbol }}</span></label>
+														<div class="col-sm-9">
+															<input type="hidden" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][trim_symbol_status]" value="0" />
+															<input type="checkbox" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][trim_symbol_status]" value="{% if field['trim_symbol_status'] %}1{% else %}0{% endif %}" class="switch" data-label-text="{{ text_enabled }}" {% if field['trim_symbol_status'] %}checked="checked"{% endif %} />
+														</div>
+													</div>
+													{% endif %}
+													{% if field['overwrite'] is defined %}
+													<div class="form-group">
+														<label class="col-sm-3 control-label" for="input-overwrite"><span data-toggle="tooltip" title="{{ help_overwrite }}">{{ entry_overwrite }}</span></label>
+														<div class="col-sm-9">
+															<input type="hidden" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][overwrite]" value="0" />
+															<input type="checkbox" name="module_{{ codename }}_generator_setting[sheet][{{ sheet['code'] }}][field][{{ field['code'] }}][overwrite]" value="{% if field['overwrite'] %}1{% else %}0{% endif %}" class="switch" data-label-text="{{ text_enabled }}" {% if field['overwrite'] %}checked="checked"{% endif %} />
+															&nbsp;<span class="info-window-item" data-href="https://opencartseomodule.com/overwrite-old-seo-urls"><i class="fa fa-question"></i></span>
+														</div>
+													</div>
+													{% endif %}
+													{% if (field['button_generate'] or field['button_clear']) %}
+													<div class="form-group">
+														<label class="col-sm-3 control-label" for="input-generate">{{ entry_generation }}</label>
+														<div class="col-sm-9">
+															{% if field['button_generate'] %}
+															<button type="button" onclick="generateFields('{{ sheet['code'] }}', '{{ field['code'] }}');" data-toggle="tooltip" title="{{ button_generate }}" class="button-generate btn btn-primary m-r-sm"><i class="fa fa-cog"></i><i class="fa fa-refresh rotate hide"></i> {{ button_generate }}</button>
+															{% endif %}
+															{% if field['button_clear'] %}
+															<button type="button" onclick="clearFields('{{ sheet['code'] }}', '{{ field['code'] }}');" data-toggle="tooltip" title="{{ button_clear }}" class="button-clear btn btn-danger"><i class="fa fa-trash"></i><i class="fa fa-refresh rotate hide"></i> {{ button_clear }}</button>
+															&nbsp;<span class="info-window-item" data-href="https://opencartseomodule.com/clear-all-urls"><i class="fa fa-question"></i></span>
+															{% endif %}
+														</div>
+													</div>
+													{% endif %}
+												</div> 
+											</div> 
+										</div> 
+										{% endfor %}
+									</div>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>	
+				</form>
+				<div class="p-lg text-center">{{ text_powered_by }}</div>
+			</div>
+		</div>
+		<div class="info-window">
+			<div class="info-window-wrap">
+				<div class="info-window-block">
+					<div class="info-window-close"><i class="fa fa-close"></i></div>
+					<div class="info-window-description"></div>
+				</div>
+			</div>
+		</div>
+		<br class="clear"/>
+	</div>
+</div>
+<script type="text/javascript">
+
+var button_popup = new Array();
+
+{% for sheet in generator_setting['sheet'] %}
+button_popup['{{ sheet['code'] }}'] = {{ sheet['button_popup']|json_encode() }};
+{% endfor %}
+
+var info_window = {
+	'item' : new Array(),
+	'current_url' : ''
+}
+	
+$.each($('.info-window-item'), function(key, value) {
+	var url = $(this).attr('data-href');
+		
+	if (url) {
+		$.getJSON(url + '?format=json&callback=?', function(data) {
+			info_window.item[url] = data['description'];
+		});
+	}
+});
+	
+$('.info-window-item').on('click', function() {
+	var url = $(this).attr('data-href');
+	
+	if (url == info_window.current_url) {
+		info_window.current_url = '';
+		$('.info-window').removeClass('resized');
+		$('.panel-resizable').removeClass('resized');
+	} else {
+		info_window.current_url = url;
+		$('.info-window .info-window-description').html(info_window.item[url]);
+		$('.panel-resizable').addClass('resized');
+		$('.info-window').addClass('resized');
+	}
+});
+	
+$('.info-window .info-window-close').on('click', function() {
+	info_window.current_url = '';
+	$('.info-window').removeClass('resized');
+	$('.panel-resizable').removeClass('resized');
+});
+
+$('.switch').bootstrapSwitch({
+    'onColor': 'success',
+	'labelWidth': '50',
+    'onText': '{{ text_yes }}',
+    'offText': '{{ text_no }}'
+});
+
+$('.switch').on('switchChange.bootstrapSwitch', function(event, state) {
+    if (state) $(this).val('1');
+	else $(this).val('0');
+});          
+
+$('[button_code]').on('click', function() {
+	var sheet_code = $(this).attr('sheet_code');
+	var button_code = $(this).attr('button_code');
+	var template_id = $(this).attr('template_id');
+	
+	if (typeof(button_popup[sheet_code][button_code]) !== 'undefined') {
+		modal_html  = '<div id="modal-dialog" class="modal"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button><h4 class="modal-title">' + button_popup[sheet_code][button_code]['name'] + '</h4></div>';
+		modal_html += '<div class="modal-body"><div class="form-horizontal">';
+		
+		$.each(button_popup[sheet_code][button_code]['field'], function(key, field) {
+			modal_html += '<div class="row"><label class="col-sm-3 control-label">' + field['name'] + '</label><div class="col-sm-9">';
+			if (field['type'] == 'text') {
+				modal_html += '<input type="text" name="' + field['code'] + '" value="' + field['value'] + '" class="form-control" />';
+			}
+			if (field['type'] == 'textarea') {
+				modal_html += '<textarea name="' + field['code'] + '" class="form-control">' + field['value'] + '</textarea>';
+			}
+			if (field['type'] == 'select' && typeof(field['option']) !== 'undefined') {								
+				modal_html += '<select name="' + field['code'] + '" class="form-control">';				
+				$.each(field['option'], function(key, option) {	
+					if (field['value'] == option['code']) {
+						modal_html += '<option value="' + option['code'] + '" selected="selected">' + option['name'] + '</option>';						
+					} else {
+						modal_html += '<option value="' + option['code'] + '">' + option['name'] + '</option>';
+					}										
+				});	
+				modal_html += '</select>';
+			}
+			modal_html += '</div></div>';
+		})
+		
+		modal_html += '</div></div>';
+		modal_html += '<div class="modal-footer"><button type="button" data-toggle="tooltip" title="{{ button_submit }}" button_code="' + button_code + '" template_id="' + template_id + '" id="button_code_insert" class="btn btn-primary">{{ button_submit }}</button></div>';		
+		modal_html += '</div></div></div>';
+		
+		$('#modal-dialog').remove();
+		
+		$('body').append(modal_html);
+		
+		$('#modal-dialog').modal('show');	
+	} else {	
+		$('#' + template_id).val($('#' + template_id).val() + button_code);
+	}
+});
+
+$('body').on('click', '#button_code_insert', function() {
+	var sheet_code = $(this).attr('sheet_code');
+	var button_code = $(this).attr('button_code');
+	var template_id = $(this).attr('template_id');
+	
+	var button_code_add = '';
+	
+	$.each($(this).parents('.modal-dialog').find('[name]'), function(key, value) {
+		button_code_add += '#' + $(this).attr('name') + '=' + $(this).val();
+	});
+			
+	button_code = button_code.replace(']', '') + button_code_add + ']';
+	$('#' + template_id).val($('#' + template_id).val() + button_code);
+			
+	$('#modal-dialog').modal('hide');
+});
+
+function generateFields(sheet_code, field_code) {
+	if (confirm("{{ text_generate_confirm }}")) {		
+		$.ajax({
+			type: 'post',
+			url: 'index.php?route={{ route }}/generateFields&{{ url_token }}&store_id={{ store_id }}',
+			data: $('[name^="module_{{ codename }}_generator_setting[sheet][' + sheet_code + '][field][' + field_code + ']"]'),
+			dataType: 'json',
+			beforeSend: function() {
+				$('#generator_sheet_' + sheet_code + '_field_' + field_code + ' .button-generate .fa-refresh').removeClass('hide');
+				$('#generator_sheet_' + sheet_code + '_field_' + field_code + ' .button-generate .fa-cog').addClass('hide');
+			},
+			complete: function() {
+				$('#generator_sheet_' + sheet_code + '_field_' + field_code + ' .button-generate .fa-refresh').addClass('hide');
+				$('#generator_sheet_' + sheet_code + '_field_' + field_code + ' .button-generate .fa-cog').removeClass('hide');
+			},
+			success: function(json) {
+				showAlert(json);
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	}
+}
+
+function clearFields(sheet_code, field_code) {
+	if (confirm("{{ text_clear_confirm }}")) {		
+		$.ajax({
+			type: 'post',
+			url: 'index.php?route={{ route }}/clearFields&{{ url_token }}&store_id={{ store_id }}',
+			data: $('[name^="module_{{ codename }}_generator_setting[sheet][' + sheet_code + '][field][' + field_code + ']"]'),
+			dataType: 'json',
+			beforeSend: function() {
+				$('#generator_sheet_' + sheet_code + '_field_' + field_code + ' .button-clear .fa-refresh').removeClass('hide');
+				$('#generator_sheet_' + sheet_code + '_field_' + field_code + ' .button-clear .fa-trash').addClass('hide');
+			},
+			complete: function() {
+				$('#generator_sheet_' + sheet_code + '_field_' + field_code + ' .button-clear .fa-refresh').addClass('hide');
+				$('#generator_sheet_' + sheet_code + '_field_' + field_code + ' .button-clear .fa-trash').removeClass('hide');
+			},
+			success: function(json) {
+				showAlert(json);
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	}
+}
+
+function showAlert(json) {
+	$('.alert, .text-danger').remove();
+	$('.form-group').removeClass('has-error');
+						
+	if (json['error']) {
+		if (json['error']['warning']) {
+			$('#content > .container-fluid').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['error']['warning'] + '</div>');
+		}				
+				
+		for (i in json['error']) {
+			var element = $('#input_' + i);
+					
+			if (element.parent().hasClass('input-group')) {
+                $(element).parent().after('<div class="text-danger">' + json['error'][i] + '</div>');
+			} else {
+				$(element).after('<div class="text-danger">' + json['error'][i] + '</div>');
+			}
+		}				
+				
+		$('.text-danger').parents('.form-group').addClass('has-error');
+	}
+			
+	if (json['success']) {
+		$('#content > .container-fluid').prepend('<div class="alert alert-success"><i class="fa fa-check-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['success'] + '</div>');
+	}
+}
+</script> 
+<script type="text/javascript">
+
+$('body').on('click', '#button_save_and_stay', function() {
+    $.ajax({
+		type: 'post',
+		url: $('#form').attr('action'),
+		data: $('#form').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button_save_and_stay .fa-refresh').removeClass('hide');
+			$('#button_save_and_stay .fa-save').addClass('hide');
+		},
+		complete: function() {
+			$('#button_save_and_stay .fa-refresh').addClass('hide');
+			$('#button_save_and_stay .fa-save').removeClass('hide');
+		},
+		success: function(json) {
+			showAlert(json);
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+    });  
+});
+	
+$('body').on('click', '#button_save_and_exit', function() {
+    $.ajax({
+		type: 'post',
+		url: $('#form').attr('action'),
+		data: $('#form').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button_save_and_exit .fa-refresh').removeClass('hide');
+			$('#button_save_and_exit .fa-save').addClass('hide');
+		},
+		complete: function() {
+			$('#button_save_and_exit .fa-refresh').addClass('hide');
+			$('#button_save_and_exit .fa-save').removeClass('hide');
+		},
+		success: function(json) {
+			showAlert(json);
+			
+			if (json['success']) {
+				location = '{{ cancel|replace({"&amp;" : "&"}) }}';
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+    });  
+});
+
+</script>
+{{ footer }}

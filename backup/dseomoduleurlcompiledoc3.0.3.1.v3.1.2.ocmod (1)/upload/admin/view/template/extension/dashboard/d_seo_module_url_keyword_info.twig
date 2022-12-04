@@ -1,0 +1,140 @@
+<div id="{{ codename }}" class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title"><i class="fa fa-key"></i> {{ heading_title }}</h3>
+	</div>
+	<div class="panel-body"></div>	
+</div>
+<script type="text/javascript">
+
+var {{ codename }}_store_tab;
+
+{{ codename }}_refresh();
+
+function {{ codename }}_update() {
+	if ({{ codename }}_store_tab) {
+		$('#{{ codename }} .stores .nav-store[href="' + {{ codename }}_store_tab + '"]').tab('show');
+	} else {
+		$('#{{ codename }} .stores .nav-store:first').tab('show');
+	}
+}
+
+function {{ codename }}_refresh() {
+	var url = 'index.php?route={{ route }}/refresh&{{ url_token }}';
+					
+	$('#{{ codename }}').load(url + ' #{{ codename }} >', function() {
+		{{ codename }}_update();
+	});
+}
+
+function {{ codename }}_showAlert(json) {
+	$('#{{ codename }} .alert').remove();
+	$('#{{ codename }} .form-group').removeClass('has-error');
+						
+	if (json['error']) {
+		if (json['error']['warning']) {
+			$('#{{ codename }} .panel-body').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['error']['warning'] + '</div>');
+		}				
+				
+		for (i in json['error']) {
+			var element = $('#{{ codename }} #input_' + i);
+					
+			if (element.parent().hasClass('input-group')) {
+                $(element).parent().after('<div class="text-danger">' + json['error'][i] + '</div>');
+			} else {
+				$(element).after('<div class="text-danger">' + json['error'][i] + '</div>');
+			}
+		}				
+				
+		$('#{{ codename }} .text-danger').parents('.form-group').addClass('has-error');
+	}
+			
+	if (json['success']) {
+		$('#{{ codename }} .panel-body').prepend('<div class="alert alert-success"><i class="fa fa-check-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button> ' + json['success'] + '</div>');
+	}
+}
+</script>
+<script type="text/javascript">
+
+$('#{{ codename }}').on('shown.bs.tab', '.nav-store[data-toggle="tab"]', function (e) {
+    {{ codename }}_store_tab = $(this).attr('href');
+});
+
+$('#{{ codename }}').on('click', '.url-element-cell', function() {
+	var url_element = $(this).children('.url-element-field');
+		
+	if ($(url_element).children('.input-field').hasClass('hide') && ($(url_element).children('.input-field').attr('type') != 'hidden')) {
+		$('.popover').popover('hide', function() {
+			$('.popover').remove();
+		});
+	
+		$('.text-field').removeClass('hide');
+		$('.input-field').addClass('hide');
+
+		$(url_element).popover({
+			html: true,
+			placement: 'top',
+			trigger: 'manual',
+			content: function() {
+				return '<button type="button" id="button_save" class="btn btn-primary" url_element_field_id="' + url_element.attr('id') + '"><i class="fa fa-save"></i></button> <button type="button" id="button_cancel" class="btn btn-danger" url_element_field_id="' + url_element.attr('id') + '"><i class="fa fa-remove"></i></button>';
+			}
+		});
+
+		$(url_element).popover('show');
+	
+		$(url_element).children('.text-field').addClass('hide');
+		$(url_element).children('.input-field').removeClass('hide');
+	}
+});
+
+$('#{{ codename }}').on('click', '#button_save', function() {
+	var url_element = $('#' + $(this).attr('url_element_field_id'));
+	var route = $(url_element).attr('route');
+	var store_id = $(url_element).attr('store_id');
+	var language_id = $(url_element).attr('language_id');
+	var url_keyword = $(url_element).children('.input-field').val();
+		
+	$.ajax({
+		url: 'index.php?route={{ route }}/editURLElement&{{ url_token }}',
+		type: 'post',
+		data: 'route=' + route + '&store_id=' + store_id + '&language_id=' + language_id + '&url_keyword=' + encodeURIComponent(url_keyword),
+		dataType: 'json',
+		success: function(json) {
+			{{ codename }}_showAlert(json);
+						
+			$(url_element).popover('hide', function() {
+				$('.popover').remove();
+			});
+			
+			setTimeout(function() {
+				if (json['error'].length == 0) {
+					$(url_element).children('.text-field').text($(url_element).children('.input-field').val());
+					{{ codename }}_refresh();
+				} else {
+					$(url_element).children('.input-field').val($(url_element).children('.text-field').text());
+				}
+				
+				$(url_element).children('.text-field').removeClass('hide');
+				$(url_element).children('.input-field').addClass('hide');
+			}, 200);
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+		
+$('#{{ codename }}').on('click', '#button_cancel', function() {
+	var url_element = $('#' + $(this).attr('url_element_field_id'));
+		
+	$(url_element).popover('hide', function() {
+		$('.popover').remove();
+	});
+			
+	setTimeout(function() {
+		$(url_element).children('.input-field').val($(url_element).children('.text-field').text());
+		$(url_element).children('.text-field').removeClass('hide');
+		$(url_element).children('.input-field').addClass('hide');
+	}, 200);
+});
+
+</script>

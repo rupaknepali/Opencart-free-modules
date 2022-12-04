@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Out of Stock</name>
+    <version>1.1</version>
+    <author>Rupak Nepali</author>
+    <link>https://webocreation.com</link>
+    <code>webocreation_module_outofstock2</code>
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search position="after"><![CDATA[$data['points'] = $product_info['points'];]]></search>
+            <add><![CDATA[
+                
+                if ($this->config->get('module_outofstock_status')) {
+                    $this->load->model('extension/module/outofstock');
+                    $data['quantity'] = $this->model_extension_module_outofstock->getQuantity($product_info);
+                    if ($data['quantity']<1){
+                        $this->load->model('extension/module/outofstock');
+                        $data['text_out_of_stock'] = $this->config->get('module_outofstock_label')[$this->config->get('config_language_id')];
+                        $data['module_outofstockstyle'] = htmlspecialchars_decode($this->config->get('module_outofstock_style'));
+                        $data['module_outofstock_show_marker_in_product_page'] = $this->config->get('module_outofstock_show_marker_in_product_page');
+                    }
+                }
+                $data['button_cart_outOfStock'] = "Out Of Stock";
+                
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[foreach ($results as $result) {]]></search>
+            <add><![CDATA[
+                foreach ($results as $result) {
+                    if ($this->config->get('module_outofstock_status')) {
+                        $this->load->model('extension/module/outofstock');
+                        $data['text_out_of_stock'] = $this->config->get('module_outofstock_label')[$this->config->get('config_language_id')];
+                        $data['module_outofstock_style'] = htmlspecialchars_decode($this->config->get('module_outofstock_style'));
+                    }
+                ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[$data['products'][] = array(]]></search>
+            <add><![CDATA[
+                $data['products'][] = array(
+                    'quantity' => ($this->config->get('module_outofstock_status'))?$this->model_extension_module_outofstock->getQuantity($result):1,
+                    
+                ]]>
+            </add>
+        </operation>
+
+    </file>
+    <file path="catalog/view/theme/*/template/product/product.twig">
+        <operation>
+            <search position="replace"><![CDATA[<ul class="nav nav-tabs"> ]]></search>
+            <add><![CDATA[
+                        <div class="clearfix"></div><ul class="nav nav-tabs">
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[<a class="thumbnail" href="{{ popup }}" ]]></search>
+            <add><![CDATA[
+                        {% if module_outofstock_style and module_outofstock_show_marker_in_product_page and module_outofstock_show_marker_in_product_page %}
+                            <style>
+                                {{module_outofstock_style}}</style>
+                        {% endif %}
+                        {% if  (quantity < 1) and text_out_of_stock and module_outofstock_show_marker_in_product_page %}
+                            <div class="box"><div class="ribbon"><span>{{ text_out_of_stock }}</span></div></div>
+                        {% endif %}
+                        <a class="thumbnail" href="{{ popup }}" 
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[ {{ header }} ]]></search>
+            <add><![CDATA[
+                    {{ header }}
+                    {% if module_outofstock_style and module_outofstock_style %}
+                        <style>
+                            {{module_outofstock_style}}</style>
+                    {% endif %}
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[<button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block">{{ button_cart }}</button>]]></search>
+            <add><![CDATA[
+                {% if  (quantity < 1) %}
+                    <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block" disabled>{{ button_cart_outOfStock }}</button>
+                {% else %}
+                    <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block">{{ button_cart }}</button>
+                {% endif %}
+
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[<div class="product-thumb transition">]]></search>
+            <add><![CDATA[
+               <div class="product-thumb transition">
+                    {% if (product.quantity<1) and text_out_of_stock %}
+                        <div class="box"><div class="ribbon"><span>{{ text_out_of_stock }}</span></div></div>
+                    {% endif %}
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}']]></search>
+            <add><![CDATA[
+                
+                {% if  (product.quantity < 1) %}
+                    <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');" disabled><span class="hidden-xs hidden-sm hidden-md" disabled>{{ button_cart_outOfStock }}</span></button>
+                {% else %}
+                    <button type="button" onclick="cart.add('{{ product.product_id }}'
+                ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[<i class="fa fa-shopping-cart"></i></button>]]></search>
+            <add><![CDATA[
+                <i class="fa fa-shopping-cart"></i></button>
+                {% endif %}
+                
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+
+    <file path="catalog/controller/product/{search,category,special,manufacturer}*.php">
+        <operation>
+            <search position="replace"><![CDATA[$data['products'] = array();]]></search>
+            <add><![CDATA[  
+                    $data['products'] = array();       
+                    $data['module_outofstock_style'] = false;
+                    $data['button_cart_outOfStock'] = "Out Of Stock";
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[foreach ($results as $result) {]]></search>
+            <add><![CDATA[
+                    foreach ($results as $result) {
+                    if ($this->config->get('module_outofstock_status')) {
+                        $this->load->model('extension/module/outofstock');
+                        $data['text_out_of_stock'] = $this->config->get('module_outofstock_label')[$this->config->get('config_language_id')];
+                        $data['module_outofstock_style'] = htmlspecialchars_decode($this->config->get('module_outofstock_style'));
+                    }
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[$data['products'][] = array(]]></search>
+            <add><![CDATA[
+                $data['products'][] = array(
+                    'quantity' => ($this->config->get('module_outofstock_status'))?$this->model_extension_module_outofstock->getQuantity($result):1,
+                    
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+
+    <file path="catalog/view/theme/*/template/product/{search,special,category,manufacturer_info}*.twig">
+        <operation>
+            <search position="replace"><![CDATA[{{ header }}]]></search>
+            <add><![CDATA[
+                    {{ header }}
+                    {% if module_outofstock_style %}
+                    <style>{{ module_outofstock_style }}</style> 
+                    {% endif %}
+
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[<div class="product-layout product-list col-xs-12">]]></search>
+            <add><![CDATA[
+                <div class="product-layout product-list col-xs-12">  
+                {% if (product.quantity<1) and text_out_of_stock %}
+                    <div class="box"><div class="ribbon"><span>{{ text_out_of_stock }}</span></div></div>
+                {% endif %}
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}']]></search>
+            <add><![CDATA[
+                
+                {% if  (product.quantity < 1) %}
+                    <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');" disabled><span class="hidden-xs hidden-sm hidden-md" disabled>{{ button_cart_outOfStock }}</span></button>
+                {% else %}
+                    <button type="button" onclick="cart.add('{{ product.product_id }}'
+                ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[{{ button_cart }}</span></button>]]></search>
+            <add><![CDATA[
+                {{ button_cart }}</span></button>
+                {% endif %}
+                 ]]>
+            </add>
+        </operation>
+
+    </file>
+
+
+
+    <file path="catalog/controller/extension/module/{bestseller,latest,special}*.php">
+        <operation>
+            <search position="replace"><![CDATA[foreach ($results as $result) {]]></search>
+            <add><![CDATA[
+                $data['button_cart_outOfStock'] = "Out Of Stock";
+              foreach ($results as $result) {
+                if ($this->config->get('module_outofstock_status')) {
+                    $this->load->model('extension/module/outofstock');
+                    $data['text_out_of_stock'] = $this->config->get('module_outofstock_label')[$this->config->get('config_language_id')];
+                    $data['module_outofstock_style'] = htmlspecialchars_decode($this->config->get('module_outofstock_style'));
+                } else{ 
+                $data['module_outofstock_style'] = false;
+                }
+        
+        
+                ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[$data['products'][] = array(]]></search>
+            <add><![CDATA[
+                 $data['products'][] = array(
+                    'quantity' => ($this->config->get('module_outofstock_status'))?$this->model_extension_module_outofstock->getQuantity($result):1,
+                    
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/extension/module/featured.php">
+        <operation>
+            <search position="replace"><![CDATA[foreach ($products as $product_id) {]]></search>
+            <add><![CDATA[
+                $data['button_cart_outOfStock'] = "Out Of Stock";
+                foreach ($products as $product_id) {
+                if ($this->config->get('module_outofstock_status')) {
+                    $this->load->model('extension/module/outofstock');
+                    $data['text_out_of_stock'] = $this->config->get('module_outofstock_label')[$this->config->get('config_language_id')];
+                    $data['module_outofstock_style'] = htmlspecialchars_decode($this->config->get('module_outofstock_style'));
+                } else{ 
+                    $data['module_outofstock_style'] = false;
+                }
+        
+        
+                ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[$data['products'][] = array(]]></search>
+            <add><![CDATA[
+                 $data['products'][] = array(
+                    'quantity' => ($this->config->get('module_outofstock_status'))?$this->model_extension_module_outofstock->getQuantity($product_info):1,
+                    
+                ]]>
+            </add>
+        </operation>
+
+
+    </file>
+
+    <file path="catalog/view/theme/*/template/extension/module/{bestseller,featured,latest,special}*.twig">
+        <operation>
+            <search position="replace"><![CDATA[<h3>{{ heading_title }}</h3>]]></search>
+            <add><![CDATA[
+                <h3>{{ heading_title }}</h3>
+                {%  if module_outofstock_style %}
+                    <style>{{module_outofstock_style}}</style>
+                {% endif %}
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[<div class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">]]></search>
+            <add><![CDATA[
+               <div class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                {%  if (product.quantity<1) and text_out_of_stock %}
+                <div class="box"><div class="ribbon"><span>{{ text_out_of_stock }}</span></div></div>
+                {% endif %}
+                ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[<button type="button" onclick="cart.add('{{ product.product_id }}']]></search>
+            <add><![CDATA[
+                
+                {% if  (product.quantity < 1) %}
+                    <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');" disabled><span class="hidden-xs hidden-sm hidden-md" disabled>{{ button_cart_outOfStock }}</span></button>
+                {% else %}
+                    <button type="button" onclick="cart.add('{{ product.product_id }}'
+                ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search position="replace"><![CDATA[{{ button_cart }}</span></button>]]></search>
+            <add><![CDATA[
+                {{ button_cart }}</span></button>
+                {% endif %}
+                 ]]>
+            </add>
+        </operation>
+
+    </file>
+
+</modification>

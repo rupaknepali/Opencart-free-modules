@@ -1,0 +1,76 @@
+{
+    "codename": "d_twig_manager",
+    "version": "2.0.7",
+    "name": "Twig Manager",
+    "description": "Add twig support to you opencart",
+    "author": {
+        "name": "Dreamvention",
+        "email": "info@dreamvention.com",
+        "url": "https://dreamvention.com"
+    },
+    "opencart_version": [
+        "3.0.0.0",
+        "3.0.1.1",
+        "3.0.1.2",
+        "3.0.2.0",
+        "3.0.3.1"
+    ],
+    "type": "library",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "install": {
+        "url": "extension/d_shopunity/modification/install&codename=d_twig_manager"
+    },
+    "uninstall": {
+        "url": "extension/d_shopunity/modification/uninstall&codename=d_twig_manager"
+    },
+    "support": {
+        "email": "support@dreamvention.com",
+        "url": "https:/dreamvention.com/support"
+    },
+    "required": {
+        "d_opencart_patch": ">=3.0.0"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_twig_manager.json",
+        "system/library/d_shopunity/install/d_twig_manager.xml",
+        "admin/model/extension/module/d_twig_manager.php",
+        "system/library/template/Twig/Extension/DTwigManager.php"
+    ],
+    "changelog": [
+        {
+            "version":"2.0.7",
+            "change": "Added support for OC v3.0.3.1"
+        },
+        {
+            "version":"2.0.6",
+            "change": "fix theme include function; add contentFunction -> file_get_content()"
+        },
+        {
+            "version":"2.0.5",
+            "change": "Fix but from uninstall"
+        },
+        {
+            "version":"2.0.4",
+            "change": "Simplified the twig compatibility activation"
+        },
+        {
+            "version":"2.0.3",
+            "change": "remove modification xml from installer"
+        },
+        {
+            "version":"2.0.2",
+            "change": "Bug fix"
+        },
+        {
+            "version":"2.0.1",
+            "change": "Added isCompatible"
+        },
+        {
+            "version":"2.0.0",
+            "change": "Support for Opencart 3.x"
+        }
+    ]
+}
