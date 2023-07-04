@@ -1,0 +1,27 @@
+
+{% if posts is not empty %}
+<div class="mb-5 mt-5">
+  <h3>{{ module_opencartwpblog_title }}</h3>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for post in posts %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{post.featured_media}}" class="card-img-top" alt="{{ post.title }}">
+          <div class="card-body">
+            <a href="{{post.link}}"><h5 class="card-title">{{ post.title }}</h5></a>
+            <p class="card-text">
+              {{post.excerpt}}
+            </p>
+          </div>
+          <div class="card-footer bg-transparent border-top-0 text-end">
+              <a href="{{post.link}}" class="btn btn-primary">Read the blog</a>
+            </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+
+  
