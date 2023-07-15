@@ -48,8 +48,10 @@ class Thirdpartyjs extends \Opencart\System\Engine\Controller
 
         $data['user_token'] = $this->session->data['user_token'];
 
-        $data['analytics_status'] = $this->config->get('analytics_status');
-        $data['analytics_code'] = $this->config->get('analytics_code');
+        $data['module_opencartwpblog_limit'] = $this->config->get('module_opencartwpblog_limit');
+
+        $data['analytics_thirdpartyjs_status'] = $this->config->get('analytics_thirdpartyjs_status');
+        $data['analytics_thirdpartyjs_code'] = $this->config->get('analytics_thirdpartyjs_code');
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
