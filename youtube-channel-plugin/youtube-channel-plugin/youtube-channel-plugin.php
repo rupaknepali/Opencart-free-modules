@@ -43,6 +43,7 @@ function display_youtube_video_link_meta_box($post) {
     <input type="text" id="youtube_video_link" name="youtube_video_link" value="<?php echo esc_attr($youtube_video_link); ?>" style="width: 100%;">
     <?php
 }
+
 function prefix_add_youtube_top_of_the_post ($content){
     $post_id = get_the_ID();
 	$youtube_video_link = get_post_meta($post_id, 'youtube_video_link', true);
