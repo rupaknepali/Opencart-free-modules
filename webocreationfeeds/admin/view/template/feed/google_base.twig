@@ -155,7 +155,7 @@ $('#button-category-add').on('click', function() {
 			}
 
 			if (json['success']) {
-				$('#category').load('index.php?route=extension/webocreationfeeds/feed/google_base/category&user_token={{ user_token }}');
+				$('#category').load('index.php?route=extension/webocreationfeeds/feed/google_base.category&user_token={{ user_token }}');
 
 				$('#category').before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
@@ -195,7 +195,7 @@ $('#category').delegate('.btn-danger', 'click', function() {
 			}
 
       if (json['success']) {
-				$('#category').load('index.php?route=extension/webocreationfeeds/feed/google_base/category&user_token={{ user_token }}');
+				$('#category').load('index.php?route=extension/webocreationfeeds/feed/google_base.category&user_token={{ user_token }}');
 
 				$('#category').before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 			}
