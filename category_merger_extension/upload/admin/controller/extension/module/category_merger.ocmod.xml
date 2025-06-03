@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Category Merger</name>
+    <code>category_merger</code>
+    <version>1.0.0</version>
+    <author>Cascade AI</author>
+    <link>https://example.com</link>
+    <description>Extension to merge two categories into one, including product associations</description>
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search><![CDATA[$catalog = array();]]></search>
+            <add position="after"><![CDATA[
+            // Category Merger
+            if ($this->user->hasPermission('access', 'extension/module/category_merger')) {
+                $catalog[] = array(
+                    'name'     => $this->language->get('text_category_merger'),
+                    'href'     => $this->url->link('extension/module/category_merger', 'user_token=' . $this->session->data['user_token'], true),
+                    'children' => array()
+                );
+            }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/en-gb/common/column_left.php">
+        <operation>
+            <search><![CDATA[$_['text_backup']]]></search>
+            <add position="after"><![CDATA[$_['text_category_merger']        = 'Category Merger';]]></add>
+        </operation>
+    </file>
+</modification>
