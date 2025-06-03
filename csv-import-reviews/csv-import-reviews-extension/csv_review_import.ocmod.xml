@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>CSV Review Import</name>
+    <code>csv_review_import</code>
+    <version>1.0.0</version>
+    <author>Cascade AI</author>
+    <link></link>
+    <description>Import product reviews from CSV file based on product model</description>
+</modification>

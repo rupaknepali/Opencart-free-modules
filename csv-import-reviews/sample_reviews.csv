@@ -1,0 +1,6 @@
+product_model,author,text,rating,date_added,status
+ABC123,John Doe,Great product! Very satisfied with the quality and performance.,5,2023-01-15 10:30:00,1
+XYZ456,Jane Smith,Good product but could be better. The quality is decent but not exceptional.,3,2023-01-16 11:45:00,1
+ABC123,Michael Johnson,Excellent value for money. Would definitely recommend to others.,4,2023-01-17 09:15:00,1
+DEF789,Sarah Williams,Not what I expected. The product didn't meet my requirements.,2,2023-01-18 14:20:00,1
+GHI101,Robert Brown,Perfect! Exactly what I was looking for and arrived quickly.,5,2023-01-19 16:30:00,1

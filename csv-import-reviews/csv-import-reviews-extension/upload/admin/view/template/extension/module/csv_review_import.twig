@@ -1,0 +1,78 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_import_info }}</div>
+        
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-import">{{ entry_file }}</label>
+            <div class="col-sm-10">
+              <input type="file" name="file" id="input-import" class="form-control" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-primary">{{ button_import }}</button>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="well">
+                <h4>CSV Format Requirements:</h4>
+                <p>Your CSV file must include the following columns:</p>
+                <ul>
+                  <li><strong>product_model</strong> - The model code of the product (must match existing products)</li>
+                  <li><strong>author</strong> - Name of the reviewer</li>
+                  <li><strong>text</strong> - Review content</li>
+                  <li><strong>rating</strong> - Rating value (1-5)</li>
+                </ul>
+                <p>Optional columns:</p>
+                <ul>
+                  <li><strong>date_added</strong> - Date of review (format: YYYY-MM-DD HH:MM:SS)</li>
+                  <li><strong>status</strong> - Review status (1 = enabled, 0 = disabled)</li>
+                </ul>
+                <p>Example:</p>
+                <pre>product_model,author,text,rating,date_added,status
+ABC123,John Doe,Great product!,5,2023-01-15 10:30:00,1
+XYZ456,Jane Smith,Could be better,3,2023-01-16 11:45:00,1</pre>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
