@@ -1,0 +1,67 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-api-key">{{ entry_api_key }}</label>
+            <div class="col-sm-10">
+              <input type="password" name="module_ai_description_generator_api_key" value="{{ module_ai_description_generator_api_key }}" placeholder="{{ entry_api_key }}" id="input-api-key" class="form-control" />
+              {% if error_api_key %}
+              <div class="text-danger">{{ error_api_key }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-model">{{ entry_model }}</label>
+            <div class="col-sm-10">
+              <select name="module_ai_description_generator_model" id="input-model" class="form-select">
+                <option value="gpt-3.5-turbo" {% if module_ai_description_generator_model == 'gpt-3.5-turbo' %}selected="selected"{% endif %}>GPT-3.5 Turbo (OpenAI)</option>
+                <option value="gpt-4" {% if module_ai_description_generator_model == 'gpt-4' %}selected="selected"{% endif %}>GPT-4 (OpenAI)</option>
+                <option value="claude-3-opus" {% if module_ai_description_generator_model == 'claude-3-opus' %}selected="selected"{% endif %}>Claude 3 Opus (Anthropic)</option>
+                <option value="claude-3-sonnet" {% if module_ai_description_generator_model == 'claude-3-sonnet' %}selected="selected"{% endif %}>Claude 3 Sonnet (Anthropic)</option>
+                <option value="mixtral-8x7b" {% if module_ai_description_generator_model == 'mixtral-8x7b' %}selected="selected"{% endif %}>Mixtral (Groq)</option>
+                <option value="llama-3.3-70b-versatile" {% if module_ai_description_generator_model == 'llama-3.3-70b-versatile' %}selected="selected"{% endif %}>Llama 3.3 (Groq)</option>
+              </select>
+              {% if error_model %}
+              <div class="text-danger">{{ error_model }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-prompt">{{ entry_prompt }}</label>
+            <div class="col-sm-10">
+              <textarea name="module_ai_description_generator_prompt" id="input-prompt" class="form-control">{{ module_ai_description_generator_prompt }}</textarea>
+               <div class="text-danger">{{help_prompt}}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_ai_description_generator_status" value="0"/>
+                <input type="checkbox" name="module_ai_description_generator_status" value="1" id="input-status" class="form-check-input"{% if module_ai_description_generator_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
