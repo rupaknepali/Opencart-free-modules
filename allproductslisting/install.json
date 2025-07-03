@@ -1,0 +1,9 @@
+{
+  "name": "All Products Listing",
+  "version": "1.0.1",
+  "author": "Rupak Nepali - Webocreation.com",
+  "link": "https://webocreation.com",
+  "description": "This extension allows you to display all products in a single page.",
+  "type": "module",
+  "license": "GPL-3.0"
+}

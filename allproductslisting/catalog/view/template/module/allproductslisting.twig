@@ -1,0 +1,66 @@
+{{ header }}
+<div id="product-all" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    <div id="content" class="col">{{ content_top }}
+      <h1>{{ heading_title }}</h1>
+      <div id="product-list" class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4"></div>
+      <div class="row">
+        <div class="col-sm-12 text-center" style="margin-top: 20px;">
+          <button id="load-more" class="btn btn-primary">{{ button_load_more }}</button>
+        </div>
+      </div>
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+<script type="text/javascript"><!--
+$(document).ready(function() {
+    var page = 1;
+    var loading = false;
+
+    function loadMoreProducts() {
+        if (loading) return;
+        loading = true;
+        $('#load-more').prop('disabled', true).text('{{ text_loading }}');
+
+        $.ajax({
+            url: '{{ load_more_url }}&page=' + page,
+            type: 'get',
+            dataType: 'json',
+            success: function(json) {
+                if (json.length > 0) {
+                    var html = '';
+                    for (var i = 0; i < json.length; i++) {
+                        html += '<div class="col mb-3">' + json[i] + '</div>';
+                    }
+                    $('#product-list').append(html);
+                    page++;
+                    loading = false;
+                    $('#load-more').prop('disabled', false).text('{{ button_load_more }}');
+                } else {
+                    $('#load-more').hide();
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                loading = false;
+                $('#load-more').prop('disabled', false).text('{{ button_load_more }}');
+            }
+        });
+    }
+
+    // Initial load
+    loadMoreProducts();
+
+    $('#load-more').on('click', function() {
+        loadMoreProducts();
+    });
+});
+//--></script>
+{{ footer }}
