@@ -1,0 +1,99 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_custom_menu_links_status" value="0"/>
+                <input type="checkbox" name="module_custom_menu_links_status" value="1" id="input-status" class="form-check-input"{% if module_custom_menu_links_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane">
+            <ul class="nav nav-tabs" id="language">
+                <li class="nav-item"><a href="#language-en-gb" data-bs-toggle="tab" class="nav-link active"><img src="language/en-gb/en-gb.png" title="English"/> English</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="language-en-gb" class="tab-pane active">
+                    <table id="menu-items" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td class="text-left">{{ entry_title }}</td>
+                                <td class="text-left">{{ entry_link }}</td>
+                                <td class="text-left">{{ entry_sort_order }}</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set menu_item_row = 0 %}
+                            {% if module_custom_menu_links_items %}
+                                {% for menu_item in module_custom_menu_links_items %}
+                                    <tr id="menu-item-row{{ menu_item_row }}">
+                                        <td class="text-left">
+                                            <input type="text" name="module_custom_menu_links_items[{{ menu_item_row }}][title]" value="{{ menu_item.title }}" placeholder="{{ entry_title }}" class="form-control" />
+                                            <div id="error-menu-item-{{ menu_item_row }}-title" class="invalid-feedback"></div>
+                                        </td>
+                                        <td class="text-left">
+                                            <input type="text" name="module_custom_menu_links_items[{{ menu_item_row }}][link]" value="{{ menu_item.link }}" placeholder="{{ entry_link }}" class="form-control" />
+                                            <div id="error-menu-item-{{ menu_item_row }}-link" class="invalid-feedback"></div>
+                                        </td>
+                                        <td class="text-left">
+                                            <input type="text" name="module_custom_menu_links_items[{{ menu_item_row }}][sort_order]" value="{{ menu_item.sort_order }}" placeholder="{{ entry_sort_order }}" class="form-control" />
+                                        </td>
+                                        <td class="text-end"><button type="button" onclick="$('#menu-item-row{{ menu_item_row }}').remove();" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa-solid fa-minus-circle"></i></button></td>
+                                    </tr>
+                                    {% set menu_item_row = menu_item_row + 1 %}
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="text-end"><button type="button" onclick="addMenuItem();" data-bs-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa-solid fa-plus-circle"></i></button></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+var menu_item_row = {{ menu_item_row }};
+
+function addMenuItem() {
+	html  = '<tr id="menu-item-row' + menu_item_row + '">';
+    html += '  <td class="text-left"><input type="text" name="module_custom_menu_links_items[' + menu_item_row + '][title]" value="" placeholder="{{ entry_title }}" class="form-control" /></td>';
+	html += '  <td class="text-left"><input type="text" name="module_custom_menu_links_items[' + menu_item_row + '][link]" value="" placeholder="{{ entry_link }}" class="form-control" /></td>';
+	html += '  <td class="text-left"><input type="text" name="module_custom_menu_links_items[' + menu_item_row + '][sort_order]" value="" placeholder="{{ entry_sort_order }}" class="form-control" /></td>';
+	html += '  <td class="text-end"><button type="button" onclick="$('# + 'menu-item-row' + menu_item_row + '').remove();" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa-solid fa-minus-circle"></i></button></td>';
+	html += '</tr>';
+
+	$('#menu-items tbody').append(html);
+
+	menu_item_row++;
+}
+//--></script>
+{{ footer }}
