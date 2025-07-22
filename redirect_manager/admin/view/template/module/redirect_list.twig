@@ -1,0 +1,74 @@
+<form id="form-redirect" method="post">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <td class="text-center" style="width: 1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', $(this).prop('checked'));" /></td>
+          <td class="text-start"><a href="{{ sort_from_url }}" class="{% if sort == 'from_url' %}{{ order|lower }}{% endif %}">{{ column_from_url }}</a></td>
+          <td class="text-start"><a href="{{ sort_to_url }}" class="{% if sort == 'to_url' %}{{ order|lower }}{% endif %}">{{ column_to_url }}</a></td>
+          <td class="text-end"><a href="{{ sort_response_code }}" class="{% if sort == 'response_code' %}{{ order|lower }}{% endif %}">{{ column_code }}</a></td>
+          <td class="text-start">{{ column_status }}</td>
+          <td class="text-end" style="min-width: 105px;">{{ column_action }}</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% if redirects %}
+          {% for redirect in redirects %}
+            <tr>
+              <td class="text-center"><input type="checkbox" name="selected[]" value="{{ redirect.redirect_id }}" /></td>
+              <td class="text-start">{{ redirect.from_url }}</td>
+              <td class="text-start">{{ redirect.to_url }}</td>
+              <td class="text-end">{{ redirect.response_code }}</td>
+              <td class="text-start">{{ redirect.status }}</td>
+              <td class="text-end"><a href="{{ redirect.edit }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a> <button type="button" value="{{ redirect.delete }}" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></button></td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td class="text-center" colspan="6">{{ text_no_results }}</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 text-start">{{ pagination }}</div>
+    <div class="col-sm-6 text-end">{{ results }}</div>
+    </div>
+  </form>
+<script type="text/javascript"><!--
+$('#form-redirect').on('click', '.btn-danger', function(e) {
+    e.preventDefault();
+
+    if (confirm('{{ text_confirm_delete }}')) {
+        var button = this;
+
+        $.ajax({
+            url: $(button).val(),
+            dataType: 'json',
+            beforeSend: function() {
+                $(button).button('loading');
+            },
+            complete: function() {
+                $(button).button('reset');
+            },
+            success: function(json) {
+                $('.alert-dismissible').remove();
+
+                if (json['error']) {
+                    $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                }
+
+                if (json['success']) {
+                    $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+                    $('#redirects').load('index.php?route=extension/redirect_manager/module/redirect_manager.list&user_token={{ user_token }}');
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    }
+});
+//--></script>

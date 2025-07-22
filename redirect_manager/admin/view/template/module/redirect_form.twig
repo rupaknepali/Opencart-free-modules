@@ -1,0 +1,69 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-redirect" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_form }}</div>
+      <div class="card-body">
+        <form id="form-redirect" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3 required">
+            <label for="input-from-url" class="col-sm-2 col-form-label">{{ entry_from_url }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="from_url" value="{{ from_url }}" placeholder="{{ entry_from_url }}" id="input-from-url" class="form-control"/>
+              <div id="error-from-url" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-to-url" class="col-sm-2 col-form-label">{{ entry_to_url }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="to_url" value="{{ to_url }}" placeholder="{{ entry_to_url }}" id="input-to-url" class="form-control"/>
+              <div id="error-to-url" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-response-code" class="col-sm-2 col-form-label">{{ entry_code }}</label>
+            <div class="col-sm-10">
+              <select name="response_code" id="input-response-code" class="form-control">
+                <option value="301" {% if response_code == 301 %} selected="selected" {% endif %}>{{ text_permanent }}</option>
+                <option value="302" {% if response_code == 302 %} selected="selected" {% endif %}>{{ text_temporary }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="status" value="0"/>
+                <input type="checkbox" name="status" value="1" id="input-status" class="form-check-input" {% if status %} checked {% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-is-regex">{{ entry_is_regex }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="is_regex" value="0"/>
+                <input type="checkbox" name="is_regex" value="1" class="form-check-input" id="input-is-regex"{% if is_regex %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_is_regex }}</div>
+            </div>
+          </div>
+          <input type="hidden" name="redirect_id" value="{{ redirect_id }}"/>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

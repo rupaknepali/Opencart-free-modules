@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <div class="input-group">
+        <input type="text" name="filter_url" value="{{ filter_url }}" placeholder="{{ text_filter }}" class="form-control"/>
+        <button type="button" id="button-filter-log" class="btn btn-primary"><i class="fa-solid fa-filter"></i> {{ button_filter }}</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 text-end">
+    <a href="{{ clear_logs }}" onclick="return confirm('{{ text_confirm }}');" data-bs-toggle="tooltip" title="{{ button_clear }}" class="btn btn-danger"><i class="fa-solid fa-eraser"></i></a>
+  </div>
+</div>
+<form id="form-not-found" method="post" data-oc-toggle="ajax" data-oc-load="{{ not_found_list }}" data-oc-target="#not_found_logs">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <td class="text-start"><a href="{{ sort_url }}" class="{% if sort == 'url' %}{{ order|lower }}{% endif %}">{{ column_url }}</a></td>
+          <td class="text-end" style="width: 10%;"><a href="{{ sort_hits }}" class="{% if sort == 'hits' %}{{ order|lower }}{% endif %}">{{ column_hits }}</a></td>
+          <td class="text-start" style="width: 20%;"><a href="{{ sort_date_added }}" class="{% if sort == 'date_added' %}{{ order|lower }}{% endif %}">{{ column_date_added }}</a></td>
+          <td class="text-start" style="width: 20%;"><a href="{{ sort_date_modified }}" class="{% if sort == 'date_modified' %}{{ order|lower }}{% endif %}">{{ column_date_modified }}</a></td>
+        </tr>
+      </thead>
+      <tbody>
+        {% if logs %}
+          {% for log in logs %}
+            <tr>
+              <td class="text-start">{{ log.url }}</td>
+              <td class="text-end">{{ log.hits }}</td>
+              <td class="text-start">{{ log.date_added }}</td>
+              <td class="text-start">{{ log.date_modified }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td class="text-center" colspan="4">{{ text_no_results }}</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 text-start">{{ pagination }}</div>
+    <div class="col-sm-6 text-end">{{ results }}</div>
+  </div>
+</form>

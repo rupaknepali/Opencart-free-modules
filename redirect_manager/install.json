@@ -1,0 +1,9 @@
+{
+  "name": "Redirect Manager",
+  "version": "1.0",
+  "author": "Rupak Nepali - Webocreation.com",
+  "link": "https://webocreation.com",
+  "description": "This extension allows you to manage redirects for your OpenCart store.",
+  "type": "module",
+  "license": "GPL-3.0"
+}
