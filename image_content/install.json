@@ -1,0 +1,9 @@
+{
+  "name": "Image Content",
+  "version": "1.0",
+  "author": "Rupak Nepali - Webocreation.com",
+  "link": "https://webocreation.com",
+  "description": "This module displays an image with content, with option to switch image position.",
+  "type": "module",
+  "license": "GPL-3.0"
+}

@@ -1,0 +1,277 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-name" class="col-sm-2 col-form-label">{{ entry_name }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control"/>
+              <div id="error-name" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_content }}</label>
+            <div class="col-sm-10">
+              <ul class="nav nav-tabs" id="language-tabs">
+                {% for language in languages %}
+                  <li class="nav-item"><a href="#language-{{ language.language_id }}" data-bs-toggle="tab" class="nav-link{% if loop.first %} active{% endif %}"><img src="{{ language.image }}" title="{{ language.name }}"/> {{ language.name }}</a></li>
+                {% endfor %}
+              </ul>
+              <div class="tab-content" id="language-content">
+                {% for language in languages %}
+                  <div id="language-{{ language.language_id }}" class="tab-pane{% if loop.first %} active{% endif %}">
+                    <div class="row mb-3">
+                      <label for="input-title-{{ language.language_id }}" class="col-sm-2 col-form-label">{{ entry_title }}</label>
+                      <div class="col-sm-10">
+                        <input type="text" name="module_description[{{ language.language_id }}][title]" placeholder="{{ entry_title }}" id="input-title-{{ language.language_id }}" value="{{ module_description[language.language_id] ? module_description[language.language_id].title }}" class="form-control"/>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="input-description-{{ language.language_id }}" class="col-sm-2 col-form-label">{{ entry_description }}</label>
+                      <div class="col-sm-10">
+                        <textarea name="module_description[{{ language.language_id }}][description]" placeholder="{{ entry_description }}" id="input-description-{{ language.language_id }}" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="form-control">{{ module_description[language.language_id] ? module_description[language.language_id].description }}</textarea>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="input-cta-text-{{ language.language_id }}" class="col-sm-2 col-form-label">{{ entry_cta_text }}</label>
+                      <div class="col-sm-10">
+                        <input type="text" name="cta_text[{{ language.language_id }}]" placeholder="{{ entry_cta_text }}" id="input-cta-text-{{ language.language_id }}" value="{{ cta_text[language.language_id] }}" class="form-control"/>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="input-cta-url-{{ language.language_id }}" class="col-sm-2 col-form-label">{{ entry_cta_url }}</label>
+                      <div class="col-sm-10">
+                        <input type="url" name="cta_url[{{ language.language_id }}]" placeholder="https://example.com" id="input-cta-url-{{ language.language_id }}" value="{{ cta_url[language.language_id] }}" class="form-control"/>
+                      </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-6">
+                    <div class="row mb-3">
+                      <label for="input-cta-style-{{ language.language_id }}" class="col-sm-6 col-form-label">{{ entry_cta_style }}</label>
+                      <div class="col-sm-6">
+                        <input type="color" name="cta_style[{{ language.language_id }}]" value="{{ cta_style[language.language_id] }}" id="input-cta-style-{{ language.language_id }}" class="form-control form-control-color" />
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="input-cta-text-color-{{ language.language_id }}" class="col-sm-6 col-form-label">{{ entry_cta_text_color }}</label>
+                      <div class="col-sm-6">
+                        <input type="color" name="cta_text_color[{{ language.language_id }}]" value="{{ cta_text_color[language.language_id] }}" id="input-cta-text-color-{{ language.language_id }}" class="form-control form-control-color" />
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="input-cta-border-color-{{ language.language_id }}" class="col-sm-6 col-form-label">{{ entry_cta_border_color }}</label>
+                      <div class="col-sm-6">
+                        <input type="color" name="cta_border_color[{{ language.language_id }}]" value="{{ cta_border_color[language.language_id] }}" id="input-cta-border-color-{{ language.language_id }}" class="form-control form-control-color" />
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <div class="row mb-3">
+                      <label for="input-cta-hover-background-{{ language.language_id }}" class="col-sm-6 col-form-label">{{ entry_cta_hover_background }}</label>
+                      <div class="col-sm-6">
+                        <input type="color" name="cta_hover_background[{{ language.language_id }}]" value="{{ cta_hover_background[language.language_id] }}" id="input-cta-hover-background-{{ language.language_id }}" class="form-control form-control-color" />
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="input-cta-border-radius-{{ language.language_id }}" class="col-sm-6 col-form-label">{{ entry_cta_border_radius }}</label>
+                      <div class="col-sm-6">
+                        <input type="text" name="cta_border_radius[{{ language.language_id }}]" value="{{ cta_border_radius[language.language_id] }}" placeholder="8px" id="input-cta-border-radius-{{ language.language_id }}" class="form-control" />
+                        <div class="form-text">Enter CSS border-radius value (e.g. 8px, 50%)</div>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="input-cta-padding-{{ language.language_id }}" class="col-sm-6 col-form-label">{{ entry_cta_padding }}</label>
+                      <div class="col-sm-6">
+                        <input type="text" name="cta_padding[{{ language.language_id }}]" value="{{ cta_padding[language.language_id] }}" placeholder="12px 32px" id="input-cta-padding-{{ language.language_id }}" class="form-control" />
+                        <div class="form-text">Enter button padding like CSS shorthand (e.g. 12px 32px)</div>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="input-cta-hover-text-color-{{ language.language_id }}" class="col-sm-6 col-form-label">{{ entry_cta_hover_text_color }}</label>
+                      <div class="col-sm-6">
+                        <input type="color" name="cta_hover_text_color[{{ language.language_id }}]" value="{{ cta_hover_text_color[language.language_id] }}" id="input-cta-hover-text-color-{{ language.language_id }}" class="form-control form-control-color" />
+                      </div>
+                    </div>
+                    </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+         
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="row mb-3">
+                <label for="input-image" class="col-sm-2 col-form-label">{{ entry_image }}</label>
+                <div class="col-sm-10">
+                  <div class="card">
+                    <div class="card-body">
+                      <img src="{{ thumb }}" alt="" title="" id="thumb-image" data-oc-placeholder="{{ placeholder }}" class="img-thumbnail"/><br/>
+                      <button type="button" data-oc-toggle="image" data-oc-target="#input-image" data-oc-thumb="#thumb-image" class="btn btn-primary btn-sm mt-2"><i class="fa-solid fa-pencil"></i> {{ button_edit }}</button>
+                      <button type="button" onclick="$('#thumb-image').attr('src', '{{ placeholder }}'); $('#input-image').val('');" class="btn btn-warning btn-sm mt-2"><i class="fa-regular fa-trash-can"></i> {{ button_clear }}</button>
+                    </div>
+                    <input type="hidden" name="image" value="{{ image }}" id="input-image"/>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row mb-3">
+                    <label for="input-image-position" class="col-sm-4 col-form-label">{{ entry_image_position }}</label>
+                    <div class="col-sm-8">
+                      <select name="image_position" id="input-image-position" class="form-select">
+                        <option value="left"{% if image_position == 'left' %} selected{% endif %}>Left</option>
+                        <option value="right"{% if image_position == 'right' %} selected{% endif %}>Right</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-image-width" class="col-sm-4 col-form-label">{{ entry_image_width }}</label>
+                    <div class="col-sm-8">
+                      <input type="number" name="image_width" value="{{ image_width }}" placeholder="95" id="input-image-width" class="form-control" min="1" max="100"/>
+                      <div class="form-text">Enter value between 1-100 (default: 95)</div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-image-border-radius" class="col-sm-4 col-form-label">{{ entry_image_border_radius }}</label>
+                    <div class="col-sm-8">
+                      <input type="text" name="image_border_radius" value="{{ image_border_radius }}" placeholder="5%" id="input-image-border-radius" class="form-control"/>
+                      <div class="form-text">Enter value in percentage (e.g., 5%, 50%) or pixels (e.g., 12px) - default: 5%</div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-image-box-shadow" class="col-sm-4 col-form-label">{{ entry_image_box_shadow }}</label>
+                    <div class="col-sm-8">
+                      <input type="text" name="image_box_shadow" value="{{ image_box_shadow }}" placeholder="0 10px 30px rgba(0, 0, 0, 0.15)" id="input-image-box-shadow" class="form-control"/>
+                      <div class="form-text">Enter CSS box-shadow value or leave empty for none</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row mb-3">
+                    <label for="input-image-transition" class="col-sm-4 col-form-label">{{ entry_image_transition }}</label>
+                    <div class="col-sm-8">
+                      <input type="text" name="image_transition" value="{{ image_transition }}" placeholder="transform 0.3s ease, box-shadow 0.3s ease" id="input-image-transition" class="form-control"/>
+                      <div class="form-text">Enter CSS transition value (default: transform 0.3s ease, box-shadow 0.3s ease)</div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-image-hover-transform" class="col-sm-4 col-form-label">{{ entry_image_hover_transform }}</label>
+                    <div class="col-sm-8">
+                      <input type="text" name="image_hover_transform" value="{{ image_hover_transform }}" placeholder="translateY(-5px)" id="input-image-hover-transform" class="form-control"/>
+                      <div class="form-text">Enter CSS transform value on hover (e.g., translateY(-5px), scale(1.05), rotate(2deg))</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row mb-3">
+                <label for="input-title-color" class="col-sm-4 col-form-label">{{ entry_title_color }}</label>
+                <div class="col-sm-8">
+                  <input type="color" name="title_color" value="{{ title_color }}" id="input-title-color" class="form-control form-control-color" />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-title-font-size" class="col-sm-4 col-form-label">{{ entry_title_font_size }}</label>
+                <div class="col-sm-8">
+                  <input type="text" name="title_font_size" value="{{ title_font_size }}" placeholder="24px" id="input-title-font-size" class="form-control" />
+                  <div class="form-text">Enter font size (e.g., 24px, 1.5rem, 120%)</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-description-color" class="col-sm-4 col-form-label">{{ entry_description_color }}</label>
+                <div class="col-sm-8">
+                  <input type="color" name="description_color" value="{{ description_color }}" id="input-description-color" class="form-control form-control-color" />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-description-font-size" class="col-sm-4 col-form-label">{{ entry_description_font_size }}</label>
+                <div class="col-sm-8">
+                  <input type="text" name="description_font_size" value="{{ description_font_size }}" placeholder="16px" id="input-description-font-size" class="form-control" />
+                  <div class="form-text">Enter font size (e.g., 16px, 1rem, 100%)</div>
+                </div>
+              </div>
+              
+            </div>
+            <div class="col-md-6">
+              <div class="row mb-3">
+                <label for="input-cta-new-tab" class="col-sm-4 col-form-label">{{ entry_cta_new_tab }}</label>
+                <div class="col-sm-8">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="cta_open_in_new_tab" value="0"/>
+                    <input type="checkbox" name="cta_open_in_new_tab" value="1" id="input-cta-new-tab" class="form-check-input"{% if cta_open_in_new_tab %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-full-width" class="col-sm-4 col-form-label">{{ entry_full_width }}</label>
+                <div class="col-sm-8">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="full_width" value="0"/>
+                    <input type="checkbox" name="full_width" value="1" id="input-full-width" class="form-check-input"{% if full_width %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-background-color" class="col-sm-4 col-form-label">{{ entry_background_color }}</label>
+                <div class="col-sm-8">
+                  <input type="color" name="background_color" value="{{ background_color }}" id="input-background-color" class="form-control form-control-color"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-margin" class="col-sm-4 col-form-label">{{ entry_margin }}</label>
+                <div class="col-sm-8">
+                  <input type="text" name="margin" value="{{ margin }}" placeholder="e.g., 20px 0px 20px 0px" id="input-margin" class="form-control"/>
+                  <div class="form-text">Format: top right bottom left (e.g., 20px 0px 20px 0px)</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-padding" class="col-sm-4 col-form-label">{{ entry_padding }}</label>
+                <div class="col-sm-8">
+                  <input type="text" name="padding" value="{{ padding }}" placeholder="e.g., 40px 20px" id="input-padding" class="form-control"/>
+                  <div class="form-text">Format: vertical horizontal (e.g., 40px 20px)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="status" value="0"/>
+                <input type="checkbox" name="status" value="1" id="input-status" class="form-check-input"{% if status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="module_id" value="{{ module_id }}" id="input-module-id"/>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('textarea[data-oc-toggle=\'ckeditor\']').ckeditor({
+    language:'{{ ckeditor }}'
+});
+//--></script>
+{{ footer }}

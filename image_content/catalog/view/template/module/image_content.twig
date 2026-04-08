@@ -1,0 +1,111 @@
+
+<style>
+.image-content-module {
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.image-content-module .content-text h2 {
+	font-size: 2.5rem;
+	font-weight: 700;
+	color: #1a1a1a;
+	margin-bottom: 1.5rem;
+	line-height: 1.3;
+}
+
+.image-content-module .content-text p,
+.image-content-module .content-text {
+	font-size: 1rem;
+	color: #555;
+	line-height: 1.8;
+	margin-bottom: 1.5rem;
+}
+
+.image-content-module img {
+	object-fit: cover;
+}
+
+.image-content-module .btn {
+	padding: 12px 32px;
+	font-size: 1rem;
+	font-weight: 600;
+	border-radius: 8px;
+	transition: all 0.3s ease;
+	display: inline-block;
+	text-decoration: none;
+}
+
+.image-content-module .btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+	.image-content-module .content-text h2 {
+		font-size: 1.75rem;
+	}
+
+	.image-content-module .content-text {
+		padding-top: 2rem;
+	}
+}
+</style>
+{% set image_hover_id = 'img-hover-' ~ random(10000, 99999) %}
+{% set button_hover_id = 'btn-hover-' ~ random(10000, 99999) %}
+<style>
+.{{ image_hover_id }}:hover {
+	transform: {{ image_hover_transform }} !important;
+}
+.{{ button_hover_id }}:hover {
+	background-color: {{ cta_hover_background }} !important;
+	color: {{ cta_hover_text_color }} !important;
+}
+</style>
+
+<div style="margin: {{ margin }};">
+	<div class="image-content-module py-5 px-4" style="background: linear-gradient(135deg, {{ background_color }} 0%, {{ background_color }}dd 100%); padding: {{ padding }};{% if full_width %}width: 100vw; margin-left: calc(-50vw + 50%); padding-left: calc(50vw - 50%)!important; padding-right: calc(50vw - 50%)!important;{% endif %}">
+		<div class="container-fluid{% if not full_width %} container{% endif %}">
+			<div class="row align-items-center g-4">
+				{% if image_position == 'left' %}
+					<div class="col-md-6 d-flex justify-content-start">
+						{% if image %}
+							<img src="{{ image }}" alt="{{ heading_title }}" class="img-fluid {{ image_hover_id }}" style="width: {{ image_width }}%; border-radius: {{ image_border_radius }}; box-shadow: {{ image_box_shadow }}; transition: {{ image_transition }};" />
+						{% endif %}
+					</div>
+					<div class="col-md-6">
+						<div class="content-text" style="color: {{ description_color }};">
+							{% if heading_title %}
+								<h2 style="color: {{ title_color }};">{{ heading_title }}</h2>
+							{% endif %}
+							{{ description }}
+							{% if cta_text and cta_url %}
+								<div class="mt-4">
+									<a href="{{ cta_url }}" class="btn {{ button_hover_id }}" style="background-color: {{ cta_style }}; border-color: {{ cta_border_color }}; color: {{ cta_text_color }}; border-radius: {{ cta_border_radius }}; padding: {{ cta_padding }};"{% if cta_open_in_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ cta_text }}</a>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				{% else %}
+					<div class="col-md-6">
+						<div class="content-text" style="color: {{ description_color }};">
+							{% if heading_title %}
+								<h2 style="color: {{ title_color }};">{{ heading_title }}</h2>
+							{% endif %}
+							{{ description }}
+							{% if cta_text and cta_url %}
+								<div class="mt-4">
+									<a href="{{ cta_url }}" class="btn {{ button_hover_id }}" style="background-color: {{ cta_style }}; border-color: {{ cta_border_color }}; color: {{ cta_text_color }}; border-radius: {{ cta_border_radius }}; padding: {{ cta_padding }};"{% if cta_open_in_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ cta_text }}</a>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-md-6 d-flex justify-content-end">
+						{% if image %}
+							<img src="{{ image }}" alt="{{ heading_title }}" class="img-fluid {{ image_hover_id }}" style="width: {{ image_width }}%; border-radius: {{ image_border_radius }}; box-shadow: {{ image_box_shadow }}; transition: {{ image_transition }};" />
+						{% endif %}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
