@@ -1,0 +1,7 @@
+{
+  "name": "Abandoned Cart Recovery",
+  "description": "Captures abandoned carts, sends up to 3 reminder emails with a one-click restore link and an optional unique coupon, and reports recovered revenue. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-abandoned-cart-recovery/"
+}

@@ -1,0 +1,187 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <ul class="nav nav-tabs">
+            <li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ text_general }}</a></li>
+            <li class="nav-item"><a href="#tab-availability" data-bs-toggle="tab" class="nav-link">{{ text_availability }}</a></li>
+            <li class="nav-item"><a href="#tab-policy" data-bs-toggle="tab" class="nav-link">{{ text_policy }}</a></li>
+            <li class="nav-item"><a href="#tab-organization" data-bs-toggle="tab" class="nav-link">{{ text_organization }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="tab-general" class="tab-pane active">
+              {% for field in ['status', 'product', 'breadcrumb', 'organization', 'website'] %}
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">{{ attribute(_context, 'entry_' ~ field) }}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-switch form-switch-lg">
+                      <input type="hidden" name="module_product_schema_{{ field }}" value="0"/>
+                      <input type="checkbox" name="module_product_schema_{{ field }}" value="1" id="input-{{ field }}" class="form-check-input"{% if attribute(_context, 'module_product_schema_' ~ field) %} checked{% endif %}/>
+                    </div>
+                    {% if field == 'website' %}<div class="form-text">{{ help_markup }}</div>{% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+              <div class="row mb-3">
+                <label for="input-reviews" class="col-sm-2 col-form-label">{{ entry_reviews }}</label>
+                <div class="col-sm-10">
+                  <input type="number" min="0" max="10" name="module_product_schema_reviews" value="{{ module_product_schema_reviews }}" id="input-reviews" class="form-control"/>
+                  <div class="form-text">{{ help_reviews }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-condition" class="col-sm-2 col-form-label">{{ entry_condition }}</label>
+                <div class="col-sm-10">
+                  <select name="module_product_schema_condition" id="input-condition" class="form-select">
+                    <option value="NewCondition"{% if module_product_schema_condition == 'NewCondition' %} selected{% endif %}>{{ text_new }}</option>
+                    <option value="UsedCondition"{% if module_product_schema_condition == 'UsedCondition' %} selected{% endif %}>{{ text_used }}</option>
+                    <option value="RefurbishedCondition"{% if module_product_schema_condition == 'RefurbishedCondition' %} selected{% endif %}>{{ text_refurbished }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-gtin" class="col-sm-2 col-form-label">{{ entry_gtin }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="module_product_schema_gtin" value="{{ module_product_schema_gtin }}" id="input-gtin" class="form-control"/>
+                  <div class="form-text">{{ help_gtin }}</div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-availability" class="tab-pane">
+              <div class="alert alert-light">{{ text_availability_info }}</div>
+              {% for stock_status in stock_statuses %}
+                <div class="row mb-3">
+                  <label for="input-availability-{{ stock_status.stock_status_id }}" class="col-sm-2 col-form-label">{{ stock_status.name }}</label>
+                  <div class="col-sm-10">
+                    <select name="module_product_schema_availability[{{ stock_status.stock_status_id }}]" id="input-availability-{{ stock_status.stock_status_id }}" class="form-select">
+                      {% for availability in availabilities %}
+                        <option value="{{ availability }}"{% if availability == stock_status.value %} selected{% endif %}>{{ availability }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            <div id="tab-policy" class="tab-pane">
+              <div class="alert alert-light">{{ text_policy_info }}</div>
+              <fieldset>
+                <legend>MerchantReturnPolicy</legend>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">{{ entry_return_status }}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-switch form-switch-lg">
+                      <input type="hidden" name="module_product_schema_return_status" value="0"/>
+                      <input type="checkbox" name="module_product_schema_return_status" value="1" id="input-return-status" class="form-check-input"{% if module_product_schema_return_status %} checked{% endif %}/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-return-country" class="col-sm-2 col-form-label">{{ entry_return_country }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" maxlength="2" name="module_product_schema_return_country" value="{{ module_product_schema_return_country }}" id="input-return-country" class="form-control"/>
+                    <div class="form-text">{{ help_country }}</div>
+                    <div id="error-return-country" class="invalid-feedback"></div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-return-days" class="col-sm-2 col-form-label">{{ entry_return_days }}</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <input type="number" min="0" name="module_product_schema_return_days" value="{{ module_product_schema_return_days }}" id="input-return-days" class="form-control"/>
+                      <span class="input-group-text">{{ text_days }}</span>
+                    </div>
+                    <div class="form-text">{{ help_return_days }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-return-fees" class="col-sm-2 col-form-label">{{ entry_return_fees }}</label>
+                  <div class="col-sm-10">
+                    <select name="module_product_schema_return_fees" id="input-return-fees" class="form-select">
+                      <option value="FreeReturn"{% if module_product_schema_return_fees == 'FreeReturn' %} selected{% endif %}>{{ text_free_return }}</option>
+                      <option value="ReturnShippingFees"{% if module_product_schema_return_fees == 'ReturnShippingFees' %} selected{% endif %}>{{ text_customer_pays }}</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>OfferShippingDetails</legend>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">{{ entry_shipping_status }}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-switch form-switch-lg">
+                      <input type="hidden" name="module_product_schema_shipping_status" value="0"/>
+                      <input type="checkbox" name="module_product_schema_shipping_status" value="1" id="input-shipping-status" class="form-check-input"{% if module_product_schema_shipping_status %} checked{% endif %}/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-shipping-country" class="col-sm-2 col-form-label">{{ entry_shipping_country }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" maxlength="2" name="module_product_schema_shipping_country" value="{{ module_product_schema_shipping_country }}" id="input-shipping-country" class="form-control"/>
+                    <div class="form-text">{{ help_country }}</div>
+                    <div id="error-shipping-country" class="invalid-feedback"></div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-shipping-rate" class="col-sm-2 col-form-label">{{ entry_shipping_rate }}</label>
+                  <div class="col-sm-10">
+                    <input type="number" step="0.01" min="0" name="module_product_schema_shipping_rate" value="{{ module_product_schema_shipping_rate }}" id="input-shipping-rate" class="form-control"/>
+                    <div class="form-text">{{ help_shipping_rate }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">{{ entry_handling }}</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <input type="number" min="0" name="module_product_schema_handling_min" value="{{ module_product_schema_handling_min }}" class="form-control"/>
+                      <input type="number" min="0" name="module_product_schema_handling_max" value="{{ module_product_schema_handling_max }}" class="form-control"/>
+                      <span class="input-group-text">{{ text_days }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">{{ entry_transit }}</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <input type="number" min="0" name="module_product_schema_transit_min" value="{{ module_product_schema_transit_min }}" class="form-control"/>
+                      <input type="number" min="0" name="module_product_schema_transit_max" value="{{ module_product_schema_transit_max }}" class="form-control"/>
+                      <span class="input-group-text">{{ text_days }}</span>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div id="tab-organization" class="tab-pane">
+              <div class="alert alert-light">{{ text_organization_info }}</div>
+              <div class="row mb-3">
+                <label for="input-same-as" class="col-sm-2 col-form-label">{{ entry_same_as }}</label>
+                <div class="col-sm-10">
+                  <textarea name="module_product_schema_same_as" rows="6" id="input-same-as" class="form-control">{{ module_product_schema_same_as }}</textarea>
+                  <div class="form-text">{{ help_same_as }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

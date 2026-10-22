@@ -1,0 +1,7 @@
+{
+  "name": "Product Structured Data (JSON-LD)",
+  "description": "Adds schema.org Product, Offer, AggregateRating, Review, MerchantReturnPolicy, OfferShippingDetails, BreadcrumbList, Organization and WebSite JSON-LD using events. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-product-structured-data-json-ld/"
+}
