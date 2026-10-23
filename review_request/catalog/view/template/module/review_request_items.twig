@@ -1,0 +1,12 @@
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:16px 0;">
+  {% for product in products %}
+    <tr>
+      <td style="padding:8px 8px 8px 0;border-bottom:1px solid #eeeeee;width:80px;vertical-align:middle;">{% if product.thumb %}<img src="{{ product.thumb }}" width="80" height="80" alt="{{ product.name|e }}" style="display:block;border:0;"/>{% endif %}</td>
+      <td style="padding:8px;border-bottom:1px solid #eeeeee;vertical-align:middle;font-size:14px;">
+        <strong>{{ product.name|e }}</strong><br/>
+        <span style="color:#666666;font-size:13px;">{{ text_rate }}</span>
+        {% for rating, href in product.stars %}<a href="{{ href|e }}" title="{{ rating }}/5" style="color:#f5a623;font-size:26px;line-height:32px;text-decoration:none;">&#9733;</a>{% endfor %}
+      </td>
+    </tr>
+  {% endfor %}
+</table>

@@ -1,0 +1,110 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_settings }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_webp_images_status" value="0"/>
+                <input type="checkbox" name="module_webp_images_status" value="1" id="input-status" class="form-check-input"{% if module_webp_images_status %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ text_cache_note }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-format" class="col-sm-2 col-form-label">{{ entry_format }}</label>
+            <div class="col-sm-10">
+              <select name="module_webp_images_format" id="input-format" class="form-select">
+                <option value="webp"{% if module_webp_images_format == 'webp' %} selected{% endif %}>{{ text_webp }}</option>
+                <option value="avif"{% if module_webp_images_format == 'avif' %} selected{% endif %}{% if not support_avif %} disabled{% endif %}>{{ text_avif }}</option>
+              </select>
+              <div class="form-text">{{ help_format }}</div>
+              <div id="error-format" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-quality" class="col-sm-2 col-form-label">{{ entry_quality }}</label>
+            <div class="col-sm-10">
+              <input type="number" min="30" max="100" name="module_webp_images_quality" value="{{ module_webp_images_quality }}" id="input-quality" class="form-control"/>
+              <div class="form-text">{{ help_quality }}</div>
+              <div id="error-quality" class="invalid-feedback"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card mb-3">
+          <div class="card-header"><i class="fa-solid fa-server"></i> {{ text_server }}</div>
+          <table class="table mb-0">
+            <tr><td>{{ entry_php }}</td><td>{{ php_version }}</td></tr>
+            <tr><td>{{ entry_gd }}</td><td>{% if support_gd %}<span class="badge bg-success">{{ gd_version }}</span>{% else %}<span class="badge bg-danger">{{ text_no }}</span>{% endif %}</td></tr>
+            <tr><td>{{ entry_webp }}</td><td>{% if support_webp %}<span class="badge bg-success">{{ text_yes }}</span>{% else %}<span class="badge bg-danger">{{ text_no }}</span>{% endif %}</td></tr>
+            <tr><td>{{ entry_avif }}</td><td>{% if support_avif %}<span class="badge bg-success">{{ text_yes }}</span>{% else %}<span class="badge bg-secondary">{{ text_no }}</span>{% endif %}</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card mb-3">
+          <div class="card-header"><i class="fa-regular fa-images"></i> {{ text_files }}</div>
+          <div class="card-body">
+            <p>{{ text_files_info }}</p>
+            <div id="webp-result" class="alert alert-light d-none"></div>
+            <button type="button" id="button-scan" data-href="{{ scan }}" class="btn btn-light"><i class="fa-solid fa-calculator"></i> {{ button_scan }}</button>
+            <button type="button" id="button-clear" data-href="{{ clear }}" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> {{ button_clear }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#button-scan, #button-clear').on('click', function() {
+    if (this.id == 'button-clear' && !confirm('{{ text_confirm }}')) {
+        return;
+    }
+
+    var button = $(this);
+
+    $.ajax({
+        url: button.attr('data-href'),
+        dataType: 'json',
+        beforeSend: function() {
+            button.prop('disabled', true);
+        },
+        complete: function() {
+            button.prop('disabled', false);
+        },
+        success: function(json) {
+            $('#webp-result').removeClass('d-none alert-danger').addClass('alert-light').text(json['success'] || '');
+
+            if (json['error']) {
+                $('#webp-result').removeClass('alert-light').addClass('alert-danger').text(json['error']);
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+//--></script>
+{{ footer }}

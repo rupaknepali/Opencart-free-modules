@@ -1,0 +1,49 @@
+{% if hide_cart %}
+<style>#form-product .input-group:has(#button-cart){display:none!important;}</style>
+{% endif %}
+<div id="back-in-stock" class="border rounded p-3 mb-3">
+  <h5 class="mb-1">{{ text_title }}</h5>
+  <p class="text-muted small mb-2">{{ text_intro }}</p>
+  <form id="form-back-in-stock" action="{{ action }}" method="post" novalidate>
+    <div class="input-group">
+      <input type="email" name="email" value="{{ email|e }}" placeholder="{{ entry_email }}" aria-label="{{ entry_email }}" id="input-back-in-stock-email" class="form-control" required/>
+      <button type="submit" id="button-back-in-stock" class="btn btn-primary">{{ button_notify }}</button>
+    </div>
+    <input type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;"/>
+    <input type="hidden" name="product_id" value="{{ product_id }}"/>
+    <div id="back-in-stock-message" class="form-text">{{ text_privacy }}</div>
+  </form>
+</div>
+<script type="text/javascript"><!--
+$('#form-back-in-stock').on('submit', function(e) {
+    e.preventDefault();
+
+    var form = $(this);
+
+    $.ajax({
+        url: form.attr('action'),
+        type: 'post',
+        data: form.serialize(),
+        dataType: 'json',
+        beforeSend: function() {
+            $('#button-back-in-stock').prop('disabled', true);
+        },
+        complete: function() {
+            $('#button-back-in-stock').prop('disabled', false);
+        },
+        success: function(json) {
+            if (json['error']) {
+                $('#input-back-in-stock-email').addClass('is-invalid');
+                $('#back-in-stock-message').addClass('text-danger').text(json['error']);
+            }
+
+            if (json['success']) {
+                form.replaceWith('<div class="alert alert-success mb-0"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + '</div>');
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+//--></script>

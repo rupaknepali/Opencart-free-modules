@@ -1,0 +1,7 @@
+{
+  "name": "Back-in-Stock Notifications",
+  "description": "Adds a \"Notify me when it's back\" form to out-of-stock product pages, emails subscribers when stock returns, and reports the most wanted products and recovered sales. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-back-in-stock-notifications/"
+}

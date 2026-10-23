@@ -1,0 +1,50 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>{{ column_email }}</th>
+        <th>{{ column_product }}</th>
+        <th class="text-center d-none d-lg-table-cell">{{ column_quantity }}</th>
+        <th>{{ column_status }}</th>
+        <th class="text-center d-none d-lg-table-cell">{{ column_clicks }}</th>
+        <th>{{ column_order }}</th>
+        <th class="d-none d-lg-table-cell">{{ column_date_added }}</th>
+        <th class="d-none d-lg-table-cell">{{ column_date_notified }}</th>
+        <th class="text-end">{{ column_action }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if subscriptions %}
+        {% for subscription in subscriptions %}
+          <tr>
+            <td>{{ subscription.email }}{% if subscription.firstname %}<br/><small class="text-muted">{{ subscription.firstname }}</small>{% endif %}</td>
+            <td><a href="{{ subscription.product }}" target="_blank">{{ subscription.product_name }}</a></td>
+            <td class="text-center d-none d-lg-table-cell">{{ subscription.quantity }}</td>
+            <td>
+              {% if subscription.status_id == 2 %}
+                <span class="badge bg-success">{{ subscription.status }}</span>
+              {% elseif subscription.status_id == 1 %}
+                <span class="badge bg-info">{{ subscription.status }}</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">{{ subscription.status }}</span>
+              {% endif %}
+            </td>
+            <td class="text-center d-none d-lg-table-cell">{{ subscription.clicks }}</td>
+            <td>{% if subscription.order %}<a href="{{ subscription.order }}" target="_blank">#{{ subscription.order_id }}</a><br/><small>{{ subscription.order_total }}</small>{% endif %}</td>
+            <td class="d-none d-lg-table-cell">{{ subscription.date_added }}</td>
+            <td class="d-none d-lg-table-cell">{{ subscription.date_notified }}</td>
+            <td class="text-end"><a href="{{ subscription.delete }}" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger btn-sm btn-delete"><i class="fa-regular fa-trash-can"></i></a></td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td class="text-center" colspan="9">{{ text_no_results }}</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-sm-6 text-start">{{ pagination }}</div>
+  <div class="col-sm-6 text-end">{{ results }}</div>
+</div>

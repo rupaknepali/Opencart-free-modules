@@ -1,0 +1,7 @@
+{
+  "name": "WebP Images",
+  "description": "Serves WebP (or AVIF) versions of OpenCart's resized product, category and banner images automatically, without re-uploading anything. Keeps JPEG/PNG in emails. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-webp-images/"
+}

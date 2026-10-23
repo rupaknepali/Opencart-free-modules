@@ -1,0 +1,111 @@
+{{ header }}
+<div id="review-request" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item">{% if breadcrumb.href %}<a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>{% else %}{{ breadcrumb.text }}{% endif %}</li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    <div id="content" class="col">{{ content_top }}
+      <h1>{{ heading_title }}</h1>
+      <p>{{ text_intro }}</p>
+      {% for product in products %}
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img src="{{ product.thumb }}" alt="{{ product.name }}" width="100" height="100" class="img-thumbnail me-3"/>
+              <div>
+                <h2 class="h5 mb-1">{{ product.name }}</h2>
+                <a href="{{ product.href }}" target="_blank">{{ text_view_product }}</a>
+              </div>
+            </div>
+            {% if product.reviewed %}
+              <div class="alert alert-success mb-0"><i class="fa-solid fa-circle-check"></i> {{ text_reviewed }} {% for i in 1..5 %}{% if i <= product.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
+            {% else %}
+              <form id="form-review-{{ product.product_id }}" class="form-review-request" action="{{ save }}" method="post">
+                <input type="hidden" name="token" value="{{ token|e }}"/>
+                <input type="hidden" name="product_id" value="{{ product.product_id }}"/>
+                <div class="mb-3">
+                  <label class="form-label d-block">{{ entry_rating }}</label>
+                  <div class="rr-stars">
+                    {% for i in 5..1 %}
+                      <input type="radio" name="rating" value="{{ i }}" id="input-rating-{{ product.product_id }}-{{ i }}"{% if product.rating == i %} checked{% endif %}/><label for="input-rating-{{ product.product_id }}-{{ i }}" title="{{ i }}/5">&#9733;</label>
+                    {% endfor %}
+                  </div>
+                  <div class="invalid-feedback error-rating"></div>
+                </div>
+                <div class="mb-3">
+                  <label for="input-author-{{ product.product_id }}" class="form-label">{{ entry_author }}</label>
+                  <input type="text" name="author" value="{{ author }}" maxlength="25" id="input-author-{{ product.product_id }}" class="form-control"/>
+                  <div class="invalid-feedback error-author"></div>
+                </div>
+                <div class="mb-3">
+                  <label for="input-text-{{ product.product_id }}" class="form-label">{{ entry_text }}</label>
+                  <textarea name="text" rows="4" maxlength="1000" id="input-text-{{ product.product_id }}" class="form-control"{% if product.selected %} autofocus{% endif %}></textarea>
+                  <div class="form-text">{{ help_text }}</div>
+                  <div class="invalid-feedback error-text"></div>
+                </div>
+                <div class="alert alert-danger d-none error-warning"></div>
+                <button type="submit" class="btn btn-primary">{{ button_submit }}</button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      {% if not products %}
+        <div class="text-end"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
+      {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<style>
+.rr-stars{display:inline-flex;flex-direction:row-reverse;gap:4px;}
+.rr-stars input{position:absolute;opacity:0;width:1px;height:1px;}
+.rr-stars label{font-size:2rem;line-height:1;color:#cccccc;cursor:pointer;}
+.rr-stars input:checked ~ label,.rr-stars label:hover,.rr-stars label:hover ~ label{color:#f5a623;}
+.rr-stars input:focus-visible + label{outline:2px solid #1f6feb;border-radius:2px;}
+</style>
+<script type="text/javascript"><!--
+$('.form-review-request').on('submit', function(e) {
+    e.preventDefault();
+
+    var form = $(this);
+
+    $.ajax({
+        url: form.attr('action'),
+        type: 'post',
+        data: form.serialize(),
+        dataType: 'json',
+        beforeSend: function() {
+            form.find('button[type=\'submit\']').prop('disabled', true);
+        },
+        complete: function() {
+            form.find('button[type=\'submit\']').prop('disabled', false);
+        },
+        success: function(json) {
+            form.find('.is-invalid').removeClass('is-invalid');
+            form.find('.invalid-feedback').removeClass('d-block').text('');
+            form.find('.error-warning').addClass('d-none').text('');
+
+            if (json['error']) {
+                for (var key in json['error']) {
+                    if (key == 'warning') {
+                        form.find('.error-warning').removeClass('d-none').text(json['error'][key]);
+                    } else {
+                        form.find('[name=\'' + key + '\']').addClass('is-invalid');
+                        form.find('.error-' + key).addClass('d-block').text(json['error'][key]);
+                    }
+                }
+            }
+
+            if (json['success']) {
+                form.replaceWith('<div class="alert alert-success mb-0"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + '</div>');
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+//--></script>
+{{ footer }}

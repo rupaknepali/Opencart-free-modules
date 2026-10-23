@@ -1,0 +1,7 @@
+{
+  "name": "Review Request Emails",
+  "description": "Emails customers a few days after their order is complete and asks them to review what they bought, with one-click star ratings, a verified-buyer review page, an optional reminder and a report. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-review-request-emails/"
+}

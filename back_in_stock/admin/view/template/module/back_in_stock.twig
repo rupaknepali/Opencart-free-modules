@@ -1,0 +1,217 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_cron_info|format(cron) }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ text_general }}</a></li>
+          <li class="nav-item"><a href="#tab-email" data-bs-toggle="tab" class="nav-link">{{ text_email }}</a></li>
+          <li class="nav-item"><a href="#tab-wanted" data-bs-toggle="tab" class="nav-link">{{ text_wanted }}</a></li>
+          <li class="nav-item"><a href="#tab-report" data-bs-toggle="tab" class="nav-link">{{ text_report }}</a></li>
+        </ul>
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="tab-content">
+            <div id="tab-general" class="tab-pane active">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_back_in_stock_status" value="0"/>
+                    <input type="checkbox" name="module_back_in_stock_status" value="1" id="input-status" class="form-check-input"{% if module_back_in_stock_status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_hide_cart }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_back_in_stock_hide_cart" value="0"/>
+                    <input type="checkbox" name="module_back_in_stock_hide_cart" value="1" id="input-hide-cart" class="form-check-input"{% if module_back_in_stock_hide_cart %} checked{% endif %}/>
+                  </div>
+                  <div class="form-text">{{ help_hide_cart }}</div>
+                  {% if stock_checkout %}
+                    <div class="form-text text-warning">{{ text_stock_checkout }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-max-emails" class="col-sm-2 col-form-label">{{ entry_max_emails }}</label>
+                <div class="col-sm-10">
+                  <input type="number" min="1" name="module_back_in_stock_max_emails" value="{{ module_back_in_stock_max_emails }}" id="input-max-emails" class="form-control"/>
+                  <div class="form-text">{{ help_max_emails }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-retention" class="col-sm-2 col-form-label">{{ entry_retention }}</label>
+                <div class="col-sm-10">
+                  <input type="number" min="30" name="module_back_in_stock_retention" value="{{ module_back_in_stock_retention }}" id="input-retention" class="form-control"/>
+                  <div class="form-text">{{ help_retention }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-bcc" class="col-sm-2 col-form-label">{{ entry_bcc }}</label>
+                <div class="col-sm-10">
+                  <input type="email" name="module_back_in_stock_bcc" value="{{ module_back_in_stock_bcc }}" id="input-bcc" class="form-control"/>
+                  <div class="form-text">{{ help_bcc }}</div>
+                  <div id="error-bcc" class="invalid-feedback"></div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-email" class="tab-pane">
+              <div class="alert alert-light">{{ text_placeholders }}</div>
+              <div class="row mb-3 required">
+                <label for="input-subject" class="col-sm-2 col-form-label">{{ entry_subject }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="module_back_in_stock_subject" value="{{ module_back_in_stock_subject }}" id="input-subject" class="form-control"/>
+                  <div id="error-subject" class="invalid-feedback"></div>
+                </div>
+              </div>
+              <div class="row mb-3 required">
+                <label for="input-message" class="col-sm-2 col-form-label">{{ entry_message }}</label>
+                <div class="col-sm-10">
+                  <textarea name="module_back_in_stock_message" rows="10" id="input-message" data-oc-toggle="ckeditor" class="form-control">{{ module_back_in_stock_message }}</textarea>
+                  <div id="error-message" class="invalid-feedback"></div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-wanted" class="tab-pane">
+              <div class="alert alert-light">{{ text_wanted_info }}</div>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>{{ column_product }}</th>
+                      <th class="d-none d-lg-table-cell">{{ column_model }}</th>
+                      <th class="text-center">{{ column_waiting }}</th>
+                      <th class="text-center">{{ column_quantity }}</th>
+                      <th>{{ column_oldest }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% if wanted %}
+                      {% for product in wanted %}
+                        <tr>
+                          <td><a href="{{ product.edit }}" target="_blank">{{ product.product_name }}</a></td>
+                          <td class="d-none d-lg-table-cell">{{ product.model }}</td>
+                          <td class="text-center"><strong>{{ product.waiting }}</strong></td>
+                          <td class="text-center">{{ product.quantity }}</td>
+                          <td>{{ product.oldest }}</td>
+                        </tr>
+                      {% endfor %}
+                    {% else %}
+                      <tr>
+                        <td class="text-center" colspan="5">{{ text_no_results }}</td>
+                      </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div id="tab-report" class="tab-pane">
+              <div class="row text-center mb-4">
+                <div class="col"><div class="border rounded p-3"><div class="fs-3 fw-bold">{{ stat_waiting }}</div><div class="text-muted">{{ text_waiting }}</div></div></div>
+                <div class="col"><div class="border rounded p-3"><div class="fs-3 fw-bold">{{ stat_notified }}</div><div class="text-muted">{{ text_notified }}</div></div></div>
+                <div class="col"><div class="border rounded p-3"><div class="fs-3 fw-bold">{{ stat_purchased }}</div><div class="text-muted">{{ text_purchased }}</div></div></div>
+                <div class="col"><div class="border rounded p-3"><div class="fs-3 fw-bold">{{ stat_rate }}</div><div class="text-muted">{{ text_rate }}</div></div></div>
+                <div class="col"><div class="border rounded p-3"><div class="fs-3 fw-bold">{{ stat_revenue }}</div><div class="text-muted">{{ text_revenue }}</div></div></div>
+              </div>
+              <div class="row g-2 mb-3">
+                <div class="col-sm-4"><input type="text" value="" placeholder="{{ entry_filter_email }}" id="filter-email" class="form-control"/></div>
+                <div class="col-sm-3"><input type="text" value="" placeholder="{{ entry_filter_product }}" id="filter-product" class="form-control"/></div>
+                <div class="col-sm-3">
+                  <select id="filter-status" class="form-select">
+                    <option value="">{{ text_all }}</option>
+                    {% for status_id in 0..2 %}
+                      <option value="{{ status_id }}">{{ attribute(_context, 'text_status_' ~ status_id) }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-sm-2 d-grid"><button type="button" id="button-filter" class="btn btn-light"><i class="fa-solid fa-filter"></i> {{ button_filter }}</button></div>
+              </div>
+              <div id="subscription-list">{{ list }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('textarea[data-oc-toggle=\'ckeditor\']').ckeditor({
+    allowedContent: true
+});
+
+$('#subscription-list').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+
+    $('#subscription-list').load(this.href);
+});
+
+$('#button-filter').on('click', function() {
+    var url = 'index.php?route=extension/back_in_stock/module/back_in_stock.list&user_token={{ user_token }}';
+
+    var filter_email = $('#filter-email').val();
+
+    if (filter_email) {
+        url += '&filter_email=' + encodeURIComponent(filter_email);
+    }
+
+    var filter_product = $('#filter-product').val();
+
+    if (filter_product) {
+        url += '&filter_product=' + encodeURIComponent(filter_product);
+    }
+
+    var filter_status = $('#filter-status').val();
+
+    if (filter_status !== '') {
+        url += '&filter_status=' + filter_status;
+    }
+
+    $('#subscription-list').load(url);
+});
+
+$('#subscription-list').on('click', '.btn-delete', function(e) {
+    e.preventDefault();
+
+    if (!confirm('{{ text_confirm }}')) {
+        return;
+    }
+
+    var element = this;
+
+    $.ajax({
+        url: $(element).attr('href'),
+        dataType: 'json',
+        success: function(json) {
+            $('.alert-dismissible').remove();
+
+            if (json['error']) {
+                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+            }
+
+            if (json['success']) {
+                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+                $(element).closest('tr').remove();
+            }
+        }
+    });
+});
+//--></script>
+{{ footer }}

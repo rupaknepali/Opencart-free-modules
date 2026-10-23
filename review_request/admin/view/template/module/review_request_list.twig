@@ -1,0 +1,50 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>{{ column_email }}</th>
+        <th>{{ column_order }}</th>
+        <th class="d-none d-lg-table-cell">{{ column_products }}</th>
+        <th class="text-center">{{ column_emails }}</th>
+        <th class="text-center d-none d-lg-table-cell">{{ column_clicks }}</th>
+        <th class="text-center">{{ column_reviews }}</th>
+        <th>{{ column_status }}</th>
+        <th class="d-none d-lg-table-cell">{{ column_date_sent }}</th>
+        <th class="text-end">{{ column_action }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if requests %}
+        {% for request in requests %}
+          <tr>
+            <td>{{ request.email }}{% if request.firstname %}<br/><small class="text-muted">{{ request.firstname }}</small>{% endif %}</td>
+            <td><a href="{{ request.order }}" target="_blank">#{{ request.order_id }}</a></td>
+            <td class="d-none d-lg-table-cell"><small>{{ request.products }}</small></td>
+            <td class="text-center">{{ request.emails }}</td>
+            <td class="text-center d-none d-lg-table-cell">{{ request.clicks }}</td>
+            <td class="text-center">{{ request.reviews }}</td>
+            <td>
+              {% if request.status_id == 2 %}
+                <span class="badge bg-success">{{ request.status }}</span>
+              {% elseif request.status_id == 1 %}
+                <span class="badge bg-info">{{ request.status }}</span>
+              {% else %}
+                <span class="badge bg-secondary">{{ request.status }}</span>
+              {% endif %}
+            </td>
+            <td class="d-none d-lg-table-cell">{{ request.date_sent }}</td>
+            <td class="text-end"><a href="{{ request.delete }}" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger btn-sm btn-delete"><i class="fa-regular fa-trash-can"></i></a></td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td class="text-center" colspan="9">{{ text_no_results }}</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-sm-6 text-start">{{ pagination }}</div>
+  <div class="col-sm-6 text-end">{{ results }}</div>
+</div>
