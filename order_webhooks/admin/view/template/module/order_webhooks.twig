@@ -1,0 +1,232 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_cron_info|format(cron) }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a href="#tab-endpoint" data-bs-toggle="tab" class="nav-link active">{{ text_endpoints }}</a></li>
+          <li class="nav-item"><a href="#tab-delivery" data-bs-toggle="tab" class="nav-link">{{ text_deliveries }}</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-endpoint" class="tab-pane active">
+            <form id="form-module" action="{{ save }}" method="post">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_order_webhooks_status" value="0"/>
+                    <input type="checkbox" name="module_order_webhooks_status" value="1" id="input-status" class="form-check-input"{% if module_order_webhooks_status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-retention" class="col-sm-2 col-form-label">{{ entry_retention }}</label>
+                <div class="col-sm-10">
+                  <input type="number" min="7" name="module_order_webhooks_retention" value="{{ module_order_webhooks_retention }}" id="input-retention" class="form-control"/>
+                  <div class="form-text">{{ help_retention }}</div>
+                </div>
+              </div>
+              <div class="alert alert-light">{{ text_signature }}</div>
+              <div class="table-responsive">
+                <table id="endpoints" class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>{{ column_url }}</th>
+                      <th>{{ column_event }}</th>
+                      <th>{{ column_secret }}</th>
+                      <th class="text-center">{{ column_status }}</th>
+                      <th class="text-end">{{ column_action }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% set row = 0 %}
+                    {% for endpoint in endpoints %}
+                      <tr id="endpoint-row-{{ row }}">
+                        <td><input type="url" name="module_order_webhooks_endpoint[{{ row }}][url]" value="{{ endpoint.url|e }}" placeholder="https://" class="form-control"/>
+                          <div id="error-url-{{ row }}" class="invalid-feedback"></div></td>
+                        <td>{% for type in types %}
+                            <div class="form-check">
+                              <input type="checkbox" name="module_order_webhooks_endpoint[{{ row }}][event][]" value="{{ type }}" id="input-event-{{ row }}-{{ loop.index }}" class="form-check-input"{% if type in endpoint.event %} checked{% endif %}/> <label for="input-event-{{ row }}-{{ loop.index }}" class="form-check-label"><code>{{ type }}</code></label>
+                            </div>
+                          {% endfor %}
+                          <div id="error-event-{{ row }}" class="invalid-feedback"></div></td>
+                        <td>
+                          <div class="input-group">
+                            <input type="text" name="module_order_webhooks_endpoint[{{ row }}][secret]" value="{{ endpoint.secret }}" readonly class="form-control font-monospace small"/>
+                            <button type="button" class="btn btn-outline-secondary btn-new-secret" title="{{ button_secret }}"><i class="fa-solid fa-rotate"></i></button>
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div class="form-check form-switch form-switch-lg d-inline-block">
+                            <input type="hidden" name="module_order_webhooks_endpoint[{{ row }}][status]" value="0"/>
+                            <input type="checkbox" name="module_order_webhooks_endpoint[{{ row }}][status]" value="1" class="form-check-input"{% if endpoint.status %} checked{% endif %}/>
+                          </div>
+                        </td>
+                        <td class="text-end text-nowrap">
+                          <button type="button" data-endpoint="{{ row }}" class="btn btn-info btn-test" title="{{ button_test }}"><i class="fa-solid fa-paper-plane"></i></button>
+                          <button type="button" onclick="$('#endpoint-row-{{ row }}').remove();" title="{{ button_remove }}" class="btn btn-danger"><i class="fa-solid fa-minus-circle"></i></button>
+                        </td>
+                      </tr>
+                      {% set row = row + 1 %}
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="4">{% if not endpoints %}<span class="text-muted">{{ text_no_endpoints }}</span>{% endif %}</td>
+                      <td class="text-end"><button type="button" id="button-add" title="{{ button_add }}" class="btn btn-primary"><i class="fa-solid fa-plus-circle"></i></button></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </form>
+          </div>
+          <div id="tab-delivery" class="tab-pane">
+            <div id="delivery">{{ list }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+var endpoint_row = {{ endpoints|length }};
+var types = {{ types|json_encode }};
+
+$('#button-add').on('click', function() {
+    var html = '<tr id="endpoint-row-' + endpoint_row + '">';
+    html += '<td><input type="url" name="module_order_webhooks_endpoint[' + endpoint_row + '][url]" value="" placeholder="https://" class="form-control"/><div id="error-url-' + endpoint_row + '" class="invalid-feedback"></div></td><td>';
+
+    for (var i = 0; i < types.length; i++) {
+        html += '<div class="form-check"><input type="checkbox" name="module_order_webhooks_endpoint[' + endpoint_row + '][event][]" value="' + types[i] + '" id="input-event-' + endpoint_row + '-' + i + '" class="form-check-input" checked/> <label for="input-event-' + endpoint_row + '-' + i + '" class="form-check-label"><code>' + types[i] + '</code></label></div>';
+    }
+
+    html += '<div id="error-event-' + endpoint_row + '" class="invalid-feedback"></div></td>';
+    html += '<td><input type="text" name="module_order_webhooks_endpoint[' + endpoint_row + '][secret]" value="" readonly placeholder="Created when you save" class="form-control font-monospace small"/></td>';
+    html += '<td class="text-center"><div class="form-check form-switch form-switch-lg d-inline-block"><input type="hidden" name="module_order_webhooks_endpoint[' + endpoint_row + '][status]" value="0"/><input type="checkbox" name="module_order_webhooks_endpoint[' + endpoint_row + '][status]" value="1" class="form-check-input" checked/></div></td>';
+    html += '<td class="text-end"><button type="button" onclick="$(\'#endpoint-row-' + endpoint_row + '\').remove();" class="btn btn-danger"><i class="fa-solid fa-minus-circle"></i></button></td>';
+    html += '</tr>';
+
+    $('#endpoints tbody').append(html);
+
+    endpoint_row++;
+});
+
+$('#endpoints').on('click', '.btn-new-secret', function() {
+    // An empty secret is replaced with a new one when you save. Update your receiver with the new secret.
+    $(this).closest('.input-group').find('input').val('').attr('placeholder', 'New secret created when you save');
+});
+
+function showAlert(type, message) {
+    $('#alert').prepend('<div class="alert alert-' + type + ' alert-dismissible"><i class="fa-solid fa-circle-' + (type == 'success' ? 'check' : 'exclamation') + '"></i> ' + message + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+}
+
+$('#form-module').on('submit', function(e) {
+    e.preventDefault();
+
+    $('#form-module .is-invalid').removeClass('is-invalid');
+    $('#form-module .invalid-feedback').removeClass('d-block');
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'post',
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function(json) {
+            if (json['error']) {
+                if (json['error']['warning']) {
+                    showAlert('danger', json['error']['warning']);
+                }
+
+                for (var key in json['error']) {
+                    $('#error-' + key.replace(/_/g, '-')).html(json['error'][key]).addClass('d-block');
+                }
+            }
+
+            if (json['success']) {
+                showAlert('success', json['success']);
+
+                $('#endpoints tbody tr').each(function(index) {
+                    if (json['secrets'][index]) {
+                        $(this).find('input[name$="[secret]"]').val(json['secrets'][index]);
+                    }
+                });
+
+                $('#delivery').load('index.php?route=extension/order_webhooks/module/order_webhooks.list&user_token={{ user_token }}');
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+
+$('#endpoints').on('click', '.btn-test', function() {
+    var button = this;
+
+    $.ajax({
+        url: '{{ test }}&endpoint=' + $(button).attr('data-endpoint'),
+        dataType: 'json',
+        beforeSend: function() {
+            $(button).button('loading');
+        },
+        complete: function() {
+            $(button).button('reset');
+        },
+        success: function(json) {
+            if (json['error']) {
+                showAlert('danger', json['error']);
+            }
+
+            if (json['success']) {
+                showAlert('success', json['success']);
+
+                $('#delivery').load('index.php?route=extension/order_webhooks/module/order_webhooks.list&user_token={{ user_token }}');
+            }
+        }
+    });
+});
+
+$('#delivery').on('click', '.pagination a, .btn-filter', function(e) {
+    e.preventDefault();
+
+    $('#delivery').load(this.href || $(this).attr('data-href'));
+});
+
+$('#delivery').on('click', '.btn-resend', function(e) {
+    e.preventDefault();
+
+    var button = this;
+
+    $.ajax({
+        url: $(button).attr('href'),
+        dataType: 'json',
+        success: function(json) {
+            if (json['error']) {
+                showAlert('danger', json['error']);
+            }
+
+            if (json['success']) {
+                showAlert('success', json['success']);
+
+                $('#delivery').load('index.php?route=extension/order_webhooks/module/order_webhooks.list&user_token={{ user_token }}');
+            }
+        }
+    });
+});
+//--></script>
+{{ footer }}

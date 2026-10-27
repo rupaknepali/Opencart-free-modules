@@ -1,0 +1,155 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_cron_info|format(cron) }}</div>
+    <p class="text-muted">{{ text_statistics|format(statistics.items, statistics.customers, statistics.sent) }}</p>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ text_general }}</a></li>
+          <li class="nav-item"><a href="#tab-email" data-bs-toggle="tab" class="nav-link">{{ text_email }}</a></li>
+          <li class="nav-item"><a href="#tab-reward" data-bs-toggle="tab" class="nav-link">{{ text_reward_tab }}</a></li>
+          <li class="nav-item"><a href="#tab-wished" data-bs-toggle="tab" class="nav-link">{{ text_wished }}</a></li>
+        </ul>
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="tab-content">
+            <div id="tab-general" class="tab-pane active">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_wishlist_alerts_status" value="0"/>
+                    <input type="checkbox" name="module_wishlist_alerts_status" value="1" class="form-check-input"{% if module_wishlist_alerts_status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_price_drop }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_wishlist_alerts_price_drop" value="0"/>
+                    <input type="checkbox" name="module_wishlist_alerts_price_drop" value="1" class="form-check-input"{% if module_wishlist_alerts_price_drop %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-min-drop" class="col-sm-2 col-form-label">{{ entry_min_drop }}</label>
+                <div class="col-sm-10">
+                  <input type="number" min="1" max="90" name="module_wishlist_alerts_min_drop" value="{{ module_wishlist_alerts_min_drop }}" id="input-min-drop" class="form-control"/>
+                  <div class="form-text">{{ help_min_drop }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_restock }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_wishlist_alerts_restock" value="0"/>
+                    <input type="checkbox" name="module_wishlist_alerts_restock" value="1" class="form-check-input"{% if module_wishlist_alerts_restock %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_newsletter }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_wishlist_alerts_newsletter" value="0"/>
+                    <input type="checkbox" name="module_wishlist_alerts_newsletter" value="1" class="form-check-input"{% if module_wishlist_alerts_newsletter %} checked{% endif %}/>
+                  </div>
+                  <div class="form-text">{{ help_newsletter }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-cooldown" class="col-sm-2 col-form-label">{{ entry_cooldown }}</label>
+                <div class="col-sm-10">
+                  <input type="number" min="1" name="module_wishlist_alerts_cooldown" value="{{ module_wishlist_alerts_cooldown }}" id="input-cooldown" class="form-control"/>
+                  <div class="form-text">{{ help_cooldown }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-max-emails" class="col-sm-2 col-form-label">{{ entry_max_emails }}</label>
+                <div class="col-sm-10">
+                  <input type="number" min="1" name="module_wishlist_alerts_max_emails" value="{{ module_wishlist_alerts_max_emails }}" id="input-max-emails" class="form-control"/>
+                  <div class="form-text">{{ help_max_emails }}</div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-email" class="tab-pane">
+              <div class="alert alert-light">{{ text_placeholders }}</div>
+              <div class="row mb-3 required">
+                <label for="input-subject" class="col-sm-2 col-form-label">{{ entry_subject }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="module_wishlist_alerts_subject" value="{{ module_wishlist_alerts_subject }}" id="input-subject" class="form-control"/>
+                  <div id="error-subject" class="invalid-feedback"></div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-message" class="col-sm-2 col-form-label">{{ entry_message }}</label>
+                <div class="col-sm-10">
+                  <textarea name="module_wishlist_alerts_message" rows="4" id="input-message" class="form-control">{{ module_wishlist_alerts_message }}</textarea>
+                </div>
+              </div>
+            </div>
+            <div id="tab-reward" class="tab-pane">
+              <div class="alert alert-light">{{ text_reward_info }}</div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_reward }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_wishlist_alerts_reward" value="0"/>
+                    <input type="checkbox" name="module_wishlist_alerts_reward" value="1" class="form-check-input"{% if module_wishlist_alerts_reward %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-wished" class="tab-pane">
+              <p>{{ text_wished_info }}</p>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>{{ column_product }}</th>
+                      <th>{{ column_model }}</th>
+                      <th class="text-end">{{ column_price }}</th>
+                      <th class="text-end">{{ column_quantity }}</th>
+                      <th class="text-end">{{ column_total }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for product in wished %}
+                      <tr>
+                        <td><a href="{{ product.edit }}">{{ product.name }}</a></td>
+                        <td>{{ product.model }}</td>
+                        <td class="text-end">{{ product.price }}</td>
+                        <td class="text-end">{{ product.quantity }}</td>
+                        <td class="text-end">{{ product.total }}</td>
+                      </tr>
+                    {% else %}
+                      <tr>
+                        <td colspan="5" class="text-center">{{ text_no_results }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

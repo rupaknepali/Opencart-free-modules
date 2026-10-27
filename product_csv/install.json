@@ -1,0 +1,7 @@
+{
+  "name": "Bulk Price & Stock CSV",
+  "description": "Export products to CSV and update price, quantity and status in bulk from a CSV file, matched by product ID, model or SKU. Shows a preview of every change before anything is saved. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-bulk-product-csv-import-export/"
+}

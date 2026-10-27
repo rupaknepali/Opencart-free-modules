@@ -1,0 +1,7 @@
+{
+  "name": "Wishlist Alerts & Reward Points",
+  "description": "Emails customers when a product on their wishlist drops in price or comes back in stock, one email per customer with all their changed products. Daily cron, cooldown and newsletter-consent options. Optionally adds earned reward points automatically when an order is complete. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-wishlist-reward-points-loyalty/"
+}

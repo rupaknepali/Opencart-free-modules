@@ -1,0 +1,7 @@
+{
+  "name": "Order Webhooks",
+  "description": "Sends signed JSON webhooks (Standard Webhooks format) to your own URLs when an order is placed, an order status changes or a customer registers. Failed deliveries are retried by the OpenCart cron. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-order-webhooks/"
+}

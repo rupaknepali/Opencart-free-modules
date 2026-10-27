@@ -1,0 +1,7 @@
+{
+  "name": "AI Image Alt Text",
+  "description": "Writes descriptive alt text for product images with Claude (vision), in every store language, and shows it on product pages and product listings instead of the product name. Review and edit every text before it goes live. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-ai-image-alt-text-generator/"
+}

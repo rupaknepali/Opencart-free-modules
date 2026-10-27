@@ -1,0 +1,59 @@
+{% if unchanged %}
+  <p class="text-muted">{{ text_unchanged|format(unchanged) }}</p>
+{% endif %}
+{% if errors %}
+  <h5 class="text-danger">{{ text_errors }} ({{ errors|length }})</h5>
+  <div class="table-responsive mb-4">
+    <table class="table table-sm table-bordered">
+      <thead>
+        <tr>
+          <th class="text-end" style="width: 80px;">{{ column_line }}</th>
+          <th>{{ column_message }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for error in errors %}
+          <tr>
+            <td class="text-end">{{ error.line }}</td>
+            <td>{{ error.message|e }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+<h5>{{ text_changes }} ({{ total }})</h5>
+{% if total > changes|length %}
+  <p class="text-muted">{{ text_more|format(total) }}</p>
+{% endif %}
+{% if changes %}
+  <div class="table-responsive">
+    <table class="table table-sm table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="text-end" style="width: 80px;">{{ column_line }}</th>
+          <th>{{ column_product }}</th>
+          <th class="text-end">{{ column_price }}</th>
+          <th class="text-end">{{ column_quantity }}</th>
+          <th class="text-center">{{ column_status }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for change in changes %}
+          <tr>
+            <td class="text-end">{{ change.line }}</td>
+            <td><a href="{{ change.edit }}" target="_blank">{{ change.name }}</a> <small class="text-muted">{{ change.model }}</small>{% if change.variant %} <span class="badge bg-info">{{ text_variant }}</span>{% endif %}</td>
+            <td class="text-end">{% if change.price %}<del class="text-muted">{{ change.price[0]|number_format(2) }}</del> &rarr; <strong>{{ change.price[1]|number_format(2) }}</strong>{% endif %}</td>
+            <td class="text-end">{% if change.quantity %}<del class="text-muted">{{ change.quantity[0] }}</del> &rarr; <strong>{{ change.quantity[1] }}</strong>{% endif %}</td>
+            <td class="text-center">{% if change.status %}{{ change.status[1] ? text_enabled : text_disabled }}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if has_variant %}
+    <p class="text-muted small">{{ text_variant_info }}</p>
+  {% endif %}
+{% else %}
+  <p>{{ text_no_changes }}</p>
+{% endif %}

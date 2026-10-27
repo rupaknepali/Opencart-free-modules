@@ -1,0 +1,93 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    {% if not seo_url %}
+      <div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_seo_url }}</div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_canonical }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_hreflang_seo_canonical" value="0"/>
+                <input type="checkbox" name="module_hreflang_seo_canonical" value="1" id="input-canonical" class="form-check-input"{% if module_hreflang_seo_canonical %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_canonical }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_noindex }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_hreflang_seo_noindex" value="0"/>
+                <input type="checkbox" name="module_hreflang_seo_noindex" value="1" id="input-noindex" class="form-check-input"{% if module_hreflang_seo_noindex %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_noindex }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-x-default" class="col-sm-2 col-form-label">{{ entry_x_default }}</label>
+            <div class="col-sm-10">
+              <select name="module_hreflang_seo_x_default" id="input-x-default" class="form-select">
+                {% for language in languages %}
+                  <option value="{{ language.code }}"{% if language.code == module_hreflang_seo_x_default %} selected{% endif %}>{{ language.name }}</option>
+                {% endfor %}
+              </select>
+              <div class="form-text">{{ help_x_default }}</div>
+            </div>
+          </div>
+          <fieldset>
+            <legend>{{ text_languages }}</legend>
+            <div class="form-text mb-2">{{ help_hreflang }}</div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>{{ column_language }}</th>
+                  <th>{{ column_code }}</th>
+                  <th>{{ column_hreflang }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for language in languages %}
+                  <tr>
+                    <td>{{ language.name }}{% if not language.status %} <span class="badge bg-secondary">{{ text_disabled }}</span>{% endif %}</td>
+                    <td><code>{{ language.code }}</code></td>
+                    <td><input type="text" name="module_hreflang_seo_code[{{ language.code }}]" value="{{ language.hreflang }}" placeholder="{{ language.default }}" id="input-code-{{ language.code }}" class="form-control"/>
+                      <div id="error-code-{{ language.code }}" class="invalid-feedback"></div></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </fieldset>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_hreflang_seo_status" value="0"/>
+                <input type="checkbox" name="module_hreflang_seo_status" value="1" id="input-status" class="form-check-input"{% if module_hreflang_seo_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

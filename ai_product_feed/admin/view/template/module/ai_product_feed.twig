@@ -1,0 +1,92 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_cron_info|format(cron) }}</div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <p><strong>{{ text_feed }}:</strong> <a href="{{ feed_url }}" target="_blank" class="text-break">{{ feed_url }}</a></p>
+        <p><strong>{{ text_preview }}:</strong> <a href="{{ preview_url }}" target="_blank" class="text-break">{{ preview_url }}</a></p>
+        <p class="mb-2">{{ generated ? generated : text_not_generated }}</p>
+        <p class="text-muted mb-0">{{ text_upload }}</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-item-id" class="col-sm-2 col-form-label">{{ entry_item_id }}</label>
+            <div class="col-sm-10">
+              <select name="module_ai_product_feed_item_id" id="input-item-id" class="form-select">
+                <option value="product_id"{% if module_ai_product_feed_item_id == 'product_id' %} selected{% endif %}>{{ text_product_id }}</option>
+                <option value="model"{% if module_ai_product_feed_item_id == 'model' %} selected{% endif %}>{{ text_model }}</option>
+                <option value="sku"{% if module_ai_product_feed_item_id == 'sku' %} selected{% endif %}>{{ text_sku }}</option>
+              </select>
+              <div class="form-text">{{ help_item_id }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-currency" class="col-sm-2 col-form-label">{{ entry_currency }}</label>
+            <div class="col-sm-10">
+              <select name="module_ai_product_feed_currency" id="input-currency" class="form-select">
+                {% for currency in currencies %}
+                  <option value="{{ currency.code }}"{% if currency.code == module_ai_product_feed_currency %} selected{% endif %}>{{ currency.title }} ({{ currency.code }})</option>
+                {% endfor %}
+              </select>
+              <div class="form-text">{{ help_currency }}</div>
+            </div>
+          </div>
+          {% for setting in [['tax', entry_tax, help_tax, module_ai_product_feed_tax], ['out_of_stock', entry_out_of_stock, help_out_of_stock, module_ai_product_feed_out_of_stock], ['brand_fallback', entry_brand_fallback, help_brand_fallback, module_ai_product_feed_brand_fallback]] %}
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">{{ setting[1] }}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-switch form-switch-lg">
+                  <input type="hidden" name="module_ai_product_feed_{{ setting[0] }}" value="0"/>
+                  <input type="checkbox" name="module_ai_product_feed_{{ setting[0] }}" value="1" class="form-check-input"{% if setting[3] %} checked{% endif %}/>
+                </div>
+                <div class="form-text">{{ setting[2] }}</div>
+              </div>
+            </div>
+          {% endfor %}
+          {% for page in [['return', entry_return, module_ai_product_feed_return], ['privacy', entry_privacy, module_ai_product_feed_privacy], ['terms', entry_terms, module_ai_product_feed_terms]] %}
+            <div class="row mb-3">
+              <label for="input-{{ page[0] }}" class="col-sm-2 col-form-label">{{ page[1] }}</label>
+              <div class="col-sm-10">
+                <select name="module_ai_product_feed_{{ page[0] }}" id="input-{{ page[0] }}" class="form-select">
+                  <option value="0">{{ text_none }}</option>
+                  {% for information in informations %}
+                    <option value="{{ information.information_id }}"{% if information.information_id == page[2] %} selected{% endif %}>{{ information.title }}</option>
+                  {% endfor %}
+                </select>
+                {% if loop.last %}<div class="form-text">{{ help_pages }}</div>{% endif %}
+              </div>
+            </div>
+          {% endfor %}
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_ai_product_feed_status" value="0"/>
+                <input type="checkbox" name="module_ai_product_feed_status" value="1" class="form-check-input"{% if module_ai_product_feed_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

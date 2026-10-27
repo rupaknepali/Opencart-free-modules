@@ -1,0 +1,89 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-analytics" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_events }}</div>
+    <div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_duplicate }}</div>
+    {% if cookie_policy %}
+      <div class="alert alert-light">{{ text_cookie_policy }}</div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-analytics" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3 required">
+            <label for="input-measurement-id" class="col-sm-2 col-form-label">{{ entry_measurement_id }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="analytics_ga4_ecommerce_measurement_id" value="{{ analytics_ga4_ecommerce_measurement_id }}" placeholder="G-XXXXXXXXXX" id="input-measurement-id" class="form-control"/>
+              <div class="form-text">{{ help_measurement_id }}</div>
+              <div id="error-measurement-id" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-item-id" class="col-sm-2 col-form-label">{{ entry_item_id }}</label>
+            <div class="col-sm-10">
+              <select name="analytics_ga4_ecommerce_item_id" id="input-item-id" class="form-select">
+                <option value="product_id"{% if analytics_ga4_ecommerce_item_id == 'product_id' %} selected{% endif %}>{{ text_product_id }}</option>
+                <option value="model"{% if analytics_ga4_ecommerce_item_id == 'model' %} selected{% endif %}>{{ text_model }}</option>
+                <option value="sku"{% if analytics_ga4_ecommerce_item_id == 'sku' %} selected{% endif %}>{{ text_sku }}</option>
+              </select>
+              <div class="form-text">{{ help_item_id }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_tax }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="analytics_ga4_ecommerce_tax" value="0"/>
+                <input type="checkbox" name="analytics_ga4_ecommerce_tax" value="1" id="input-tax" class="form-check-input"{% if analytics_ga4_ecommerce_tax %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_tax }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_list }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="analytics_ga4_ecommerce_list" value="0"/>
+                <input type="checkbox" name="analytics_ga4_ecommerce_list" value="1" id="input-list" class="form-check-input"{% if analytics_ga4_ecommerce_list %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_list }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_debug }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="analytics_ga4_ecommerce_debug" value="0"/>
+                <input type="checkbox" name="analytics_ga4_ecommerce_debug" value="1" id="input-debug" class="form-check-input"{% if analytics_ga4_ecommerce_debug %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_debug }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="analytics_ga4_ecommerce_status" value="0"/>
+                <input type="checkbox" name="analytics_ga4_ecommerce_status" value="1" id="input-status" class="form-check-input"{% if analytics_ga4_ecommerce_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

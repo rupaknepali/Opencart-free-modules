@@ -1,0 +1,7 @@
+{
+  "name": "AI Shop Assistant",
+  "description": "A chat assistant on every page that answers shoppers' questions by searching your catalog with Claude tool use. Read-only product tools, rate limits, store facts and a log of what customers ask. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-ai-shopping-assistant-chatbot-claude/"
+}

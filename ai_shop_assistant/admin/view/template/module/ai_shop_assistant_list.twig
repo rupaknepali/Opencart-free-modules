@@ -1,0 +1,32 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th style="width: 160px;">{{ column_date }}</th>
+        <th>{{ column_question }}</th>
+        <th>{{ column_products }}</th>
+        <th>{{ column_conversation }}</th>
+        <th class="text-end">{{ column_tokens }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+        <tr>
+          <td class="text-nowrap small">{{ log.date_added }}</td>
+          <td>{{ log.question|e }}</td>
+          <td class="small">{% if log.products %}{{ log.products|e }}{% else %}<span class="text-danger">{{ text_none }}</span>{% endif %}</td>
+          <td class="font-monospace small">{{ log.conversation }}</td>
+          <td class="text-end">{{ log.tokens }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="5" class="text-center">{{ text_no_results }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-sm-6 text-start">{{ pagination }}</div>
+  <div class="col-sm-6 text-end">{{ results }}</div>
+</div>

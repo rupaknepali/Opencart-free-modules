@@ -1,0 +1,186 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a href="#tab-images" data-bs-toggle="tab" class="nav-link active">{{ text_images }}</a></li>
+          <li class="nav-item"><a href="#tab-settings" data-bs-toggle="tab" class="nav-link">{{ text_settings }}</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-images" class="tab-pane active">
+            <div class="alert alert-info">{{ text_info }}</div>
+            <div id="image-list">{{ list }}</div>
+          </div>
+          <div id="tab-settings" class="tab-pane">
+            <div class="alert alert-light">{{ text_privacy }}</div>
+            <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+              <div class="row mb-3">
+                <label for="input-api-key" class="col-sm-2 col-form-label">{{ entry_api_key }}</label>
+                <div class="col-sm-10">
+                  <input type="password" name="module_ai_alt_text_api_key" value="{{ module_ai_alt_text_api_key }}" autocomplete="off" id="input-api-key" class="form-control"/>
+                  <div class="form-text">{{ help_api_key }}</div>
+                  <div id="error-api-key" class="invalid-feedback"></div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-model" class="col-sm-2 col-form-label">{{ entry_model }}</label>
+                <div class="col-sm-10">
+                  <select name="module_ai_alt_text_model" id="input-model" class="form-select">
+                    {% for model in models %}
+                      <option value="{{ model }}"{% if model == module_ai_alt_text_model %} selected{% endif %}>{{ model }}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="form-text">{{ text_cost }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_language }}</label>
+                <div class="col-sm-10">
+                  {% for language in languages %}
+                    <div class="form-check form-check-inline">
+                      <input type="checkbox" name="module_ai_alt_text_language[]" value="{{ language.language_id }}" id="input-language-{{ language.language_id }}" class="form-check-input"{% if language.language_id in module_ai_alt_text_language %} checked{% endif %}/> <label for="input-language-{{ language.language_id }}" class="form-check-label">{{ language.name }}</label>
+                    </div>
+                  {% endfor %}
+                  <div class="form-text">{{ help_language }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-instructions" class="col-sm-2 col-form-label">{{ entry_instructions }}</label>
+                <div class="col-sm-10">
+                  <textarea name="module_ai_alt_text_instructions" rows="3" id="input-instructions" class="form-control">{{ module_ai_alt_text_instructions }}</textarea>
+                  <div class="form-text">{{ help_instructions }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_ai_alt_text_status" value="0"/>
+                    <input type="checkbox" name="module_ai_alt_text_status" value="1" class="form-check-input"{% if module_ai_alt_text_status %} checked{% endif %}/>
+                  </div>
+                  <div class="form-text">{{ help_status }}</div>
+                </div>
+              </div>
+              <div class="text-end"><button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> {{ button_save }}</button></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+var generate_url = 'index.php?route=extension/ai_alt_text/module/ai_alt_text.generate&user_token={{ user_token }}';
+
+function showAlert(type, message) {
+    $('#alert').prepend('<div class="alert alert-' + type + ' alert-dismissible"><i class="fa-solid fa-circle-' + (type == 'success' ? 'check' : 'exclamation') + '"></i> ' + message + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+}
+
+// Asks for one image and fills its fields. Returns a jQuery promise.
+function generateImage(button) {
+    var row = $(button).closest('.image-row');
+
+    $(button).prop('disabled', true).find('i').attr('class', 'fa-solid fa-spinner fa-spin');
+
+    return $.ajax({
+        url: generate_url,
+        type: 'post',
+        dataType: 'json',
+        data: {product_id: row.attr('data-product-id'), image: row.attr('data-image')}
+    }).done(function(json) {
+        if (json['error']) {
+            row.find('.image-error').text(json['error']).removeClass('d-none');
+        }
+
+        if (json['alts']) {
+            row.find('.image-error').addClass('d-none');
+
+            for (var language_id in json['alts']) {
+                row.find('input[data-language-id="' + language_id + '"]').val(json['alts'][language_id]).addClass('border-info');
+                row.find('input.source[data-language-id="' + language_id + '"]').val('ai');
+            }
+        }
+    }).always(function() {
+        $(button).prop('disabled', false).find('i').attr('class', 'fa-solid fa-wand-magic-sparkles');
+    });
+}
+
+$('#image-list').on('click', '.btn-generate', function() {
+    generateImage(this);
+});
+
+// One request at a time, to stay within API rate limits.
+$('#image-list').on('click', '#button-generate-page', function() {
+    var buttons = $('#image-list .image-row').filter(function() {
+        return $(this).find('input.alt').filter(function() { return this.value == ''; }).length > 0;
+    }).find('.btn-generate').toArray();
+
+    var total = buttons.length;
+    var done = 0;
+
+    function next() {
+        if (!buttons.length) {
+            showAlert('success', '{{ text_generated|escape('js') }}');
+
+            return;
+        }
+
+        done++;
+
+        $('#generate-status').text('{{ text_generating|escape('js') }}'.replace('%s', done).replace('%s', total));
+
+        generateImage(buttons.shift()).always(next);
+    }
+
+    next();
+});
+
+$('#image-list').on('submit', '#form-alt', function(e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'post',
+        dataType: 'json',
+        data: $(this).serialize(),
+        success: function(json) {
+            if (json['error']) {
+                showAlert('danger', json['error']);
+            }
+
+            if (json['success']) {
+                showAlert('success', json['success']);
+
+                $('#image-list input.alt').removeClass('border-info');
+            }
+        }
+    });
+});
+
+$('#image-list').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+
+    $('#image-list').load(this.href);
+});
+
+$('#image-list').on('submit', '#form-filter', function(e) {
+    e.preventDefault();
+
+    $('#image-list').load('index.php?route=extension/ai_alt_text/module/ai_alt_text.list&user_token={{ user_token }}&' + $(this).serialize());
+});
+//--></script>
+{{ footer }}

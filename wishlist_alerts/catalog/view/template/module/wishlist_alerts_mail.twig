@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>{{ title }}</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:Arial,Helvetica,sans-serif;color:#222;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:24px 0;">
+  <tr>
+    <td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:6px;">
+        <tr>
+          <td style="padding:24px 24px 8px;font-size:18px;font-weight:bold;"><a href="{{ store_url }}" style="color:#222;text-decoration:none;">{{ store_name }}</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 24px 16px;font-size:15px;line-height:22px;">{{ message }}</td>
+        </tr>
+        {% for product in products %}
+          <tr>
+            <td style="padding:0 24px 12px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:6px;">
+                <tr>
+                  {% if product.image %}
+                    <td width="120" style="padding:12px;"><a href="{{ product.href }}"><img src="{{ product.image }}" width="96" height="96" alt="{{ product.name }}" style="display:block;border:0;"/></a></td>
+                  {% endif %}
+                  <td style="padding:12px;font-size:15px;line-height:22px;">
+                    <span style="display:inline-block;background:{{ product.reason == 'restock' ? '#dcfce7' : '#dbeafe' }};color:{{ product.reason == 'restock' ? '#166534' : '#1e40af' }};font-size:12px;font-weight:bold;padding:2px 8px;border-radius:10px;">{{ product.reason == 'restock' ? text_restock : text_price_drop }}</span><br/>
+                    <a href="{{ product.href }}" style="color:#222;font-weight:bold;text-decoration:none;">{{ product.name }}</a><br/>
+                    {% if product.reason == 'price' %}<del style="color:#888;">{{ product.old_price }}</del> {% endif %}<strong style="color:#1f6feb;">{{ product.price }}</strong><br/>
+                    <a href="{{ product.href }}" style="display:inline-block;margin-top:8px;background:#1f6feb;color:#ffffff;padding:8px 16px;border-radius:4px;text-decoration:none;font-size:14px;">{{ text_view }}</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td style="padding:16px 24px 24px;font-size:12px;line-height:18px;color:#6b7280;">{{ text_footer }}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

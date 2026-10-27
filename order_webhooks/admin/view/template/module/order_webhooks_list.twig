@@ -1,0 +1,47 @@
+<div class="mb-3 text-end">
+  <a data-href="index.php?route=extension/order_webhooks/module/order_webhooks.list&user_token={{ user_token }}" href="#" class="btn btn-light btn-sm btn-filter">{{ text_all }}</a>
+  <a data-href="index.php?route=extension/order_webhooks/module/order_webhooks.list&user_token={{ user_token }}&filter_status=0" href="#" class="btn btn-light btn-sm btn-filter">{{ text_status_0 }}</a>
+  <a data-href="index.php?route=extension/order_webhooks/module/order_webhooks.list&user_token={{ user_token }}&filter_status=2" href="#" class="btn btn-light btn-sm btn-filter">{{ text_status_2 }}</a>
+</div>
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>{{ column_date_added }}</th>
+        <th>{{ column_event }}</th>
+        <th>{{ column_url }}</th>
+        <th class="text-center">{{ column_status }}</th>
+        <th class="text-end">{{ column_attempts }}</th>
+        <th>{{ column_response }}</th>
+        <th>{{ column_next }}</th>
+        <th class="text-end">{{ column_action }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if deliveries %}
+        {% for delivery in deliveries %}
+          <tr>
+            <td class="text-nowrap">{{ delivery.date_added }}<br/><small class="text-muted font-monospace">{{ delivery.message_id }}</small></td>
+            <td><code>{{ delivery.event }}</code></td>
+            <td class="text-break small">{{ delivery.url|e }}</td>
+            <td class="text-center">
+              {% if delivery.status_id == 1 %}<span class="badge bg-success">{{ delivery.status }}</span>{% elseif delivery.status_id == 2 %}<span class="badge bg-danger">{{ delivery.status }}</span>{% else %}<span class="badge bg-warning text-dark">{{ delivery.status }}</span>{% endif %}
+            </td>
+            <td class="text-end">{{ delivery.attempts }}</td>
+            <td class="small">{% if delivery.response_code %}HTTP {{ delivery.response_code }}{% endif %}<div class="text-muted text-break">{{ delivery.response_body|slice(0, 160)|e }}</div></td>
+            <td class="text-nowrap small">{{ delivery.next_attempt }}</td>
+            <td class="text-end"><a href="{{ delivery.resend }}" title="{{ button_resend }}" class="btn btn-warning btn-sm btn-resend"><i class="fa-solid fa-paper-plane"></i></a></td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td class="text-center" colspan="8">{{ text_no_results }}</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-sm-6 text-start">{{ pagination }}</div>
+  <div class="col-sm-6 text-end">{{ results }}</div>
+</div>

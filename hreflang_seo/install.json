@@ -1,0 +1,7 @@
+{
+  "name": "Hreflang & Canonical SEO",
+  "description": "Adds hreflang alternate links (with x-default) for every language, fills in missing canonical tags on the home and information pages, and adds noindex to search, compare, cart, checkout and account pages. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-hreflang-canonical-multi-language-seo/"
+}

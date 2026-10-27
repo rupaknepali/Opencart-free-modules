@@ -1,0 +1,110 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <p class="text-muted">{{ text_statistics|format(statistics.questions, statistics.conversations, statistics.input_tokens|number_format, statistics.output_tokens|number_format) }}</p>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a href="#tab-settings" data-bs-toggle="tab" class="nav-link active">{{ text_settings }}</a></li>
+          <li class="nav-item"><a href="#tab-questions" data-bs-toggle="tab" class="nav-link">{{ text_questions }}</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-settings" class="tab-pane active">
+            <div class="alert alert-light">{{ text_privacy }}</div>
+            <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+              <div class="row mb-3 required">
+                <label for="input-api-key" class="col-sm-2 col-form-label">{{ entry_api_key }}</label>
+                <div class="col-sm-10">
+                  <input type="password" name="module_ai_shop_assistant_api_key" value="{{ module_ai_shop_assistant_api_key }}" autocomplete="off" id="input-api-key" class="form-control"/>
+                  <div class="form-text">{{ help_api_key }}</div>
+                  <div id="error-api-key" class="invalid-feedback"></div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-model" class="col-sm-2 col-form-label">{{ entry_model }}</label>
+                <div class="col-sm-10">
+                  <select name="module_ai_shop_assistant_model" id="input-model" class="form-select">
+                    {% for model in models %}
+                      <option value="{{ model }}"{% if model == module_ai_shop_assistant_model %} selected{% endif %}>{{ model }}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="form-text">{{ text_cost }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-title" class="col-sm-2 col-form-label">{{ entry_title }}</label>
+                <div class="col-sm-10"><input type="text" name="module_ai_shop_assistant_title" value="{{ module_ai_shop_assistant_title }}" id="input-title" class="form-control"/></div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-welcome" class="col-sm-2 col-form-label">{{ entry_welcome }}</label>
+                <div class="col-sm-10"><input type="text" name="module_ai_shop_assistant_welcome" value="{{ module_ai_shop_assistant_welcome }}" id="input-welcome" class="form-control"/></div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-color" class="col-sm-2 col-form-label">{{ entry_color }}</label>
+                <div class="col-sm-10"><input type="color" name="module_ai_shop_assistant_color" value="{{ module_ai_shop_assistant_color }}" id="input-color" class="form-control form-control-color"/></div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-facts" class="col-sm-2 col-form-label">{{ entry_facts }}</label>
+                <div class="col-sm-10">
+                  <textarea name="module_ai_shop_assistant_facts" rows="6" id="input-facts" class="form-control">{{ module_ai_shop_assistant_facts }}</textarea>
+                  <div class="form-text">{{ help_facts }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-session-limit" class="col-sm-2 col-form-label">{{ entry_session_limit }}</label>
+                <div class="col-sm-10"><input type="number" min="1" name="module_ai_shop_assistant_session_limit" value="{{ module_ai_shop_assistant_session_limit }}" id="input-session-limit" class="form-control"/></div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-ip-limit" class="col-sm-2 col-form-label">{{ entry_ip_limit }}</label>
+                <div class="col-sm-10">
+                  <input type="number" min="1" name="module_ai_shop_assistant_ip_limit" value="{{ module_ai_shop_assistant_ip_limit }}" id="input-ip-limit" class="form-control"/>
+                  <div class="form-text">{{ help_limits }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-retention" class="col-sm-2 col-form-label">{{ entry_retention }}</label>
+                <div class="col-sm-10"><input type="number" min="1" name="module_ai_shop_assistant_retention" value="{{ module_ai_shop_assistant_retention }}" id="input-retention" class="form-control"/></div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_ai_shop_assistant_status" value="0"/>
+                    <input type="checkbox" name="module_ai_shop_assistant_status" value="1" class="form-check-input"{% if module_ai_shop_assistant_status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div id="tab-questions" class="tab-pane">
+            <p>{{ text_questions_info }}</p>
+            <div id="questions">{{ list }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#questions').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+
+    $('#questions').load(this.href);
+});
+//--></script>
+{{ footer }}

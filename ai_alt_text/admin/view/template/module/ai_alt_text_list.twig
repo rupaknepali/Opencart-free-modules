@@ -1,0 +1,48 @@
+<form id="form-filter" class="row g-2 align-items-center mb-3">
+  <div class="col-sm-5"><input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ entry_name }}" class="form-control"/></div>
+  <div class="col-sm-5">
+    <div class="form-check">
+      <input type="checkbox" name="filter_missing" value="1" id="input-filter-missing" class="form-check-input"{% if filter_missing %} checked{% endif %}/> <label for="input-filter-missing" class="form-check-label">{{ text_missing }}</label>
+    </div>
+  </div>
+  <div class="col-sm-2 text-end"><button type="submit" class="btn btn-light"><i class="fa-solid fa-filter"></i> {{ button_filter }}</button></div>
+</form>
+<form id="form-alt" action="index.php?route=extension/ai_alt_text/module/ai_alt_text.saveAlt&user_token={{ user_token }}" method="post">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div><button type="button" id="button-generate-page" class="btn btn-info"><i class="fa-solid fa-wand-magic-sparkles"></i> {{ button_generate_page }}</button> <span id="generate-status" class="text-muted ms-2"></span></div>
+    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> {{ button_save_alt }}</button>
+  </div>
+  {% for product in products %}
+    <div class="border rounded p-3 mb-3">
+      <h5 class="mb-3"><a href="{{ product.edit }}" target="_blank">{{ product.name }}</a></h5>
+      {% for image in product.images %}
+        <div class="row image-row mb-3" data-product-id="{{ product.product_id }}" data-image="{{ image.image }}">
+          <div class="col-sm-2 text-center">
+            {% if image.thumb %}<img src="{{ image.thumb }}" alt="" class="img-thumbnail"/>{% endif %}
+            {% if image.main %}<div><span class="badge bg-secondary">{{ text_main }}</span></div>{% endif %}
+          </div>
+          <div class="col-sm-9">
+            {% for language in languages %}
+              <div class="input-group mb-1">
+                <span class="input-group-text" style="min-width: 90px;">{{ language.code }}</span>
+                <input type="text" name="alt[{{ image.key|e }}][{{ language.language_id }}][alt]" value="{{ image.alts[language.language_id].alt|e }}" maxlength="255" data-language-id="{{ language.language_id }}" class="form-control alt"/>
+                {% if image.alts[language.language_id].source == 'ai' %}<span class="input-group-text"><small>{{ text_ai }}</small></span>{% endif %}
+                <input type="hidden" name="source[{{ image.key|e }}][{{ language.language_id }}]" value="{{ image.alts[language.language_id].source|default('manual') }}" data-language-id="{{ language.language_id }}" class="source"/>
+              </div>
+            {% endfor %}
+            <div class="text-danger small image-error d-none"></div>
+          </div>
+          <div class="col-sm-1 text-end">
+            <button type="button" title="{{ button_generate }}" class="btn btn-outline-info btn-generate"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center">{{ text_no_results }}</p>
+  {% endfor %}
+</form>
+<div class="row">
+  <div class="col-sm-6 text-start">{{ pagination }}</div>
+  <div class="col-sm-6 text-end">{{ results }}</div>
+</div>

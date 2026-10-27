@@ -1,0 +1,7 @@
+{
+  "name": "GA4 Ecommerce Events",
+  "description": "Sends Google Analytics 4 ecommerce events (view_item_list, view_item, add_to_cart, view_cart, begin_checkout, purchase) from OpenCart without editing theme files. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-ga4-ecommerce-events/"
+}
