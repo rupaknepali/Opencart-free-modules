@@ -1,0 +1,14 @@
+<div class="free-shipping-bar{% if compact %} px-2 pt-1 pb-2{% else %} mb-3{% endif %}">
+  <div class="{% if compact %}small{% endif %} mb-1">{% if reached %}<i class="fa-solid fa-truck text-success"></i>{% else %}<i class="fa-solid fa-truck"></i>{% endif %} {{ text }}</div>
+  <div class="progress" role="progressbar" aria-label="{{ text|striptags }}" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100" style="height: {% if compact %}6px{% else %}10px{% endif %};">
+    <div class="progress-bar{% if reached %} bg-success{% endif %}" style="width: {{ percent }}%"></div>
+  </div>
+  {% if products %}
+    <p class="mt-3 mb-2">{{ text_suggest }}</p>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-{{ products|length < 4 ? products|length : 4 }}">
+      {% for product in products %}
+        <div class="col mb-3">{{ product }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

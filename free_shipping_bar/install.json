@@ -1,0 +1,7 @@
+{
+  "name": "Free Shipping Progress Bar",
+  "description": "Shows \"Spend $X more for free shipping\" in the cart and mini-cart, using the Free Shipping method's total, and suggests products that close the gap. For OpenCart 4.1.0.x.",
+  "version": "1.0.0",
+  "author": "Rupak Nepali - webocreation.com",
+  "link": "https://webocreation.com/opencart-4-free-shipping-progress-bar/"
+}

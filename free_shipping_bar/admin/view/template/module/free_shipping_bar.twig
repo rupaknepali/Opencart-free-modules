@@ -1,0 +1,92 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_how }}</div>
+    <div class="alert alert-light">{{ text_free_method }}</div>
+    {% if free_geo_zone %}
+      <div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_geo_zone }}</div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-source" class="col-sm-2 col-form-label">{{ entry_source }}</label>
+            <div class="col-sm-10">
+              <select name="module_free_shipping_bar_source" id="input-source" class="form-select">
+                <option value="free"{% if module_free_shipping_bar_source == 'free' %} selected{% endif %}>{{ text_source_free }}</option>
+                <option value="custom"{% if module_free_shipping_bar_source == 'custom' %} selected{% endif %}>{{ text_source_custom }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-total" class="col-sm-2 col-form-label">{{ entry_total }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_free_shipping_bar_total" value="{{ module_free_shipping_bar_total }}" placeholder="{{ entry_total }}" id="input-total" class="form-control"/>
+              <div class="form-text">{{ help_total|format(currency) }}</div>
+              <div id="error-total" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_cart }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_free_shipping_bar_cart" value="0"/>
+                <input type="checkbox" name="module_free_shipping_bar_cart" value="1" id="input-cart" class="form-check-input"{% if module_free_shipping_bar_cart %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_mini_cart }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_free_shipping_bar_mini_cart" value="0"/>
+                <input type="checkbox" name="module_free_shipping_bar_mini_cart" value="1" id="input-mini-cart" class="form-check-input"{% if module_free_shipping_bar_mini_cart %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-suggest" class="col-sm-2 col-form-label">{{ entry_suggest }}</label>
+            <div class="col-sm-10">
+              <input type="number" min="0" max="6" name="module_free_shipping_bar_suggest" value="{{ module_free_shipping_bar_suggest }}" id="input-suggest" class="form-control"/>
+              <div class="form-text">{{ help_suggest }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_category }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_free_shipping_bar_category" value="0"/>
+                <input type="checkbox" name="module_free_shipping_bar_category" value="1" id="input-category" class="form-check-input"{% if module_free_shipping_bar_category %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_category }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_free_shipping_bar_status" value="0"/>
+                <input type="checkbox" name="module_free_shipping_bar_status" value="1" id="input-status" class="form-check-input"{% if module_free_shipping_bar_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
