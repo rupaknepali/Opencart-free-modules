@@ -1,0 +1,114 @@
+<div class="socialshare socialshare-{{ position }}{% if position == 'inline' %} mb-4{% endif %}">
+  {% if share_heading %}
+    <h5 class="mb-2">{{ share_heading|e }}</h5>
+  {% endif %}
+  <div class="socialshare-list d-flex flex-wrap gap-2">
+    {% for network in networks %}
+      {% if network.href %}
+        <a href="{{ network.href|e }}"{% if network.popup %} target="_blank" rel="noopener nofollow"{% endif %} class="btn btn-sm socialshare-btn socialshare-{{ network.code }}" title="{{ network.label|e }}" aria-label="{{ network.label|e }}"><i class="{{ network.icon }}"></i>{% if show_label %} <span>{{ network.label|e }}</span>{% endif %}</a>
+      {% else %}
+        <button type="button" class="btn btn-sm socialshare-btn socialshare-{{ network.code }}{% if network.code == 'native' %} d-none{% endif %}" data-url="{{ url|e }}" data-title="{{ title|e }}" title="{{ network.label|e }}" aria-label="{{ network.label|e }}"><i class="{{ network.icon }}"></i>{% if show_label %} <span>{{ network.label|e }}</span>{% endif %}</button>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+<style>
+/* Bootstrap's .btn:hover/:active read these variables; set them all so hover keeps the brand color */
+.socialshare-btn{--bs-btn-color:#fff;--bs-btn-hover-color:#fff;--bs-btn-active-color:#fff;--bs-btn-bg:var(--ss);--bs-btn-hover-bg:var(--ss);--bs-btn-active-bg:var(--ss);--bs-btn-border-width:0;--bs-btn-focus-box-shadow:0 0 0 .2rem rgba(0,0,0,.25);background-color:var(--ss);color:#fff;min-width:2.25rem;transition:filter .15s,width .15s}
+.socialshare-btn:hover,.socialshare-btn:focus-visible{filter:brightness(.88)}
+.socialshare-btn:active{filter:brightness(.78)}
+.socialshare-facebook{--ss:#1877f2}.socialshare-x{--ss:#000}.socialshare-linkedin{--ss:#0a66c2}
+.socialshare-pinterest{--ss:#e60023}.socialshare-whatsapp{--ss:#25d366}.socialshare-telegram{--ss:#26a5e4}
+.socialshare-reddit{--ss:#ff4500}.socialshare-bluesky{--ss:#0085ff}.socialshare-email{--ss:#6c757d}
+.socialshare-copy{--ss:#495057}.socialshare-native{--ss:#212529}
+.socialshare-x:hover,.socialshare-native:hover{filter:none;--ss:#3a3a3a}
+/* Sticky left / right: vertical icon bar on the screen edge */
+.socialshare-left,.socialshare-right{position:fixed;top:50%;transform:translateY(-50%);z-index:1030}
+.socialshare-left{left:0}.socialshare-right{right:0}
+.socialshare-left .socialshare-list,.socialshare-right .socialshare-list{flex-direction:column;flex-wrap:nowrap!important;gap:0!important;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.socialshare-left .socialshare-list{border-radius:0 .5rem .5rem 0}.socialshare-right .socialshare-list{border-radius:.5rem 0 0 .5rem}
+.socialshare-left .socialshare-btn,.socialshare-right .socialshare-btn{border-radius:0;width:2.75rem;height:2.75rem;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.socialshare-left .socialshare-btn:hover,.socialshare-right .socialshare-btn:hover{width:3.25rem}
+/* Sticky top / bottom: full-width bar */
+.socialshare-top,.socialshare-bottom{position:fixed;left:0;right:0;z-index:1030;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.15);padding:.5rem}
+.socialshare-top{top:0;transform:translateY(-110%);transition:transform .25s}
+.socialshare-top.is-visible{transform:none}
+.socialshare-bottom{bottom:0}
+.socialshare-top .socialshare-list,.socialshare-bottom .socialshare-list{justify-content:center}
+body:has(.socialshare-bottom){padding-bottom:3.25rem}
+/* Phones: side bars would cover the text, so they become a bottom bar */
+@media (max-width:767.98px){
+.socialshare-left,.socialshare-right{top:auto;bottom:0;left:0;right:0;transform:none;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.15);padding:.5rem}
+.socialshare-left .socialshare-list,.socialshare-right .socialshare-list{flex-direction:row;flex-wrap:wrap!important;justify-content:center;gap:.5rem!important;border-radius:0;box-shadow:none}
+.socialshare-left .socialshare-btn,.socialshare-right .socialshare-btn{border-radius:var(--bs-border-radius-sm,.25rem);width:2.5rem;height:2.25rem}
+body:has(.socialshare-left),body:has(.socialshare-right){padding-bottom:3.25rem}
+}
+@media print{.socialshare{display:none!important}}
+</style>
+<script type="text/javascript">
+if (!window.socialshareReady) {
+  window.socialshareReady = true;
+
+  // Share links open in a small window instead of a new tab.
+  $(document).on('click', '.socialshare a[target="_blank"]', function(e) {
+    // Not "noopener" in the features: with it, window.open() returns null and we can't tell if it opened.
+    var popup = window.open(this.href, 'socialshare', 'width=640,height=560');
+
+    if (popup) {
+      popup.opener = null;
+      e.preventDefault();
+    }
+  });
+
+  // Copy link
+  $(document).on('click', '.socialshare-copy', function() {
+    var button = this;
+    var url = button.getAttribute('data-url');
+
+    var done = function() {
+      button.setAttribute('title', '{{ text_copied|e('js') }}');
+      $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> {{ text_copied|e('js') }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(done);
+    } else {
+      var input = document.createElement('textarea');
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      done();
+    }
+  });
+
+  $(function() {
+    // Sticky bars: move to <body> so a hidden column (side columns are hidden on phones)
+    // or a transformed theme wrapper can't hide them or break position: fixed.
+    $('.socialshare-left, .socialshare-right, .socialshare-top, .socialshare-bottom').appendTo('body');
+
+    // The phone's own share sheet, only where the browser supports it.
+    if (navigator.share) {
+      $('.socialshare-native').removeClass('d-none');
+    }
+
+    // Sticky top: slide in after scrolling, so it doesn't cover the store header on load.
+    var top = $('.socialshare-top');
+
+    if (top.length) {
+      var toggle = function() {
+        top.toggleClass('is-visible', window.scrollY > 300);
+      };
+
+      $(window).on('scroll', toggle);
+
+      toggle();
+    }
+  });
+
+  $(document).on('click', '.socialshare-native', function() {
+    navigator.share({title: this.getAttribute('data-title'), url: this.getAttribute('data-url')}).catch(function() {});
+  });
+}
+</script>

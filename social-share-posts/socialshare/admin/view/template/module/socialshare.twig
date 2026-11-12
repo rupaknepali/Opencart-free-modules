@@ -1,0 +1,85 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_networks }}</label>
+            <div class="col-sm-10">
+              <input type="hidden" name="module_socialshare_networks[]" value=""/>
+              {% for network in networks %}
+                <div class="form-check">
+                  <input type="checkbox" name="module_socialshare_networks[]" value="{{ network.code }}" id="input-network-{{ network.code }}" class="form-check-input"{% if network.code in module_socialshare_networks %} checked{% endif %}/>
+                  <label for="input-network-{{ network.code }}" class="form-check-label">{{ network.name }}</label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-position" class="col-sm-2 col-form-label">{{ entry_position }}</label>
+            <div class="col-sm-10">
+              <select name="module_socialshare_position" id="input-position" class="form-select">
+                {% for position in positions %}
+                  <option value="{{ position.code }}"{% if position.code == module_socialshare_position %} selected{% endif %}>{{ position.name }}</option>
+                {% endfor %}
+              </select>
+              <div class="form-text">{{ help_position }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-heading" class="col-sm-2 col-form-label">{{ entry_heading }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_socialshare_heading" value="{{ module_socialshare_heading }}" id="input-heading" class="form-control"/>
+              <div class="form-text">{{ help_heading }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-label" class="col-sm-2 col-form-label">{{ entry_label }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_socialshare_label" value="0"/>
+                <input type="checkbox" name="module_socialshare_label" value="1" id="input-label" class="form-check-input"{% if module_socialshare_label %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-og" class="col-sm-2 col-form-label">{{ entry_og }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_socialshare_og" value="0"/>
+                <input type="checkbox" name="module_socialshare_og" value="1" id="input-og" class="form-check-input"{% if module_socialshare_og %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_og }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_socialshare_status" value="0"/>
+                <input type="checkbox" name="module_socialshare_status" value="1" id="input-status" class="form-check-input"{% if module_socialshare_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
