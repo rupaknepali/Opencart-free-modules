@@ -1,0 +1,56 @@
+<fieldset class="mb-3">
+  <legend class="visually-hidden">{{ text_captcha }}</legend>
+  <div id="input-captcha" class="oc-turnstile" data-sitekey="{{ site_key }}" data-theme="{{ theme }}" data-size="{{ size }}"></div>
+  <div id="error-captcha" class="invalid-feedback"></div>
+</fieldset>
+<script type="text/javascript">
+(function () {
+  // Render every widget that isn't rendered yet. Explicit rendering also covers forms
+  // inserted after the page loads, such as the checkout steps.
+  window.ocTurnstileRender = window.ocTurnstileRender || function () {
+    if (!window.turnstile) {
+      return;
+    }
+
+    document.querySelectorAll('.oc-turnstile:not([data-rendered])').forEach(function (element) {
+      element.setAttribute('data-rendered', '1');
+      element.setAttribute('data-widget-id', turnstile.render(element, {
+        sitekey: element.getAttribute('data-sitekey'),
+        theme: element.getAttribute('data-theme'),
+        size: element.getAttribute('data-size')
+      }));
+    });
+  };
+
+  if (window.turnstile) {
+    window.ocTurnstileRender();
+  } else if (!document.getElementById('oc-turnstile-api')) {
+    var script = document.createElement('script');
+    script.id = 'oc-turnstile-api';
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=ocTurnstileRender';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+
+  // Tokens are single-use. OpenCart submits forms with AJAX and keeps the page when a field
+  // is wrong, so reset the widget after every submit that carried a token. OpenCart 4.1 sends
+  // a serialized string; some forms and extensions send FormData. Handle both.
+  if (!window.ocTurnstileResetBound && window.jQuery) {
+    window.ocTurnstileResetBound = true;
+
+    jQuery(document).ajaxComplete(function (event, xhr, settings) {
+      var data = settings.data;
+      var hasToken = (typeof FormData !== 'undefined' && data instanceof FormData)
+        ? data.has('cf-turnstile-response')
+        : (typeof data === 'string' && data.indexOf('cf-turnstile-response=') !== -1);
+
+      if (hasToken && window.turnstile) {
+        document.querySelectorAll('.oc-turnstile[data-rendered]').forEach(function (element) {
+          turnstile.reset(element.getAttribute('data-widget-id'));
+        });
+      }
+    });
+  }
+})();
+</script>

@@ -1,0 +1,81 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-captcha" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_signup }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-captcha" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3 required">
+            <label for="input-site-key" class="col-sm-2 col-form-label">{{ entry_site_key }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="captcha_turnstile_site_key" value="{{ captcha_turnstile_site_key }}" id="input-site-key" class="form-control" autocomplete="off"/>
+              <div id="error-site-key" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-secret-key" class="col-sm-2 col-form-label">{{ entry_secret_key }}</label>
+            <div class="col-sm-10">
+              <input type="password" name="captcha_turnstile_secret_key" value="{{ captcha_turnstile_secret_key }}" id="input-secret-key" class="form-control" autocomplete="new-password"/>
+              <div id="error-secret-key" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-theme" class="col-sm-2 col-form-label">{{ entry_theme }}</label>
+            <div class="col-sm-10">
+              <select name="captcha_turnstile_theme" id="input-theme" class="form-select">
+                <option value="auto"{% if captcha_turnstile_theme == 'auto' %} selected{% endif %}>{{ text_auto }}</option>
+                <option value="light"{% if captcha_turnstile_theme == 'light' %} selected{% endif %}>{{ text_light }}</option>
+                <option value="dark"{% if captcha_turnstile_theme == 'dark' %} selected{% endif %}>{{ text_dark }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-size" class="col-sm-2 col-form-label">{{ entry_size }}</label>
+            <div class="col-sm-10">
+              <select name="captcha_turnstile_size" id="input-size" class="form-select">
+                <option value="flexible"{% if captcha_turnstile_size == 'flexible' %} selected{% endif %}>{{ text_flexible }}</option>
+                <option value="normal"{% if captcha_turnstile_size == 'normal' %} selected{% endif %}>{{ text_normal }}</option>
+                <option value="compact"{% if captcha_turnstile_size == 'compact' %} selected{% endif %}>{{ text_compact }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-fail-open" class="col-sm-2 col-form-label">{{ entry_fail_open }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="captcha_turnstile_fail_open" value="0"/>
+                <input type="checkbox" name="captcha_turnstile_fail_open" value="1" id="input-fail-open" class="form-check-input"{% if captcha_turnstile_fail_open %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_fail_open }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="captcha_turnstile_status" value="0"/>
+                <input type="checkbox" name="captcha_turnstile_status" value="1" id="input-status" class="form-check-input"{% if captcha_turnstile_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
