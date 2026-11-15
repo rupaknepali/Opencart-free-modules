@@ -1,0 +1,59 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-mode" class="col-sm-2 col-form-label">{{ entry_mode }}</label>
+            <div class="col-sm-10">
+              <select name="module_loadmore_mode" id="input-mode" class="form-select">
+                <option value="button"{% if module_loadmore_mode == 'button' %} selected{% endif %}>{{ text_button }}</option>
+                <option value="scroll"{% if module_loadmore_mode == 'scroll' %} selected{% endif %}>{{ text_scroll }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-auto" class="col-sm-2 col-form-label">{{ entry_auto }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_loadmore_auto" value="{{ module_loadmore_auto }}" min="0" id="input-auto" class="form-control"/>
+              <div class="form-text">{{ help_auto }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-label" class="col-sm-2 col-form-label">{{ entry_label }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_loadmore_label" value="{{ module_loadmore_label }}" id="input-label" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_loadmore_status" value="0"/>
+                <input type="checkbox" name="module_loadmore_status" value="1" id="input-status" class="form-check-input"{% if module_loadmore_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

@@ -1,0 +1,30 @@
+<p class="oc-sizechart-link mb-3"><a href="#" data-bs-toggle="modal" data-bs-target="#modal-size-chart"><i class="fa-solid fa-ruler-horizontal" aria-hidden="true"></i> {{ label }}</a></p>
+<div class="modal fade" id="modal-size-chart" tabindex="-1" aria-labelledby="modal-size-chart-title" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-size-chart-title">{{ title }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped text-center align-middle mb-0">
+            {% for row in rows %}
+              {% if loop.first %}
+                <thead class="table-light"><tr>{% for cell in row %}<th scope="col">{{ cell }}</th>{% endfor %}</tr></thead><tbody>
+              {% else %}
+                <tr>{% for cell in row %}{% if loop.first %}<th scope="row">{{ cell }}</th>{% else %}<td>{{ cell }}</td>{% endif %}{% endfor %}</tr>
+              {% endif %}
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% if note %}<p class="text-muted small mt-3 mb-0">{{ note }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+// Move the popup to <body>, so a theme's column styles (overflow, transforms) can't trap it under the backdrop.
+document.body.appendChild(document.getElementById('modal-size-chart'));
+//--></script>

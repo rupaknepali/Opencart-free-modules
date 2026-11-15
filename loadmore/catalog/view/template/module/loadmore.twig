@@ -1,0 +1,102 @@
+<style>
+.oc-loadmore { text-align: center; margin: 0 0 2rem; }
+.oc-loadmore .btn { min-width: 14rem; }
+.oc-loadmore-hidden { display: none !important; }
+</style>
+<script type="text/javascript"><!--
+(function () {
+  var list = document.getElementById('product-list');
+  var pagination = document.querySelector('#content ul.pagination');
+
+  if (!list || !pagination) return;
+
+  var mode = '{{ mode }}';
+  var auto = {{ auto }};
+  var loaded = 0;
+
+  // The link after the active page is the next page. Works whatever the arrows look like.
+  function nextUrl(root) {
+    var link = root.querySelector('ul.pagination li.active + li a');
+    return link ? link.getAttribute('href') : null;
+  }
+
+  var url = nextUrl(document);
+
+  if (!url) return;
+
+  var row = pagination.closest('.row') || pagination.parentNode;
+  var results = row.querySelector('.text-end');
+
+  // Hide the page numbers but keep them in the HTML for search engines.
+  pagination.classList.add('oc-loadmore-hidden');
+
+  var wrap = document.createElement('div');
+  wrap.className = 'oc-loadmore';
+  wrap.innerHTML = '<button type="button" class="btn btn-outline-primary btn-lg"></button>';
+  row.parentNode.insertBefore(wrap, row);
+
+  var button = wrap.querySelector('button');
+  button.textContent = '{{ label|e('js') }}';
+
+  var busy = false;
+
+  function load() {
+    if (busy || !url) return;
+
+    busy = true;
+    button.disabled = true;
+    button.textContent = '{{ lm_loading|e('js') }}';
+
+    fetch(url, {credentials: 'same-origin'})
+      .then(function (response) {
+        if (!response.ok) throw new Error(response.status);
+        return response.text();
+      })
+      .then(function (html) {
+        var page = new DOMParser().parseFromString(html, 'text/html');
+        var items = page.querySelectorAll('#product-list > *');
+
+        items.forEach(function (item) {
+          list.appendChild(document.importNode(item, true));
+        });
+
+        // Keep the hidden page links current, so the next page is always found from them.
+        var newPagination = page.querySelector('#content ul.pagination');
+        if (newPagination) pagination.innerHTML = newPagination.innerHTML;
+
+        // The loaded page says "Showing 21 to 30 of 30 (3 Pages)": change its first number to 1.
+        var newResults = newPagination ? newPagination.closest('.row').querySelector('.text-end') : null;
+        if (results && newResults) results.textContent = newResults.textContent.replace(/\d+/, '1');
+
+        url = nextUrl(page);
+        loaded++;
+        busy = false;
+        button.disabled = false;
+        button.textContent = '{{ label|e('js') }}';
+
+        if (!url) {
+          wrap.remove();
+        } else if (mode == 'scroll' && (!auto || loaded < auto) && wrap.getBoundingClientRect().top < window.innerHeight + 400) {
+          // Still near the bottom (short pages, tall screens): the observer won't fire again, so keep going.
+          load();
+        }
+      })
+      .catch(function () {
+        busy = false;
+        button.disabled = false;
+        button.textContent = '{{ lm_error|e('js') }}';
+      });
+  }
+
+  button.addEventListener('click', load);
+
+  // Infinite scroll: load when the button comes near the screen, up to the limit.
+  if (mode == 'scroll' && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting && (!auto || loaded < auto)) {
+        load();
+      }
+    }, {rootMargin: '400px 0px'}).observe(wrap);
+  }
+})();
+//--></script>

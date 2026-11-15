@@ -1,0 +1,103 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3 required">
+            <label for="input-cutoff" class="col-sm-2 col-form-label">{{ entry_cutoff }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_estdelivery_cutoff" value="{{ module_estdelivery_cutoff }}" placeholder="14:00" id="input-cutoff" class="form-control" style="max-width: 10rem;"/>
+              <div class="form-text">{{ help_cutoff }} {{ text_clock|format(now, timezone) }}</div>
+              <div id="error-cutoff" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-processing" class="col-sm-2 col-form-label">{{ entry_processing }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_estdelivery_processing" value="{{ module_estdelivery_processing }}" min="0" id="input-processing" class="form-control" style="max-width: 10rem;"/>
+              <div class="form-text">{{ help_processing }}</div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-min" class="col-sm-2 col-form-label">{{ entry_transit }}</label>
+            <div class="col-sm-10">
+              <div class="input-group" style="max-width: 20rem;">
+                <input type="number" name="module_estdelivery_min" value="{{ module_estdelivery_min }}" min="0" id="input-min" class="form-control" aria-label="Shortest"/>
+                <span class="input-group-text">to</span>
+                <input type="number" name="module_estdelivery_max" value="{{ module_estdelivery_max }}" min="0" id="input-max" class="form-control" aria-label="Longest"/>
+              </div>
+              <div class="form-text">{{ help_transit }}</div>
+              <div id="error-transit" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label class="col-sm-2 col-form-label">{{ entry_days }}</label>
+            <div class="col-sm-10">
+              <div id="input-days" class="pt-2">
+                {% for number, name in weekdays %}
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" name="module_estdelivery_days[]" value="{{ number }}" id="input-day-{{ number }}" class="form-check-input"{% if number in module_estdelivery_days %} checked{% endif %}/>
+                    <label for="input-day-{{ number }}" class="form-check-label">{{ name }}</label>
+                  </div>
+                {% endfor %}
+              </div>
+              <div class="form-text">{{ help_days }}</div>
+              <div id="error-days" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-holidays" class="col-sm-2 col-form-label">{{ entry_holidays }}</label>
+            <div class="col-sm-10">
+              <textarea name="module_estdelivery_holidays" rows="4" placeholder="2026-12-25" id="input-holidays" class="form-control" style="max-width: 20rem;">{{ module_estdelivery_holidays }}</textarea>
+              <div class="form-text">{{ help_holidays }}</div>
+              <div id="error-holidays" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-format" class="col-sm-2 col-form-label">{{ entry_format }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_estdelivery_format" value="{{ module_estdelivery_format }}" id="input-format" class="form-control" style="max-width: 10rem;"/>
+              <div class="form-text">{{ help_format }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-stock" class="col-sm-2 col-form-label">{{ entry_stock }}</label>
+            <div class="col-sm-10">
+              <select name="module_estdelivery_stock" id="input-stock" class="form-select" style="max-width: 24rem;">
+                <option value="0"{% if not module_estdelivery_stock %} selected{% endif %}>{{ text_hide }}</option>
+                <option value="1"{% if module_estdelivery_stock %} selected{% endif %}>{{ text_show }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_estdelivery_status" value="0"/>
+                <input type="checkbox" name="module_estdelivery_status" value="1" id="input-status" class="form-check-input"{% if module_estdelivery_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

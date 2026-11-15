@@ -1,0 +1,95 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-size-chart" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-ruler"></i> {{ text_form }}</div>
+      <div class="card-body">
+        <form id="form-size-chart" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <input type="hidden" name="size_chart_id" value="{{ size_chart_id }}" id="input-size-chart-id"/>
+          <div class="row mb-3 required">
+            <label for="input-name" class="col-sm-2 col-form-label">{{ entry_name }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="name" value="{{ name }}" id="input-name" class="form-control"/>
+              <div class="form-text">{{ help_name }}</div>
+              <div id="error-name" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-content" class="col-sm-2 col-form-label">{{ entry_content }}</label>
+            <div class="col-sm-10">
+              <textarea name="content" rows="8" id="input-content" class="form-control font-monospace">{{ content }}</textarea>
+              <div class="form-text">{{ help_content }}</div>
+              <div id="error-content" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-note" class="col-sm-2 col-form-label">{{ entry_note }}</label>
+            <div class="col-sm-10">
+              <textarea name="note" rows="3" id="input-note" class="form-control">{{ note }}</textarea>
+              <div class="form-text">{{ help_note }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_category }}</label>
+            <div class="col-sm-10">
+              <div class="form-control p-0" style="height: 220px; overflow: auto;">
+                <table class="table table-sm m-0">
+                  <tbody>
+                    {% for category in categories %}
+                      <tr>
+                        <td class="ps-3">
+                          <div class="form-check">
+                            <input type="checkbox" name="category[]" value="{{ category.category_id }}" id="input-category-{{ category.category_id }}" class="form-check-input"{% if category.category_id in category_ids %} checked{% endif %}/>
+                            <label for="input-category-{{ category.category_id }}" class="form-check-label">{{ category.name }}</label>
+                          </div>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-sort-order" class="col-sm-2 col-form-label">{{ entry_sort_order }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="sort_order" value="{{ sort_order }}" id="input-sort-order" class="form-control" style="max-width: 10rem;"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="status" value="0"/>
+                <input type="checkbox" name="status" value="1" id="input-status" class="form-check-input"{% if status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+// After the first save of a new chart, keep its ID so the next save updates it instead of adding another.
+$(document).ajaxComplete(function (event, xhr) {
+  if (xhr.responseJSON && xhr.responseJSON.size_chart_id) {
+    $('#input-size-chart-id').val(xhr.responseJSON.size_chart_id);
+  }
+});
+//--></script>
+{{ footer }}

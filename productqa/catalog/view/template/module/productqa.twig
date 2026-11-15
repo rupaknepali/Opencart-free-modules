@@ -1,0 +1,107 @@
+<section id="product-qa" class="mt-5 mb-4">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+    <h3 class="m-0">{{ pqa_heading }}{% if questions %} <small class="text-muted fs-6">({{ questions|length }})</small>{% endif %}</h3>
+    {% if not login %}
+      <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#product-qa-form" aria-expanded="false" aria-controls="product-qa-form"><i class="fa-regular fa-circle-question"></i> {{ pqa_text_ask }}</button>
+    {% endif %}
+  </div>
+  {% if login %}
+    <p class="text-muted">{{ login }}</p>
+  {% else %}
+    <div id="product-qa-form" class="collapse">
+      <form class="card card-body mb-4" novalidate>
+        <input type="hidden" name="product_id" value="{{ product_id }}"/>
+        <div class="oc-pqa-hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"/></label></div>
+        {% if not logged %}
+          <div class="mb-3">
+            <label for="input-pqa-name" class="form-label">{{ pqa_entry_name }}</label>
+            <input type="text" name="name" maxlength="64" id="input-pqa-name" class="form-control"/>
+            <div id="error-pqa-name" class="invalid-feedback"></div>
+          </div>
+        {% endif %}
+        <div class="mb-3">
+          <label for="input-pqa-question" class="form-label">{{ pqa_entry_question }}</label>
+          <textarea name="question" rows="3" maxlength="1000" id="input-pqa-question" class="form-control"></textarea>
+          <div id="error-pqa-question" class="invalid-feedback"></div>
+          <div class="form-text">{{ pqa_text_note }}</div>
+        </div>
+        <div id="product-qa-alert"></div>
+        <div><button type="submit" class="btn btn-primary">{{ pqa_button_submit }}</button></div>
+      </form>
+    </div>
+  {% endif %}
+  {% if questions %}
+    <div class="oc-pqa-list">
+      {% for question in questions %}
+        <div class="oc-pqa-item border-bottom py-3{% if loop.index > limit %} d-none{% endif %}">
+          <div class="d-flex gap-2"><span class="oc-pqa-label">{{ pqa_text_q }}</span><div><strong>{{ question.question }}</strong><div class="small text-muted">{{ pqa_text_asked_by|format(question.name, question.date) }}</div></div></div>
+          <div class="d-flex gap-2 mt-2"><span class="oc-pqa-label oc-pqa-a">{{ pqa_text_a }}</span><div>{{ question.answer }}</div></div>
+        </div>
+      {% endfor %}
+    </div>
+    {% if questions|length > limit %}
+      <button type="button" id="product-qa-more" class="btn btn-link px-0 mt-2">{{ pqa_text_show_all|format(questions|length) }}</button>
+    {% endif %}
+  {% else %}
+    <p class="text-muted">{{ pqa_text_empty }}</p>
+  {% endif %}
+</section>
+<style>
+#product-qa .oc-pqa-label { flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--bs-primary, #0d6efd); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .85rem; }
+#product-qa .oc-pqa-a { background: var(--bs-success, #198754); }
+#product-qa .oc-pqa-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+<script type="text/javascript"><!--
+(function () {
+  var more = document.getElementById('product-qa-more');
+
+  if (more) {
+    more.addEventListener('click', function () {
+      document.querySelectorAll('#product-qa .oc-pqa-item.d-none').forEach(function (item) { item.classList.remove('d-none'); });
+      more.remove();
+    });
+  }
+
+  var form = document.querySelector('#product-qa-form form');
+
+  if (!form) return;
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var button = form.querySelector('button[type="submit"]');
+    var alert = document.getElementById('product-qa-alert');
+
+    button.disabled = true;
+    alert.innerHTML = '';
+    form.querySelectorAll('.is-invalid').forEach(function (field) { field.classList.remove('is-invalid'); });
+
+    fetch('{{ ask|e('js') }}'.replace(/&amp;/g, '&'), {method: 'POST', body: new FormData(form), credentials: 'same-origin'})
+      .then(function (response) { return response.json(); })
+      .then(function (json) {
+        button.disabled = false;
+
+        if (json.error) {
+          ['name', 'question'].forEach(function (key) {
+            if (json.error[key]) {
+              document.getElementById('input-pqa-' + key).classList.add('is-invalid');
+              document.getElementById('error-pqa-' + key).textContent = json.error[key];
+            }
+          });
+
+          if (json.error.warning) {
+            alert.innerHTML = '<div class="alert alert-danger">' + json.error.warning + '</div>';
+          }
+        }
+
+        if (json.success) {
+          form.reset();
+          alert.innerHTML = '<div class="alert alert-success">' + json.success + '</div>';
+        }
+      })
+      .catch(function () {
+        button.disabled = false;
+      });
+  });
+})();
+//--></script>

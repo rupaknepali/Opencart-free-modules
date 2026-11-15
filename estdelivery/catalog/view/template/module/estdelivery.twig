@@ -1,0 +1,44 @@
+<div class="oc-estdelivery d-flex align-items-start gap-2 border rounded px-3 py-2 mb-3"{% if deadline %} data-deadline="{{ deadline }}" data-now="{{ now }}"{% endif %}>
+  <i class="fa-solid fa-truck-fast mt-1" aria-hidden="true"></i>
+  <span class="oc-estdelivery-text">{{ before ?: after }}</span>
+  {% if deadline %}<template class="oc-estdelivery-after">{{ after }}</template>{% endif %}
+</div>
+<style>
+.oc-estdelivery { background: var(--bs-tertiary-bg, #f8f9fa); color: var(--bs-body-color); }
+.oc-estdelivery .fa-truck-fast { color: var(--bs-success, #198754); }
+</style>
+{% if deadline %}
+<script type="text/javascript"><!--
+(function () {
+  var box = document.querySelector('.oc-estdelivery[data-deadline]');
+  if (!box) return;
+
+  // Count down on the server's clock: offset corrects for a visitor whose clock is wrong.
+  var deadline = parseInt(box.getAttribute('data-deadline'), 10) * 1000;
+  var offset = parseInt(box.getAttribute('data-now'), 10) * 1000 - Date.now();
+
+  function tick() {
+    var left = deadline - (Date.now() + offset);
+    var text = box.querySelector('.oc-estdelivery-text');
+
+    if (left <= 0) {
+      // Past the cut-off: switch to the next working day's dates.
+      text.innerHTML = box.querySelector('.oc-estdelivery-after').innerHTML;
+      return;
+    }
+
+    var minutes = Math.ceil(left / 60000);
+    var hours = Math.floor(minutes / 60);
+    var countdown = box.querySelector('.oc-estdelivery-countdown');
+
+    if (countdown) {
+      countdown.textContent = (hours ? hours + ' {{ ed_hours|e('js') }} ' : '') + (minutes % 60) + ' {{ ed_minutes|e('js') }}';
+    }
+
+    setTimeout(tick, 30000);
+  }
+
+  tick();
+})();
+//--></script>
+{% endif %}

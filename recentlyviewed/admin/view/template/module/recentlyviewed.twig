@@ -1,0 +1,72 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-heading" class="col-sm-2 col-form-label">{{ entry_heading }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_recentlyviewed_heading" value="{{ module_recentlyviewed_heading }}" id="input-heading" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-limit" class="col-sm-2 col-form-label">{{ entry_limit }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_recentlyviewed_limit" value="{{ module_recentlyviewed_limit }}" min="1" max="20" id="input-limit" class="form-control"/>
+              <div class="form-text">{{ help_limit }}</div>
+              <div id="error-limit" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-width" class="col-sm-2 col-form-label">{{ entry_width }} × {{ entry_height }}</label>
+            <div class="col-sm-10">
+              <div class="input-group">
+                <input type="number" name="module_recentlyviewed_width" value="{{ module_recentlyviewed_width }}" id="input-width" class="form-control" aria-label="{{ entry_width }}"/>
+                <span class="input-group-text">×</span>
+                <input type="number" name="module_recentlyviewed_height" value="{{ module_recentlyviewed_height }}" id="input-height" class="form-control" aria-label="{{ entry_height }}"/>
+              </div>
+              <div id="error-size" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-clear" class="col-sm-2 col-form-label">{{ entry_clear }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_recentlyviewed_clear" value="0"/>
+                <input type="checkbox" name="module_recentlyviewed_clear" value="1" id="input-clear" class="form-check-input"{% if module_recentlyviewed_clear %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_clear }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_recentlyviewed_status" value="0"/>
+                <input type="checkbox" name="module_recentlyviewed_status" value="1" id="input-status" class="form-check-input"{% if module_recentlyviewed_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

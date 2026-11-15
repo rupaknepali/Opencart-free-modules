@@ -1,0 +1,21 @@
+<section id="recently-viewed" class="mt-4">
+  <div class="d-flex align-items-baseline justify-content-between mt-5 mb-4">
+    <h3 class="m-0">{{ heading }}</h3>
+    {% if clear %}
+      <button type="button" id="recently-viewed-clear" class="btn btn-link btn-sm p-0">{{ rv_text_clear }}</button>
+    {% endif %}
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
+    {% for product in products %}
+      <div class="col mb-3">{{ product }}</div>
+    {% endfor %}
+  </div>
+</section>
+{% if clear %}
+<script type="text/javascript"><!--
+document.getElementById('recently-viewed-clear').addEventListener('click', function () {
+  document.cookie = 'oc_recently_viewed=; Max-Age=0; path=/; SameSite=Lax';
+  document.getElementById('recently-viewed').innerHTML = '<p class="text-muted mt-5">{{ rv_text_cleared|e('js') }}</p>';
+});
+//--></script>
+{% endif %}

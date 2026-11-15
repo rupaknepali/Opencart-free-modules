@@ -1,0 +1,34 @@
+<form id="form-chart" method="post" data-oc-toggle="ajax" data-oc-load="{{ action }}" data-oc-target="#chart">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="text-center" style="width: 1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', $(this).prop('checked'));" class="form-check-input"/></th>
+          <th>{{ column_name }}</th>
+          <th class="text-end">{{ column_categories }}</th>
+          <th class="text-end">{{ column_sort_order }}</th>
+          <th>{{ column_status }}</th>
+          <th class="text-end">{{ column_action }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if charts %}
+          {% for chart in charts %}
+            <tr>
+              <td class="text-center"><input type="checkbox" name="selected[]" value="{{ chart.size_chart_id }}" class="form-check-input"/></td>
+              <td>{{ chart.name }}</td>
+              <td class="text-end">{{ chart.categories }}</td>
+              <td class="text-end">{{ chart.sort_order }}</td>
+              <td>{% if chart.status %}<span class="badge bg-success">{{ text_enabled }}</span>{% else %}<span class="badge bg-secondary">{{ text_disabled }}</span>{% endif %}</td>
+              <td class="text-end"><a href="{{ chart.edit }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a></td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td class="text-center" colspan="6">{{ text_no_charts }}</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</form>
