@@ -1,4 +1,4 @@
-# [Opencart free modules](https://webocreation.com/blog/opencart/opencart-extensions-free-download/)
+# [Opencart free modules](https://webocreation.com/opencart/opencart-extensions-free-download/)
 
 #### [Show selected categories as featured categories OpenCart module free](https://webocreation.com/blog/opencart-show-selected-categories-as-featured-module-free/)
 #### [Swapping image when hovering over in products – Opencart free module](https://webocreation.com/blog/swapping-image-when-hovering-over-in-products-opencart-free-module/)

@@ -1,5 +1,8 @@
 # Custom Menu Links for OpenCart 4
 
+> **Guide & support:** [webocreation.com](https://webocreation.com) · **Download:** [`custom_menu_links.ocmod.zip`](custom_menu_links.ocmod.zip) · **OpenCart:** 4.1.0.3
+
+
 ## Overview
 
 This extension allows you to easily add multiple custom links to the main navigation menu of your OpenCart 4 store. Through a simple interface in the admin panel, you can add, remove, and sort an unlimited number of menu items, giving you full control over your store's navigation.
@@ -52,3 +55,7 @@ The catalog controller (`catalog/controller/module/custom_menu_links.php`) conta
 ---
 
 **Compatibility:** Developed and tested for OpenCart 4.x.
+
+---
+
+More free OpenCart extensions: [https://webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/) · [webocreation.com](https://webocreation.com)
