@@ -6,7 +6,7 @@ Older and third-party OpenCart extensions kept for reference: news ticker, You S
 |---|---|
 | **Platform** | OpenCart 2.x – 3.0.x |
 | **Type** | Resource |
-| **Guide & support** | [webocreation.com/blog/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/) |
+| **Guide & support** | [webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/) |
 
 ## More free extensions
 

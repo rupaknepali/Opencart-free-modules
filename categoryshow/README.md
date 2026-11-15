@@ -7,7 +7,7 @@ Shows selected categories as a featured categories module on any layout.
 | **Platform** | OpenCart 3.0.x |
 | **Type** | OpenCart 3 extension / OCMOD |
 | **Download** | [`categoryshow.ocmod.zip`](categoryshow.ocmod.zip) |
-| **Guide & support** | [webocreation.com/blog/opencart-show-selected-categories-as-featured-module-free/](https://webocreation.com/blog/opencart-show-selected-categories-as-featured-module-free/) |
+| **Guide & support** | [webocreation.com/opencart-show-selected-categories-as-featured-module-free/](https://webocreation.com/opencart-show-selected-categories-as-featured-module-free/) |
 
 ## Installation
 
@@ -18,7 +18,7 @@ Shows selected categories as a featured categories module on any layout.
 
 ## More free extensions
 
-- Full write-up for this extension: [https://webocreation.com/blog/opencart-show-selected-categories-as-featured-module-free/](https://webocreation.com/blog/opencart-show-selected-categories-as-featured-module-free/)
+- Full write-up for this extension: [https://webocreation.com/opencart-show-selected-categories-as-featured-module-free/](https://webocreation.com/opencart-show-selected-categories-as-featured-module-free/)
 - All free OpenCart extensions: [https://webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/)
 - Website: [webocreation.com](https://webocreation.com)
 

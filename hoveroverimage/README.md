@@ -7,7 +7,7 @@ Lets you choose a second image per product that is shown when shoppers hover ove
 | **Platform** | OpenCart 3.0.x |
 | **Type** | OpenCart 3 extension / OCMOD |
 | **Download** | [`hoveroverimage.ocmod.zip`](hoveroverimage.ocmod.zip) |
-| **Guide & support** | [webocreation.com/blog/swapping-image-when-hovering-over-in-products-opencart-free-module/](https://webocreation.com/blog/swapping-image-when-hovering-over-in-products-opencart-free-module/) |
+| **Guide & support** | [webocreation.com/swapping-image-when-hovering-over-in-products-opencart-free-module/](https://webocreation.com/swapping-image-when-hovering-over-in-products-opencart-free-module/) |
 
 ## Installation
 
@@ -18,7 +18,7 @@ Lets you choose a second image per product that is shown when shoppers hover ove
 
 ## More free extensions
 
-- Full write-up for this extension: [https://webocreation.com/blog/swapping-image-when-hovering-over-in-products-opencart-free-module/](https://webocreation.com/blog/swapping-image-when-hovering-over-in-products-opencart-free-module/)
+- Full write-up for this extension: [https://webocreation.com/swapping-image-when-hovering-over-in-products-opencart-free-module/](https://webocreation.com/swapping-image-when-hovering-over-in-products-opencart-free-module/)
 - All free OpenCart extensions: [https://webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/)
 - Website: [webocreation.com](https://webocreation.com)
 

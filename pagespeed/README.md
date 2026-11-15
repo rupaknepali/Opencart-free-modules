@@ -7,7 +7,7 @@ OCMOD with speed optimizations: HTML minification, deferred scripts, lazy loadin
 | **Platform** | OpenCart 3.0.x |
 | **Type** | OpenCart 3 extension / OCMOD |
 | **Download** | [`pagespeed.ocmod.zip`](pagespeed.ocmod.zip) |
-| **Guide & support** | [webocreation.com/blog/10-ways-to-speed-up-the-opencart-3-website-speed-optimization/](https://webocreation.com/blog/10-ways-to-speed-up-the-opencart-3-website-speed-optimization/) |
+| **Guide & support** | [webocreation.com/10-ways-to-speed-up-the-opencart-3-website-speed-optimization/](https://webocreation.com/10-ways-to-speed-up-the-opencart-3-website-speed-optimization/) |
 
 ## Installation
 
@@ -17,7 +17,7 @@ OCMOD with speed optimizations: HTML minification, deferred scripts, lazy loadin
 
 ## More free extensions
 
-- Full write-up for this extension: [https://webocreation.com/blog/10-ways-to-speed-up-the-opencart-3-website-speed-optimization/](https://webocreation.com/blog/10-ways-to-speed-up-the-opencart-3-website-speed-optimization/)
+- Full write-up for this extension: [https://webocreation.com/10-ways-to-speed-up-the-opencart-3-website-speed-optimization/](https://webocreation.com/10-ways-to-speed-up-the-opencart-3-website-speed-optimization/)
 - All free OpenCart extensions: [https://webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/)
 - Website: [webocreation.com](https://webocreation.com)
 

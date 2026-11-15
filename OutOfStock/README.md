@@ -7,7 +7,7 @@ Shows a "Sold out" label on out-of-stock products and replaces the Add to Cart b
 | **Platform** | OpenCart 3.0.x |
 | **Type** | OpenCart 3 extension / OCMOD |
 | **Download** | [`outofstock.ocmod.zip`](outofstock.ocmod.zip) |
-| **Guide & support** | [webocreation.com/blog/out-of-stock-label-and-button-module-in-opencart-3-for-free/](https://webocreation.com/blog/out-of-stock-label-and-button-module-in-opencart-3-for-free/) |
+| **Guide & support** | [webocreation.com/out-of-stock-label-and-button-module-in-opencart-3-for-free/](https://webocreation.com/out-of-stock-label-and-button-module-in-opencart-3-for-free/) |
 
 ## Installation
 
@@ -18,7 +18,7 @@ Shows a "Sold out" label on out-of-stock products and replaces the Add to Cart b
 
 ## More free extensions
 
-- Full write-up for this extension: [https://webocreation.com/blog/out-of-stock-label-and-button-module-in-opencart-3-for-free/](https://webocreation.com/blog/out-of-stock-label-and-button-module-in-opencart-3-for-free/)
+- Full write-up for this extension: [https://webocreation.com/out-of-stock-label-and-button-module-in-opencart-3-for-free/](https://webocreation.com/out-of-stock-label-and-button-module-in-opencart-3-for-free/)
 - All free OpenCart extensions: [https://webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/)
 - Website: [webocreation.com](https://webocreation.com)
 

@@ -7,7 +7,7 @@ Copy of [product-availability-in-category-page-modules](../product-availability-
 | **Platform** | OpenCart 3.0.x |
 | **Type** | OpenCart 3 extension / OCMOD |
 | **Download** | [`product-availability.ocmod.zip`](product-availability.ocmod.zip) |
-| **Guide & support** | [webocreation.com/blog/ocmod-module-to-show-product-availability-on-products-of-modules-page/](https://webocreation.com/blog/ocmod-module-to-show-product-availability-on-products-of-modules-page/) |
+| **Guide & support** | [webocreation.com/ocmod-module-to-show-product-availability-on-products-of-modules-page/](https://webocreation.com/ocmod-module-to-show-product-availability-on-products-of-modules-page/) |
 
 ## Installation
 
@@ -17,7 +17,7 @@ Copy of [product-availability-in-category-page-modules](../product-availability-
 
 ## More free extensions
 
-- Full write-up for this extension: [https://webocreation.com/blog/ocmod-module-to-show-product-availability-on-products-of-modules-page/](https://webocreation.com/blog/ocmod-module-to-show-product-availability-on-products-of-modules-page/)
+- Full write-up for this extension: [https://webocreation.com/ocmod-module-to-show-product-availability-on-products-of-modules-page/](https://webocreation.com/ocmod-module-to-show-product-availability-on-products-of-modules-page/)
 - All free OpenCart extensions: [https://webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/)
 - Website: [webocreation.com](https://webocreation.com)
 

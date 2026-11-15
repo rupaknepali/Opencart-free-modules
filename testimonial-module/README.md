@@ -6,7 +6,7 @@ Multi-instance testimonials module with a slider, plus admin pages to add, edit 
 |---|---|
 | **Platform** | OpenCart 3.0.x |
 | **Type** | OpenCart 3 extension (copy files) |
-| **Guide & support** | [webocreation.com/blog/opencart-3-module-development-tutorial-multi-instance-slider-testimonials/](https://webocreation.com/blog/opencart-3-module-development-tutorial-multi-instance-slider-testimonials/) |
+| **Guide & support** | [webocreation.com/opencart-3-module-development-tutorial-multi-instance-slider-testimonials/](https://webocreation.com/opencart-3-module-development-tutorial-multi-instance-slider-testimonials/) |
 
 ## Installation
 
@@ -16,7 +16,7 @@ Multi-instance testimonials module with a slider, plus admin pages to add, edit 
 
 ## More free extensions
 
-- Full write-up for this extension: [https://webocreation.com/blog/opencart-3-module-development-tutorial-multi-instance-slider-testimonials/](https://webocreation.com/blog/opencart-3-module-development-tutorial-multi-instance-slider-testimonials/)
+- Full write-up for this extension: [https://webocreation.com/opencart-3-module-development-tutorial-multi-instance-slider-testimonials/](https://webocreation.com/opencart-3-module-development-tutorial-multi-instance-slider-testimonials/)
 - All free OpenCart extensions: [https://webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/)
 - Website: [webocreation.com](https://webocreation.com)
 

@@ -7,7 +7,7 @@ Adds full-width top and bottom positions to Design > Layouts so modules can span
 | **Platform** | OpenCart 3.0.x |
 | **Type** | OpenCart 3 extension / OCMOD |
 | **Download** | [`fullwidthtopbottom.ocmod.zip`](fullwidthtopbottom.ocmod.zip) |
-| **Guide & support** | [webocreation.com/blog/opencart-free-extension-to-add-full-width-position-in-layout/](https://webocreation.com/blog/opencart-free-extension-to-add-full-width-position-in-layout/) |
+| **Guide & support** | [webocreation.com/opencart-free-extension-to-add-full-width-position-in-layout/](https://webocreation.com/opencart-free-extension-to-add-full-width-position-in-layout/) |
 
 ## Installation
 
@@ -17,7 +17,7 @@ Adds full-width top and bottom positions to Design > Layouts so modules can span
 
 ## More free extensions
 
-- Full write-up for this extension: [https://webocreation.com/blog/opencart-free-extension-to-add-full-width-position-in-layout/](https://webocreation.com/blog/opencart-free-extension-to-add-full-width-position-in-layout/)
+- Full write-up for this extension: [https://webocreation.com/opencart-free-extension-to-add-full-width-position-in-layout/](https://webocreation.com/opencart-free-extension-to-add-full-width-position-in-layout/)
 - All free OpenCart extensions: [https://webocreation.com/opencart/opencart-extensions-free-download/](https://webocreation.com/opencart/opencart-extensions-free-download/)
 - Website: [webocreation.com](https://webocreation.com)
 

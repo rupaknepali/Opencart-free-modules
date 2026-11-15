@@ -3,7 +3,7 @@
 Opencart theme development environment setup with Gulp, Package JSON, npm, Javascript ES6 compiling, plus SCSS, images, and fonts.
 
 Detail documentation:
-[OpenCart 3 theme development environment set up Gulp SCSS JS](https://webocreation.com/blog/opencart-theme-development-gulp-package-json-npm-setup/)
+[OpenCart 3 theme development environment set up Gulp SCSS JS](https://webocreation.com/opencart-theme-development-gulp-package-json-npm-setup/)
 
 1. Download or clone this repo
 2. Go to catalog/view/theme and paste this folder and rename the folder opencart-theme-developement-gulp-setup to your theme name

@@ -4,14 +4,14 @@ Free Opencart 3 theme named "NepalBuddhaOpencartThemeFree"
 
 **[Video tutorial to install it ](https://www.youtube.com/watch?v=v580dOJ94Oo)**
 
-**[Documentation](https://webocreation.com/blog/opencart-3-themes-free)**
+**[Documentation](https://webocreation.com/opencart-3-themes-free)**
 
 **[Demo](https://webocreation.com/nepalbuddha/)**
 
 Following modules are directly integrated into the theme above:
-**[Featured categories OpenCart module free](https://webocreation.com/blog/opencart-show-selected-categories-as-featured-module-free)**
+**[Featured categories OpenCart module free](https://webocreation.com/opencart-show-selected-categories-as-featured-module-free)**
 
-**[Show full width OpenCart module free](https://webocreation.com/blog/opencart-free-extension-to-add-full-width-position-in-layout)**
+**[Show full width OpenCart module free](https://webocreation.com/opencart-free-extension-to-add-full-width-position-in-layout)**
 
 ## Following are the developer tutorials which helps to understand code easily:
 
