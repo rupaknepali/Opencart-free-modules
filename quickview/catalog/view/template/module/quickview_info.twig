@@ -1,0 +1,38 @@
+<div class="row g-4">
+  <div class="col-md-6">
+    <img src="{{ images[0].popup }}" alt="{{ name }}" class="img-fluid oc-qv-main"/>
+    {% if images|length > 1 %}
+      <div class="oc-qv-thumbs">
+        {% for image in images %}
+          <button type="button" class="oc-qv-thumb{% if loop.first %} active{% endif %}" data-popup="{{ image.popup }}" aria-label="{{ name }} {{ loop.index }}"><img src="{{ image.thumb }}" alt=""/></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="col-md-6">
+    <h2 class="h4 mb-2" id="oc-qv-title">{{ name }}</h2>
+    <ul class="list-unstyled small text-muted mb-3">
+      {% if manufacturer %}<li>{{ qv_text_brand }} {{ manufacturer }}</li>{% endif %}
+      <li>{{ qv_text_model }} {{ model }}</li>
+      <li>{{ qv_text_stock }} <span class="{{ in_stock ? 'text-success' : 'text-danger' }}">{{ stock }}</span></li>
+    </ul>
+    {% if price %}
+      <div class="oc-qv-price mb-3">
+        {% if special %}<span class="price-new">{{ special }}</span> <span class="price-old">{{ price }}</span>{% else %}<span class="price-new">{{ price }}</span>{% endif %}
+      </div>
+    {% endif %}
+    {% if description %}<p class="oc-qv-desc">{{ description }}</p>{% endif %}
+
+    {% if needs_choice %}
+      <a href="{{ href }}" class="btn btn-primary btn-lg w-100 mb-2">{{ qv_button_choose }}</a>
+    {% else %}
+      <form method="post" action="{{ cart_add }}" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#cart" class="d-flex gap-2 mb-2">
+        <input type="hidden" name="product_id" value="{{ product_id }}"/>
+        <label for="oc-qv-qty" class="visually-hidden">{{ qv_entry_qty }}</label>
+        <input type="number" name="quantity" value="{{ minimum }}" min="{{ minimum }}" id="oc-qv-qty" class="form-control" style="max-width:90px"/>
+        <button type="submit" class="btn btn-primary flex-grow-1"><i class="fa-solid fa-cart-shopping"></i> {{ qv_button_cart }}</button>
+      </form>
+    {% endif %}
+    <a href="{{ href }}" class="small">{{ qv_text_details }} &rarr;</a>
+  </div>
+</div>

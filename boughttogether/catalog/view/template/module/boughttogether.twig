@@ -1,0 +1,122 @@
+<div class="boughttogether mb-4" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-cart="{{ cart }}"
+     data-left="{{ currency_left }}" data-right="{{ currency_right }}" data-decimals="{{ currency_decimals }}" data-dec-point="{{ decimal_point }}" data-thousand-point="{{ thousand_point }}"
+     data-text-added="{{ text_added|e('html_attr') }}" data-text-none="{{ text_none_selected|e('html_attr') }}">
+  <h3 class="mb-3">{{ heading }}</h3>
+  <div class="bt-items">
+    {% for product in products %}
+      <div class="bt-item{% if not product.selectable %} bt-disabled{% endif %}">
+        <a href="{{ product.href }}" class="bt-image"><img src="{{ product.thumb }}" alt="{{ product.name }}" class="img-fluid"/></a>
+        <div class="form-check">
+          {% if product.selectable %}
+            <input type="checkbox" class="form-check-input bt-check" id="bt-{{ product.product_id }}" value="{{ product.product_id }}" data-quantity="{{ product.quantity }}" data-value="{{ product.value }}" data-name="{{ product.name }}" checked/>
+          {% endif %}
+          <label class="form-check-label" for="bt-{{ product.product_id }}">
+            {% if product.current %}<strong>{{ text_this_item }}</strong> {{ product.name }}{% else %}<a href="{{ product.href }}">{{ product.name }}</a>{% endif %}
+          </label>
+        </div>
+        {% if show_price %}<div class="bt-price">{{ product.price }}{% if product.quantity > 1 %} &times; {{ product.quantity }}{% endif %}</div>{% endif %}
+        {% if not product.selectable %}
+          {% if product.current %}<div class="small text-muted">{{ text_choose_above }}</div>{% else %}<a href="{{ product.href }}" class="small">{{ text_choose_options }}</a>{% endif %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="bt-summary">
+      {% if show_price %}<div class="bt-total-line">{{ text_total }} <strong class="bt-total">{{ total }}</strong></div>{% endif %}
+    <button type="button" class="btn btn-primary bt-add"><i class="fa-solid fa-cart-plus"></i> {{ button_add_selected }}</button>
+  </div>
+</div>
+<style>
+.boughttogether .bt-items{display:flex;flex-wrap:wrap;gap:16px 32px;margin-bottom:16px}
+.boughttogether .bt-item{position:relative;width:140px}
+.boughttogether .bt-item + .bt-item::before{content:"+";position:absolute;left:-23px;top:52px;font-size:22px;font-weight:300;line-height:1;color:#6c757d}
+.boughttogether .bt-item.bt-disabled .bt-image img{opacity:.6}
+.boughttogether .bt-image img{border:1px solid #dee2e6;border-radius:6px;margin-bottom:8px}
+.boughttogether .form-check-label{font-size:14px;line-height:1.35}
+.boughttogether .bt-price{margin-top:4px;font-weight:600}
+.boughttogether .bt-summary{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:14px 16px;background:#f8f9fa;border-radius:8px}
+.boughttogether .bt-total-line{font-size:16px}
+.boughttogether .bt-total{font-size:20px}
+@media (max-width:575.98px){
+  .boughttogether .bt-items{gap:16px 28px}
+  .boughttogether .bt-item{width:calc(50% - 14px)}
+  .boughttogether .bt-item:nth-child(odd)::before{display:none}
+  .boughttogether .bt-summary .bt-add{width:100%}
+}
+</style>
+<script type="text/javascript">
+(function () {
+  var script = document.currentScript;
+  var box = (script && script.previousElementSibling && script.previousElementSibling.previousElementSibling) || document.querySelector('.boughttogether');
+
+  function money(amount) {
+    var d = parseInt(box.dataset.decimals, 10) || 0;
+    var parts = amount.toFixed(d).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, box.dataset.thousandPoint);
+    return box.dataset.left + parts.join(box.dataset.decPoint) + box.dataset.right;
+  }
+
+  function esc(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function checked() {
+    return Array.prototype.slice.call(box.querySelectorAll('.bt-check:checked'));
+  }
+
+  function updateTotal() {
+    var total = checked().reduce(function (sum, input) {
+      return sum + parseFloat(input.dataset.value) * parseInt(input.dataset.quantity, 10);
+    }, 0);
+    var el = box.querySelector('.bt-total');
+    if (el) el.textContent = money(total);
+    box.querySelector('.bt-add').disabled = checked().length === 0;
+  }
+
+  box.addEventListener('change', function (e) {
+    if (e.target.classList.contains('bt-check')) updateTotal();
+  });
+
+  box.querySelector('.bt-add').addEventListener('click', function () {
+    var button = this;
+    var items = checked();
+
+    if (!items.length) {
+      $('#alert').prepend('<div class="alert alert-warning alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + box.dataset.textNone + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+      return;
+    }
+
+    $(button).button('loading');
+
+    var added = [];
+    var url = box.dataset.cartAdd.replaceAll('&amp;', '&');
+
+    // One request per product, in order, so the cart session isn't written to in parallel.
+    items.reduce(function (chain, input) {
+      return chain.then(function () {
+        return $.ajax({
+          url: url,
+          type: 'post',
+          data: {product_id: input.value, quantity: input.dataset.quantity},
+          dataType: 'json'
+        }).then(function (json) {
+          if (json['success']) {
+            added.push(esc(input.dataset.name));
+          }
+        });
+      });
+    }, $.Deferred().resolve().promise()).always(function () {
+      $(button).button('reset');
+      $('#cart').load(box.dataset.cartInfo.replaceAll('&amp;', '&'));
+      if (added.length) {
+        var message = box.dataset.textAdded.replace('%s', added.join(', ')).replace('%s', box.dataset.cart);
+        $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + message + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+      }
+    });
+  });
+
+  updateTotal();
+})();
+</script>

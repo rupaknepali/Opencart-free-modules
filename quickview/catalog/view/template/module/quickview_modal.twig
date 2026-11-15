@@ -1,0 +1,60 @@
+<div class="modal fade" id="oc-quickview" tabindex="-1" aria-labelledby="oc-qv-title" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ qv_button_close }}"></button>
+      </div>
+      <div class="modal-body pt-0" id="oc-quickview-body"></div>
+    </div>
+  </div>
+</div>
+<style>
+.product-thumb{position:relative}
+.oc-quickview-wrap{position:relative}
+.oc-quickview{position:absolute;top:10px;right:10px;z-index:3;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#212529;background:rgba(255,255,255,.95);border:1px solid #dee2e6;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.08);opacity:0;transform:translateY(-4px);transition:opacity .15s,transform .15s}
+.product-thumb:hover .oc-quickview,.oc-quickview-wrap:hover .oc-quickview,.oc-quickview:focus-visible{opacity:1;transform:none}
+.oc-quickview:hover{background:#fff}
+@media (hover:none){.oc-quickview{opacity:1;transform:none}.oc-quickview span{display:none}}
+#oc-quickview .oc-qv-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+#oc-quickview .oc-qv-thumb{padding:0;border:2px solid transparent;border-radius:6px;background:none;line-height:0}
+#oc-quickview .oc-qv-thumb.active{border-color:#0d6efd}
+#oc-quickview .oc-qv-thumb img{width:56px;height:56px;object-fit:cover;border-radius:4px}
+#oc-quickview .oc-qv-price{font-size:1.5rem;font-weight:700}
+#oc-quickview .oc-qv-price .price-old{font-size:1rem;font-weight:400;color:#6c757d;text-decoration:line-through}
+#oc-quickview .oc-qv-desc{color:#495057}
+#oc-quickview .oc-qv-loading{padding:60px 0;text-align:center}
+</style>
+<script type="text/javascript">
+(function () {
+  var url = '{{ info|e('js') }}'.replaceAll('&amp;', '&');
+  var body = document.getElementById('oc-quickview-body');
+  var element = document.getElementById('oc-quickview');
+  var modal = null;
+
+  document.addEventListener('click', function (e) {
+    var button = e.target.closest('.oc-quickview');
+
+    if (button) {
+      e.preventDefault();
+      body.innerHTML = '<div class="oc-qv-loading"><div class="spinner-border" role="status"><span class="visually-hidden">Loading</span></div></div>';
+      modal = modal || bootstrap.Modal.getOrCreateInstance(element);
+      modal.show();
+
+      fetch(url + '&product_id=' + encodeURIComponent(button.getAttribute('data-product-id')), {credentials: 'same-origin'})
+        .then(function (response) { return response.text(); })
+        .then(function (html) { body.innerHTML = html; })
+        .catch(function () { body.innerHTML = '<p class="p-3">Sorry, this product could not be loaded.</p>'; });
+
+      return;
+    }
+
+    // Gallery: swap the large image.
+    var thumb = e.target.closest('#oc-quickview .oc-qv-thumb');
+
+    if (thumb) {
+      element.querySelector('.oc-qv-main').src = thumb.getAttribute('data-popup');
+      element.querySelectorAll('.oc-qv-thumb').forEach(function (t) { t.classList.toggle('active', t === thumb); });
+    }
+  });
+})();
+</script>
