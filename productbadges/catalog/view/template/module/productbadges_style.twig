@@ -1,0 +1,11 @@
+<style>
+.product-thumb .image, .image.magnific-popup, .oc-badges-wrap { position: relative; }
+.oc-badges { position: absolute; top: .5rem; {{ side }}: .5rem; z-index: 2; display: flex; flex-direction: column; align-items: flex-{{ side == 'right' ? 'end' : 'start' }}; gap: .3rem; pointer-events: none; }
+.oc-badge { display: inline-block; padding: .2rem .55rem; border-radius: .25rem; font-size: .75rem; font-weight: 700; line-height: 1.4; letter-spacing: .02em; color: #fff; text-transform: uppercase; box-shadow: 0 1px 2px rgba(0, 0, 0, .15); }
+.oc-badge-sale { background: #dc3545; }
+.oc-badge-new { background: #198754; }
+.oc-badge-bestseller { background: #f59f00; color: #212529; }
+.oc-badge-soldout { background: #495057; }
+.image.magnific-popup .oc-badges { top: 1rem; {{ side }}: 1rem; }
+.image.magnific-popup .oc-badge { font-size: .85rem; }
+</style>
