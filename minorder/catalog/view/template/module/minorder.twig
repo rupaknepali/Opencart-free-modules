@@ -1,0 +1,7 @@
+<div class="alert alert-warning oc-minorder" role="status">
+  <p class="mb-2"><i class="fa-solid fa-basket-shopping"></i> <strong>{{ mo_title }}</strong></p>
+  {% for message in messages %}<p class="mb-1">{{ message }}</p>{% endfor %}
+  <div class="progress mt-2" role="progressbar" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100" style="height: .5rem;">
+    <div class="progress-bar bg-warning" style="width: {{ percent }}%"></div>
+  </div>
+</div>

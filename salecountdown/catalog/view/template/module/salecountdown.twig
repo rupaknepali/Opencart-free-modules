@@ -1,0 +1,40 @@
+<style>
+.oc-countdown { color: var(--bs-danger, #dc3545); font-weight: 600; }
+.oc-countdown-lg { font-size: 1.05rem; margin: -.25rem 0 1rem; }
+.oc-countdown-lg .oc-countdown-time { font-variant-numeric: tabular-nums; }
+.oc-countdown-sm { font-size: .8rem; margin-top: .25rem; }
+</style>
+<script type="text/javascript"><!--
+(function () {
+  // Use the server's clock: offset corrects a visitor whose computer clock is wrong.
+  var offset = {{ now }} * 1000 - Date.now();
+  var boxes = document.querySelectorAll('.oc-countdown[data-end]');
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  function tick() {
+    var now = Date.now() + offset;
+
+    boxes.forEach(function (box) {
+      var left = Math.floor((parseInt(box.getAttribute('data-end'), 10) * 1000 - now) / 1000);
+      var time = box.querySelector('.oc-countdown-time');
+
+      if (left <= 0) {
+        box.textContent = '{{ sc_ended|e('js') }}';
+        return;
+      }
+
+      var d = Math.floor(left / 86400), h = Math.floor(left % 86400 / 3600), m = Math.floor(left % 3600 / 60), s = left % 60;
+
+      if (box.getAttribute('data-short')) {
+        time.textContent = d ? d + 'd ' + h + 'h' : h + 'h ' + m + 'm';
+      } else {
+        time.textContent = (d ? d + 'd ' : '') + pad(h) + ':' + pad(m) + ':' + pad(s);
+      }
+    });
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+//--></script>

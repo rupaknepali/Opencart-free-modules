@@ -1,0 +1,72 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_rules }}</label>
+            <div class="col-sm-10">
+              <div class="table-responsive">
+                <table class="table table-bordered mb-1">
+                  <thead>
+                    <tr>
+                      <th>{{ column_group }}</th>
+                      <th style="width: 14rem;">{{ column_amount|format(currency) }}</th>
+                      <th style="width: 10rem;">{{ column_quantity }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for group in customer_groups %}
+                      <tr>
+                        <td class="align-middle">{{ group.name }}</td>
+                        <td><input type="number" step="0.01" min="0" name="module_minorder_rule[{{ group.customer_group_id }}][amount]" value="{{ module_minorder_rule[group.customer_group_id].amount }}" placeholder="0.00" class="form-control"/></td>
+                        <td><input type="number" step="1" min="0" name="module_minorder_rule[{{ group.customer_group_id }}][quantity]" value="{{ module_minorder_rule[group.customer_group_id].quantity }}" placeholder="0" class="form-control"/></td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="form-text">{{ help_rules }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-basis" class="col-sm-2 col-form-label">{{ entry_basis }}</label>
+            <div class="col-sm-10">
+              <select name="module_minorder_basis" id="input-basis" class="form-select">
+                <option value="subtotal"{% if module_minorder_basis == 'subtotal' %} selected{% endif %}>{{ text_subtotal }}</option>
+                <option value="total"{% if module_minorder_basis == 'total' %} selected{% endif %}>{{ text_total }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_minorder_status" value="0"/>
+                <input type="checkbox" name="module_minorder_status" value="1" id="input-status" class="form-check-input"{% if module_minorder_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
