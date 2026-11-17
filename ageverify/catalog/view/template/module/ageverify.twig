@@ -1,0 +1,47 @@
+<div id="oc-agegate" class="oc-agegate" role="dialog" aria-modal="true" aria-labelledby="oc-agegate-title" aria-describedby="oc-agegate-text">
+  <div class="oc-agegate-box">
+    {% if logo %}<img src="{{ logo }}" alt="{{ store }}" class="oc-agegate-logo"/>{% endif %}
+    <h2 id="oc-agegate-title" class="oc-agegate-title">{{ title }}</h2>
+    <p id="oc-agegate-text" class="oc-agegate-text">{{ message }}</p>
+    <div class="oc-agegate-buttons">
+      <button type="button" class="btn btn-primary btn-lg" id="oc-agegate-yes">{{ yes }}</button>
+      <a href="{{ exit_url }}" class="btn btn-outline-secondary btn-lg" id="oc-agegate-no" rel="nofollow">{{ no }}</a>
+    </div>
+  </div>
+</div>
+<style>
+.oc-agegate { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(17, 24, 39, .92); backdrop-filter: blur(6px); }
+.oc-agegate-box { width: 100%; max-width: 440px; background: var(--bs-body-bg, #fff); border-radius: .75rem; padding: 2rem 1.5rem; text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, .35); }
+.oc-agegate-logo { max-height: 48px; max-width: 200px; margin-bottom: 1.25rem; }
+.oc-agegate-title { font-size: 1.6rem; margin: 0 0 .5rem; }
+.oc-agegate-text { color: var(--bs-secondary-color, #6c757d); margin: 0 0 1.5rem; }
+.oc-agegate-buttons { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+body.oc-agegate-open { overflow: hidden; }
+</style>
+<script type="text/javascript"><!--
+(function () {
+  var gate = document.getElementById('oc-agegate');
+  if (!gate) return;
+
+  document.body.classList.add('oc-agegate-open');
+
+  var yes = document.getElementById('oc-agegate-yes');
+  yes.focus();
+
+  yes.addEventListener('click', function () {
+    // Remember the answer on this device. 0 days = a session cookie, gone when the browser closes.
+    document.cookie = 'oc_age_ok=1; path=/; SameSite=Lax' + ({{ days }} > 0 ? '; Max-Age=' + ({{ days }} * 86400) : '');
+    gate.remove();
+    document.body.classList.remove('oc-agegate-open');
+  });
+
+  // Keep keyboard focus inside the dialog while it's open.
+  gate.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var items = gate.querySelectorAll('button, a');
+    var first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+    else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+  });
+})();
+//--></script>

@@ -1,0 +1,48 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ reply }}" class="btn btn-primary"><i class="fa-solid fa-reply"></i> {{ text_reply }}</a>
+        {% if request.status %}
+          <button type="button" data-href="{{ status_url }}&status=0" class="btn btn-outline-secondary oc-rq-status">{{ text_mark_new }}</button>
+        {% else %}
+          <button type="button" data-href="{{ status_url }}&status=1" class="btn btn-outline-success oc-rq-status"><i class="fa-solid fa-check"></i> {{ text_mark_replied }}</button>
+        {% endif %}
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply-all"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-file-invoice-dollar"></i> {{ text_request|format(request.quote_request_id) }}</div>
+      <div class="card-body">
+        <table class="table table-bordered mb-0">
+          <tbody>
+            <tr><th style="width: 12rem;">{{ entry_product }}</th><td><a href="{{ product_href }}" target="_blank">{{ product }}</a></td></tr>
+            <tr><th>{{ entry_quantity }}</th><td>{{ request.quantity }}</td></tr>
+            <tr><th>{{ entry_name }}</th><td>{{ request.name }}</td></tr>
+            <tr><th>{{ entry_company }}</th><td>{{ request.company }}</td></tr>
+            <tr><th>{{ entry_email_address }}</th><td><a href="{{ reply }}">{{ request.email }}</a></td></tr>
+            <tr><th>{{ entry_telephone }}</th><td>{{ request.telephone }}</td></tr>
+            <tr><th>{{ entry_message }}</th><td>{{ message }}</td></tr>
+            <tr><th>{{ entry_date }}</th><td>{{ date_added }}</td></tr>
+            <tr><th>{{ entry_ip }}</th><td>{{ request.ip }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('.oc-rq-status').on('click', function () {
+  $.getJSON($(this).data('href').replace(/&amp;/g, '&'), function (json) { if (json.success) location.reload(); });
+});
+//--></script>
+{{ footer }}

@@ -1,0 +1,83 @@
+<div class="oc-rq mb-3">
+  {% if replace %}<p class="oc-rq-por h4 mb-3">{{ rq_price_on_request }}</p>{% endif %}
+  <button type="button" class="btn {{ replace ? 'btn-primary btn-lg' : 'btn-outline-primary' }}" data-bs-toggle="modal" data-bs-target="#modal-requestquote"><i class="fa-solid fa-file-invoice-dollar"></i> {{ rq_button }}</button>
+</div>
+<div class="modal fade" id="modal-requestquote" tabindex="-1" aria-labelledby="modal-requestquote-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="form-requestquote" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-requestquote-title">{{ rq_title }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ rq_close }}"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small">{{ rq_intro }}</p>
+          <p class="fw-semibold">{{ product }}</p>
+          <input type="hidden" name="product_id" value="{{ product_id }}"/>
+          <div class="oc-rq-hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"/></label></div>
+          <div class="row g-2">
+            <div class="col-sm-6"><label for="input-rq-name" class="form-label">{{ rq_entry_name }}</label><input type="text" name="name" value="{{ name }}" id="input-rq-name" class="form-control" autocomplete="name"/><div id="error-rq-name" class="invalid-feedback"></div></div>
+            <div class="col-sm-6"><label for="input-rq-email" class="form-label">{{ rq_entry_email }}</label><input type="email" name="email" value="{{ email }}" id="input-rq-email" class="form-control" autocomplete="email"/><div id="error-rq-email" class="invalid-feedback"></div></div>
+            <div class="col-sm-6"><label for="input-rq-telephone" class="form-label">{{ rq_entry_telephone }}</label><input type="tel" name="telephone" value="{{ telephone }}" id="input-rq-telephone" class="form-control" autocomplete="tel"/></div>
+            <div class="col-sm-6"><label for="input-rq-company" class="form-label">{{ rq_entry_company }}</label><input type="text" name="company" value="" id="input-rq-company" class="form-control" autocomplete="organization"/></div>
+            <div class="col-sm-4"><label for="input-rq-quantity" class="form-label">{{ rq_entry_quantity }}</label><input type="number" name="quantity" value="{{ minimum }}" min="1" id="input-rq-quantity" class="form-control"/><div id="error-rq-quantity" class="invalid-feedback"></div></div>
+            <div class="col-12"><label for="input-rq-message" class="form-label">{{ rq_entry_message }}</label><textarea name="message" rows="3" maxlength="2000" id="input-rq-message" class="form-control"></textarea><div id="error-rq-message" class="invalid-feedback"></div></div>
+          </div>
+          <div id="requestquote-alert" class="mt-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">{{ rq_send }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<style>
+.oc-rq-hidden { display: none !important; }
+.oc-rq-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+<script type="text/javascript"><!--
+(function () {
+  var modal = document.getElementById('modal-requestquote');
+  if (!modal) return;
+
+  // A modal inside the product column can be trapped under its backdrop by theme styles: move it to <body>.
+  document.body.appendChild(modal);
+
+  var form = document.getElementById('form-requestquote');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var button = form.querySelector('button[type="submit"]');
+    var alert = document.getElementById('requestquote-alert');
+
+    button.disabled = true;
+    alert.innerHTML = '';
+    form.querySelectorAll('.is-invalid').forEach(function (field) { field.classList.remove('is-invalid'); });
+
+    fetch('{{ send|e('js') }}'.replace(/&amp;/g, '&'), {method: 'POST', body: new FormData(form), credentials: 'same-origin'})
+      .then(function (response) { return response.json(); })
+      .then(function (json) {
+        button.disabled = false;
+
+        if (json.error) {
+          ['name', 'email', 'quantity', 'message'].forEach(function (key) {
+            if (json.error[key]) {
+              document.getElementById('input-rq-' + key).classList.add('is-invalid');
+              document.getElementById('error-rq-' + key).textContent = json.error[key];
+            }
+          });
+
+          if (json.error.warning) alert.innerHTML = '<div class="alert alert-danger mb-0">' + json.error.warning + '</div>';
+        }
+
+        if (json.success) {
+          form.querySelector('.modal-body').innerHTML = '<div class="alert alert-success mb-0">' + json.success + '</div>';
+          button.remove();
+        }
+      })
+      .catch(function () { button.disabled = false; });
+  });
+})();
+//--></script>

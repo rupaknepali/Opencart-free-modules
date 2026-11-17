@@ -1,0 +1,38 @@
+<form id="form-request" method="post" data-oc-toggle="ajax" data-oc-load="{{ action }}" data-oc-target="#request">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="text-center" style="width: 1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', $(this).prop('checked'));" class="form-check-input"/></th>
+          <th>{{ column_product }}</th>
+          <th>{{ column_name }}</th>
+          <th class="text-end">{{ column_quantity }}</th>
+          <th>{{ column_status }}</th>
+          <th>{{ column_date_added }}</th>
+          <th class="text-end">{{ column_action }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if requests %}
+          {% for request in requests %}
+            <tr>
+              <td class="text-center"><input type="checkbox" name="selected[]" value="{{ request.quote_request_id }}" class="form-check-input"/></td>
+              <td>{{ request.product }}</td>
+              <td>{{ request.name }}{% if request.company %}<br/><small class="text-muted">{{ request.company }}</small>{% endif %}</td>
+              <td class="text-end">{{ request.quantity }}</td>
+              <td>{% if request.status %}<span class="badge bg-success">{{ text_replied }}</span>{% else %}<span class="badge bg-danger">{{ text_new }}</span>{% endif %}</td>
+              <td>{{ request.date_added }}</td>
+              <td class="text-end"><a href="{{ request.view }}" data-bs-toggle="tooltip" title="{{ button_view }}" class="btn btn-primary"><i class="fa-solid fa-eye"></i></a></td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td class="text-center" colspan="7">{{ text_no_results }}</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 text-start">{{ pagination }}</div>
+    <div class="col-sm-6 text-end">{{ results }}</div>
+  </div>
+</form>

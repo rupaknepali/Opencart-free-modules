@@ -1,0 +1,23 @@
+<div id="oc-announce" class="oc-announce" role="region" aria-label="{{ ab_region }}" style="background: {{ background }}; color: {{ color }};">
+  <div class="container oc-announce-inner">
+    <p class="oc-announce-text">{{ message }}{% if link_text and link_url %} <a href="{{ link_url }}" style="color: {{ color }};">{{ link_text }}</a>{% endif %}</p>
+    {% if dismiss %}<button type="button" class="oc-announce-close" aria-label="{{ ab_close }}" style="color: {{ color }};">&times;</button>{% endif %}
+  </div>
+</div>
+<style>
+.oc-announce { font-size: .9rem; line-height: 1.4; }
+.oc-announce-inner { position: relative; padding-top: .55rem; padding-bottom: .55rem; text-align: center; }
+.oc-announce-text { margin: 0 2rem; }
+.oc-announce-text a { font-weight: 600; text-decoration: underline; }
+.oc-announce-close { position: absolute; right: .5rem; top: 50%; transform: translateY(-50%); border: 0; background: transparent; font-size: 1.4rem; line-height: 1; padding: .25rem .5rem; cursor: pointer; opacity: .8; }
+.oc-announce-close:hover, .oc-announce-close:focus { opacity: 1; }
+</style>
+{% if dismiss %}
+<script type="text/javascript"><!--
+document.querySelector('#oc-announce .oc-announce-close').addEventListener('click', function () {
+  // Remember for 30 days which message was closed; a new message shows again.
+  document.cookie = 'oc_announce={{ id }}; Max-Age=2592000; path=/; SameSite=Lax';
+  document.getElementById('oc-announce').remove();
+});
+//--></script>
+{% endif %}

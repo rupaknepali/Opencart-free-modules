@@ -1,0 +1,73 @@
+<div id="oc-stickycart" class="oc-stickycart{% if not desktop %} d-lg-none{% endif %}" aria-hidden="true">
+  <div class="container d-flex align-items-center gap-3">
+    {% if thumb %}<img src="{{ thumb }}" alt="" width="44" height="44" class="oc-stickycart-img d-none d-sm-block"/>{% endif %}
+    <div class="oc-stickycart-info flex-grow-1">
+      <div class="oc-stickycart-name">{{ name }}</div>
+      {% if price %}<div class="oc-stickycart-price">{{ price }}{% if old_price %} <span class="oc-stickycart-old">{{ old_price }}</span>{% endif %}</div>{% endif %}
+    </div>
+    <button type="button" class="btn btn-primary oc-stickycart-btn" tabindex="-1">{{ required ? sc_options : label }}</button>
+  </div>
+</div>
+<style>
+.oc-stickycart { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1030; background: var(--bs-body-bg, #fff); border-top: 1px solid var(--bs-border-color, #dee2e6); box-shadow: 0 -4px 16px rgba(0, 0, 0, .08); padding: .6rem 0; transform: translateY(110%); transition: transform .2s ease; }
+.oc-stickycart.is-visible { transform: translateY(0); }
+.oc-stickycart-img { object-fit: contain; border-radius: .25rem; }
+.oc-stickycart-name { font-weight: 600; font-size: .9rem; line-height: 1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+.oc-stickycart-price { font-size: .9rem; }
+.oc-stickycart-old { text-decoration: line-through; color: var(--bs-secondary-color, #6c757d); font-size: .8rem; }
+.oc-stickycart-btn { white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .oc-stickycart { transition: none; } }
+</style>
+<script type="text/javascript"><!--
+(function () {
+  var bar = document.getElementById('oc-stickycart');
+  var main = document.getElementById('button-cart');
+  if (!bar || !main || !('IntersectionObserver' in window)) return;
+
+  var required = {{ required ? 'true' : 'false' }};
+
+  // Sit above any other bar fixed to the bottom of the screen (a cookie notice, our Social Share bar...),
+  // instead of hiding under it.
+  function lift() {
+    var offset = 0;
+
+    Array.prototype.forEach.call(document.body.children, function (el) {
+      if (el === bar) return;
+
+      var style = getComputedStyle(el);
+
+      if (style.position === 'fixed' && style.display !== 'none' && parseFloat(style.bottom) <= 1 && el.offsetHeight < window.innerHeight / 3) {
+        var rect = el.getBoundingClientRect();
+
+        // Only bars that span most of the width at the very bottom.
+        if (rect.bottom >= window.innerHeight - 1 && rect.width > window.innerWidth / 2) {
+          offset = Math.max(offset, rect.height);
+        }
+      }
+    });
+
+    bar.style.bottom = offset + 'px';
+  }
+
+  // Show the bar only once the main button has scrolled up out of view (not before the shopper reaches it).
+  new IntersectionObserver(function (entries) {
+    var entry = entries[0];
+    var past = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+    if (past) lift();
+    bar.classList.toggle('is-visible', past);
+    bar.setAttribute('aria-hidden', past ? 'false' : 'true');
+    bar.querySelector('button').tabIndex = past ? 0 : -1;
+  }).observe(main);
+
+  bar.querySelector('button').addEventListener('click', function () {
+    if (required) {
+      // Options must be chosen in the main form: take the shopper there.
+      var form = document.getElementById('product') || main;
+      form.scrollIntoView({behavior: 'smooth', block: 'start'});
+    } else {
+      // Use OpenCart's own button, so its add-to-cart, messages and cart refresh all work as normal.
+      main.click();
+    }
+  });
+})();
+//--></script>
