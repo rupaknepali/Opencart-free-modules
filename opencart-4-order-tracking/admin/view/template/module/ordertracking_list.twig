@@ -1,0 +1,29 @@
+{% if trackings %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <td>{{ column_carrier }}</td>
+          <td>{{ column_tracking }}</td>
+          <td>{{ column_date_added }}</td>
+          <td class="text-end">{{ column_action }}</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tracking in trackings %}
+          <tr>
+            <td>{{ tracking.carrier|e }}</td>
+            <td><code>{{ tracking.tracking_number|e }}</code></td>
+            <td>{{ tracking.date_added }}</td>
+            <td class="text-end text-nowrap">
+              <a href="{{ tracking.url|e }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> {{ button_track }}</a>
+              {% if can_modify %}<button type="button" value="{{ tracking.order_tracking_id }}" class="btn btn-outline-danger btn-sm ordertracking-remove"><i class="fa-solid fa-trash-can"></i></button>{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p class="text-muted">{{ text_no_tracking }}</p>
+{% endif %}

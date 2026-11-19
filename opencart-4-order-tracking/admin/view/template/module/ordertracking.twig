@@ -1,0 +1,114 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_ordertracking_status" value="0"/>
+                <input type="checkbox" name="module_ordertracking_status" value="1" id="input-status" class="form-check-input"{% if module_ordertracking_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-order-status" class="col-sm-2 col-form-label">{{ entry_order_status }}</label>
+            <div class="col-sm-10">
+              <select name="module_ordertracking_order_status_id" id="input-order-status" class="form-select">
+                <option value="0">{{ text_none }}</option>
+                {% for order_status in order_statuses %}
+                  <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == module_ordertracking_order_status_id %} selected{% endif %}>{{ order_status.name }}</option>
+                {% endfor %}
+              </select>
+              <div class="form-text">{{ help_order_status }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-notify" class="col-sm-2 col-form-label">{{ entry_notify }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_ordertracking_notify" value="0"/>
+                <input type="checkbox" name="module_ordertracking_notify" value="1" id="input-notify" class="form-check-input"{% if module_ordertracking_notify %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_notify }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-comment" class="col-sm-2 col-form-label">{{ entry_comment }}</label>
+            <div class="col-sm-10">
+              <textarea name="module_ordertracking_comment" rows="4" id="input-comment" class="form-control">{{ module_ordertracking_comment }}</textarea>
+              <div class="form-text">{{ help_comment }}</div>
+            </div>
+          </div>
+          <fieldset>
+            <legend>{{ text_carriers }}</legend>
+            <p class="form-text">{{ help_carriers }}</p>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <td style="width: 25%;">{{ entry_carrier_name }}</td>
+                    <td>{{ entry_carrier_url }}</td>
+                    <td style="width: 1px;"></td>
+                  </tr>
+                </thead>
+                <tbody id="carrier-rows">
+                  {% set carrier_row = 0 %}
+                  {% for carrier in module_ordertracking_carriers %}
+                    <tr id="carrier-row-{{ carrier_row }}">
+                      <td><input type="text" name="module_ordertracking_carriers[{{ carrier_row }}][name]" value="{{ carrier.name }}" class="form-control"/></td>
+                      <td><input type="text" name="module_ordertracking_carriers[{{ carrier_row }}][url]" value="{{ carrier.url }}" id="input-carrier-{{ carrier_row }}" class="form-control"/>
+                        <div id="error-carrier-{{ carrier_row }}" class="invalid-feedback"></div></td>
+                      <td><button type="button" onclick="$('#carrier-row-{{ carrier_row }}').remove();" class="btn btn-danger"><i class="fa-solid fa-minus-circle"></i></button></td>
+                    </tr>
+                    {% set carrier_row = carrier_row + 1 %}
+                  {% endfor %}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="2"></td>
+                    <td><button type="button" id="button-add-carrier" data-bs-toggle="tooltip" title="{{ button_add_carrier }}" class="btn btn-primary"><i class="fa-solid fa-plus-circle"></i></button></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+var carrier_row = {{ carrier_row }};
+
+$('#button-add-carrier').on('click', function() {
+    var html = '<tr id="carrier-row-' + carrier_row + '">';
+    html += '  <td><input type="text" name="module_ordertracking_carriers[' + carrier_row + '][name]" value="" class="form-control"/></td>';
+    html += '  <td><input type="text" name="module_ordertracking_carriers[' + carrier_row + '][url]" value="https://" id="input-carrier-' + carrier_row + '" class="form-control"/><div id="error-carrier-' + carrier_row + '" class="invalid-feedback"></div></td>';
+    html += '  <td><button type="button" onclick="$(\'#carrier-row-' + carrier_row + '\').remove();" class="btn btn-danger"><i class="fa-solid fa-minus-circle"></i></button></td>';
+    html += '</tr>';
+
+    $('#carrier-rows').append(html);
+
+    carrier_row++;
+});
+//--></script>
+{{ footer }}

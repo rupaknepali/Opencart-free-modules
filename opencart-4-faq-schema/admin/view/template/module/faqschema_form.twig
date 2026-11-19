@@ -1,0 +1,152 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-faq" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_form }}</div>
+      <div class="card-body">
+        <form id="form-faq" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-type" class="col-sm-2 col-form-label">{{ entry_type }}</label>
+            <div class="col-sm-10">
+              <select name="type" id="input-type" class="form-select">
+                {% for item in types %}
+                  <option value="{{ item }}"{% if item == type %} selected{% endif %}>{{ attribute(_context, 'text_type_' ~ item) }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-target-name" class="col-sm-2 col-form-label">{{ entry_target }}</label>
+            <div class="col-sm-10">
+              <div class="form-check mb-2">
+                <input type="checkbox" name="all" value="1" id="input-all" class="form-check-input"{% if faq_id and not target_id %} checked{% endif %}/>
+                <label for="input-all" class="form-check-label">{{ entry_all }}</label>
+              </div>
+              <div id="target-search">
+                <input type="text" value="{{ target_name }}" placeholder="{{ help_target }}" id="input-target-name" data-oc-target="autocomplete-target" class="form-control" autocomplete="off"/>
+                <ul id="autocomplete-target" class="dropdown-menu"></ul>
+              </div>
+              <div id="target-information">
+                <select id="input-information" class="form-select">
+                  <option value="0"></option>
+                  {% for information in informations %}
+                    <option value="{{ information.information_id }}"{% if type == 'information' and information.information_id == target_id %} selected{% endif %}>{{ information.title }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <input type="hidden" name="target_id" value="{{ target_id }}" id="input-target-id"/>
+              <div id="input-target"></div>
+              <div id="error-target" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <ul class="nav nav-tabs">
+            {% for language in languages %}
+              <li class="nav-item"><a href="#language-{{ language.language_id }}" data-bs-toggle="tab" class="nav-link{% if loop.first %} active{% endif %}"><img src="{{ language.image }}" title="{{ language.name }}"/> {{ language.name }}</a></li>
+            {% endfor %}
+          </ul>
+          <div class="tab-content pt-3">
+            {% for language in languages %}
+              <div id="language-{{ language.language_id }}" class="tab-pane{% if loop.first %} active{% endif %}">
+                <div class="row mb-3 required">
+                  <label for="input-question-{{ language.language_id }}" class="col-sm-2 col-form-label">{{ entry_question }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="faq_description[{{ language.language_id }}][question]" value="{{ faq_description[language.language_id].question }}" id="input-question-{{ language.language_id }}" class="form-control"/>
+                    <div id="error-question-{{ language.language_id }}" class="invalid-feedback"></div>
+                  </div>
+                </div>
+                <div class="row mb-3 required">
+                  <label for="input-answer-{{ language.language_id }}" class="col-sm-2 col-form-label">{{ entry_answer }}</label>
+                  <div class="col-sm-10">
+                    <textarea name="faq_description[{{ language.language_id }}][answer]" rows="6" id="input-answer-{{ language.language_id }}" class="form-control">{{ faq_description[language.language_id].answer }}</textarea>
+                    <div class="form-text">{{ help_answer }}</div>
+                    <div id="error-answer-{{ language.language_id }}" class="invalid-feedback"></div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="row mb-3">
+            <label for="input-sort-order" class="col-sm-2 col-form-label">{{ entry_sort_order }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="sort_order" value="{{ sort_order }}" id="input-sort-order" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="status" value="0"/>
+                <input type="checkbox" name="status" value="1" id="input-status" class="form-check-input"{% if status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="faq_id" value="{{ faq_id }}"/>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+function faqTarget() {
+    var type = $('#input-type').val();
+    var all = $('#input-all').prop('checked');
+
+    $('#target-search').toggle(!all && type != 'information');
+    $('#target-information').toggle(!all && type == 'information');
+}
+
+$('#input-type').on('change', function() {
+    // A product ID means nothing for a category, so start again.
+    $('#input-target-id').val(0);
+    $('#input-target-name').val('');
+    $('#input-information').val(0);
+
+    faqTarget();
+});
+
+$('#input-all').on('change', faqTarget);
+
+$('#input-information').on('change', function() {
+    $('#input-target-id').val($(this).val());
+});
+
+$('#input-target-name').autocomplete({
+    'source': function(request, response) {
+        var type = $('#input-type').val();
+
+        $.ajax({
+            url: 'index.php?route=catalog/' + type + '.autocomplete&user_token={{ user_token }}&filter_name=' + encodeURIComponent(request),
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item[type + '_id']
+                    }
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+        $('#input-target-name').val(decodeHTMLEntities(item['label']));
+        $('#input-target-id').val(item['value']);
+    }
+});
+
+faqTarget();
+//--></script>
+{{ footer }}

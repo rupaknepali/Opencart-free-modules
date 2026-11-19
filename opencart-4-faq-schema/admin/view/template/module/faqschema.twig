@@ -1,0 +1,118 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ add }}" data-bs-toggle="tooltip" title="{{ text_add_faq }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-gear"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_faqschema_status" value="0"/>
+                <input type="checkbox" name="module_faqschema_status" value="1" id="input-status" class="form-check-input"{% if module_faqschema_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-schema" class="col-sm-2 col-form-label">{{ entry_schema }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_faqschema_schema" value="0"/>
+                <input type="checkbox" name="module_faqschema_schema" value="1" id="input-schema" class="form-check-input"{% if module_faqschema_schema %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_schema }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-heading" class="col-sm-2 col-form-label">{{ entry_heading }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_faqschema_heading" value="{{ module_faqschema_heading }}" id="input-heading" class="form-control"/>
+              <div class="form-text">{{ help_heading }}</div>
+            </div>
+          </div>
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> {{ button_save }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-list"></i> {{ text_faqs }}</div>
+      <div class="card-body">
+        <div class="mb-3">
+          <div class="btn-group" role="group" id="faq-filter">
+            <button type="button" value="" class="btn btn-outline-secondary active">{{ text_all }}</button>
+            {% for type in types %}
+              <button type="button" value="{{ type }}" class="btn btn-outline-secondary">{{ attribute(_context, 'text_type_' ~ type) }}</button>
+            {% endfor %}
+          </div>
+          <button type="button" id="button-delete" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger float-end"><i class="fa-regular fa-trash-can"></i></button>
+        </div>
+        <form id="form-faq" method="post">
+          <div id="faq-list">{{ list }}</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+var filter_type = '';
+
+$('#faq-filter button').on('click', function() {
+    $('#faq-filter button').removeClass('active');
+    $(this).addClass('active');
+
+    filter_type = $(this).val();
+
+    $('#faq-list').load('index.php?route=extension/faqschema/module/faqschema.list&user_token={{ user_token }}&filter_type=' + filter_type);
+});
+
+$('#faq-list').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+
+    $('#faq-list').load(this.href);
+});
+
+$('#button-delete').on('click', function() {
+    if (!confirm('{{ text_confirm|escape('js') }}')) {
+        return;
+    }
+
+    $.ajax({
+        url: 'index.php?route=extension/faqschema/module/faqschema.delete&user_token={{ user_token }}',
+        type: 'post',
+        dataType: 'json',
+        data: $('#form-faq').serialize(),
+        success: function(json) {
+            $('.alert-dismissible').remove();
+
+            if (json['error']) {
+                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+            }
+
+            if (json['success']) {
+                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+                $('#faq-list').load('index.php?route=extension/faqschema/module/faqschema.list&user_token={{ user_token }}&filter_type=' + filter_type);
+            }
+        }
+    });
+});
+//--></script>
+{{ footer }}

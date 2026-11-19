@@ -1,0 +1,25 @@
+<div id="ordertracking" class="mb-4">
+  <h2>{{ ot_heading }}</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <td class="text-start">{{ ot_carrier }}</td>
+          <td class="text-start">{{ ot_tracking }}</td>
+          <td class="text-start">{{ ot_shipped }}</td>
+          <td class="text-end"></td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tracking in trackings %}
+          <tr>
+            <td class="text-start">{{ tracking.carrier|e }}</td>
+            <td class="text-start"><code>{{ tracking.tracking_number|e }}</code></td>
+            <td class="text-start">{{ tracking.date_added }}</td>
+            <td class="text-end"><a href="{{ tracking.url|e }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm"><i class="fa-solid fa-truck-fast"></i> {{ ot_track }}<span class="visually-hidden"> {{ tracking.tracking_number|e }} {{ ot_new_window }}</span></a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
