@@ -1,0 +1,47 @@
+<div data-total="{{ total }}">
+  {% if reports %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle small">
+        <thead>
+          <tr>
+            <th>{{ column_policy }}</th>
+            <th>{{ column_directive }}</th>
+            <th>{{ column_blocked }}</th>
+            <th>{{ column_page }}</th>
+            <th class="text-end">{{ column_count }}</th>
+            <th>{{ column_date }}</th>
+            <th class="text-end">{{ column_action }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for report in reports %}
+            <tr>
+              <td><span class="badge {{ report.policy == 'enforce' ? 'bg-danger' : 'bg-info text-dark' }}">{{ report.policy == 'enforce' ? text_policy_enforce : text_policy_report }}</span></td>
+              <td class="font-monospace">{{ report.directive }}</td>
+              <td class="font-monospace text-break">{{ report.blocked }}{% if report.sample %}<div class="text-body-secondary mt-1"><code>{{ report.sample }}</code></div>{% endif %}</td>
+              <td class="text-break">{{ report.document }}{% if report.source %}<div class="text-body-secondary font-monospace mt-1">{{ report.source }}</div>{% endif %}</td>
+              <td class="text-end">{{ report.count }}</td>
+              <td class="text-nowrap">{{ report.date }}</td>
+              <td>
+                <div class="d-flex gap-1 justify-content-end align-items-start">
+                  {% if report.allow %}
+                    <button type="button" data-csp-allow="{{ report.report_id }}" title="{{ report.allow_title }}" class="btn btn-sm btn-success text-nowrap"><i class="fa-solid fa-check"></i> {{ report.allow }}</button>
+                  {% else %}
+                    <span class="text-body-secondary small" style="max-width: 280px;">{{ report.hint }}</span>
+                  {% endif %}
+                  <button type="button" data-csp-delete="{{ report.report_id }}" title="{{ button_delete }}" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 text-start">{{ pagination }}</div>
+      <div class="col-sm-6 text-end">{{ results }}</div>
+    </div>
+  {% else %}
+    <p class="text-center text-body-secondary my-4">{{ text_no_reports }}</p>
+  {% endif %}
+</div>

@@ -1,0 +1,275 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ text_general }}</a></li>
+          <li class="nav-item"><a href="#tab-report" data-bs-toggle="tab" class="nav-link">{{ text_report }} <span class="badge {{ module_csp_report_status ? 'bg-success' : 'bg-secondary' }}" id="badge-report">{{ module_csp_report_status ? text_enabled : text_disabled }}</span></a></li>
+          <li class="nav-item"><a href="#tab-enforce" data-bs-toggle="tab" class="nav-link">{{ text_enforce }} <span class="badge {{ module_csp_enforce_status ? 'bg-success' : 'bg-secondary' }}" id="badge-enforce">{{ module_csp_enforce_status ? text_enabled : text_disabled }}</span></a></li>
+          <li class="nav-item"><a href="#tab-violations" data-bs-toggle="tab" class="nav-link">{{ text_violations }} <span class="badge bg-warning text-dark" id="badge-violations">{{ report_total }}</span></a></li>
+        </ul>
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="tab-content">
+            <div id="tab-general" class="tab-pane active">
+              <div class="row mb-3">
+                <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_csp_status" value="0"/>
+                    <input type="checkbox" name="module_csp_status" value="1" id="input-status" class="form-check-input"{% if module_csp_status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-nonce" class="col-sm-2 col-form-label">{{ entry_nonce }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_csp_nonce" value="0"/>
+                    <input type="checkbox" name="module_csp_nonce" value="1" id="input-nonce" class="form-check-input"{% if module_csp_nonce %} checked{% endif %}/>
+                  </div>
+                  <div class="form-text">{{ help_nonce }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-reporting" class="col-sm-2 col-form-label">{{ entry_reporting }}</label>
+                <div class="col-sm-10">
+                  <select name="module_csp_reporting" id="input-reporting" class="form-select">
+                    <option value="local"{% if module_csp_reporting == 'local' %} selected{% endif %}>{{ text_local }}</option>
+                    <option value="remote"{% if module_csp_reporting == 'remote' %} selected{% endif %}>{{ text_remote }}</option>
+                    <option value="off"{% if module_csp_reporting == 'off' %} selected{% endif %}>{{ text_off }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3" id="row-report-url">
+                <label for="input-report-url" class="col-sm-2 col-form-label">{{ entry_report_url }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="module_csp_report_url" value="{{ module_csp_report_url|e }}" placeholder="https://" id="input-report-url" class="form-control"/>
+                  <div id="error-report-url" class="invalid-feedback"></div>
+                  <div class="form-text">{{ help_report_url }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-skip" class="col-sm-2 col-form-label">{{ entry_skip }}</label>
+                <div class="col-sm-10">
+                  <textarea name="module_csp_skip" rows="3" id="input-skip" class="form-control font-monospace">{{ module_csp_skip|e }}</textarea>
+                  <div class="form-text">{{ help_skip }}</div>
+                </div>
+              </div>
+            </div>
+            {% for type in ['report', 'enforce'] %}
+              {% set policy = type == 'report' ? module_csp_report : module_csp_enforce %}
+              <div id="tab-{{ type }}" class="tab-pane csp-policy" data-type="{{ type }}">
+                <div class="alert {{ type == 'enforce' ? 'alert-warning' : 'alert-light border' }} mt-3">{{ type == 'enforce' ? text_enforce_info : text_report_info }}</div>
+                <div class="row mb-3">
+                  <label for="input-{{ type }}-status" class="col-sm-2 col-form-label">{{ entry_policy_status }}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-switch form-switch-lg">
+                      <input type="hidden" name="module_csp_{{ type }}_status" value="0"/>
+                      <input type="checkbox" name="module_csp_{{ type }}_status" value="1" id="input-{{ type }}-status" class="form-check-input csp-status"{% if (type == 'report' ? module_csp_report_status : module_csp_enforce_status) %} checked{% endif %}/>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <span class="me-2 text-body-secondary">{{ text_preset }}</span>
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-csp-preset="starter">{{ text_starter }}</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-csp-preset="strict">{{ text_strict }}</button>
+                  {% if type == 'enforce' %}<button type="button" class="btn btn-sm btn-outline-secondary" data-csp-preset="copy">{{ text_copy_report }}</button>{% endif %}
+                  <button type="button" class="btn btn-sm btn-outline-danger" data-csp-preset="clear">{{ text_clear_policy }}</button>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm align-middle">
+                    <tbody>
+                      {% for directive in directives %}
+                        <tr>
+                          <td style="width: 160px;"><label for="input-{{ type }}-{{ directive.name }}" class="font-monospace">{{ directive.name }}</label></td>
+                          <td><input type="text" name="module_csp_{{ type }}[{{ directive.name }}]" value="{{ policy[directive.name]|default('')|e }}" id="input-{{ type }}-{{ directive.name }}" data-directive="{{ directive.name }}" class="form-control form-control-sm font-monospace csp-directive"/></td>
+                          <td class="text-body-secondary small d-none d-lg-table-cell" style="width: 32%;">{{ directive.help }}</td>
+                        </tr>
+                      {% endfor %}
+                      <tr>
+                        <td><label for="input-{{ type }}-upgrade" class="font-monospace small">{{ entry_upgrade }}</label></td>
+                        <td>
+                          <div class="form-check form-switch">
+                            <input type="hidden" name="module_csp_{{ type }}_upgrade" value="0"/>
+                            <input type="checkbox" name="module_csp_{{ type }}_upgrade" value="1" id="input-{{ type }}-upgrade" class="form-check-input csp-upgrade"{% if (type == 'report' ? module_csp_report_upgrade : module_csp_enforce_upgrade) %} checked{% endif %}/>
+                          </div>
+                        </td>
+                        <td class="text-body-secondary small d-none d-lg-table-cell">{{ help_upgrade }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <label class="form-label fw-semibold">{{ text_preview }}</label>
+                <pre class="bg-body-tertiary border rounded p-3 small csp-preview" style="white-space: pre-wrap; word-break: break-all;"></pre>
+                <div class="form-text">{{ text_preview_help }}</div>
+              </div>
+            {% endfor %}
+            <div id="tab-violations" class="tab-pane">
+              <div class="d-flex justify-content-end gap-2 my-3">
+                <button type="button" id="button-csp-refresh" class="btn btn-sm btn-light"><i class="fa-solid fa-rotate"></i> {{ text_refresh }}</button>
+                <button type="button" id="button-csp-clear" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash-can"></i> {{ text_clear_all }}</button>
+              </div>
+              <div id="csp-report">{{ report_list }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+(function () {
+  var token = '{{ user_token }}';
+  var base = 'index.php?route=extension/csp/module/csp';
+  var presets = {starter: {{ starter }}, strict: {{ strict }}};
+  var enabledText = '{{ text_enabled|e('js') }}', disabledText = '{{ text_disabled|e('js') }}';
+
+  function preview(pane) {
+    var type = pane.data('type'), parts = [], nonce = $('#input-nonce').is(':checked');
+
+    pane.find('.csp-directive').each(function () {
+      var value = $.trim($(this).val()).replace(/[;,\s]+/g, ' ');
+
+      if (value) {
+        var name = $(this).data('directive');
+
+        if (nonce && (name == 'script-src' || (name == 'default-src' && !$.trim(pane.find('[data-directive="script-src"]').val())))) {
+          value += " 'nonce-…'";
+        }
+
+        parts.push(name + ' ' + value);
+      }
+    });
+
+    if (pane.find('.csp-upgrade').is(':checked')) {
+      parts.push('upgrade-insecure-requests');
+    }
+
+    if ($('#input-reporting').val() != 'off' && parts.length) {
+      parts.push('report-uri …');
+    }
+
+    var name = type == 'enforce' ? 'Content-Security-Policy' : 'Content-Security-Policy-Report-Only';
+
+    pane.find('.csp-preview').text(parts.length ? name + ': ' + parts.join('; ') : '(empty: no header is sent)');
+
+    var on = pane.find('.csp-status').is(':checked');
+
+    $('#badge-' + type).toggleClass('bg-success', on).toggleClass('bg-secondary', !on).text(on ? enabledText : disabledText);
+  }
+
+  function fill(type, policy) {
+    var pane = $('#tab-' + type);
+
+    pane.find('.csp-directive').each(function () {
+      $(this).val(policy[$(this).data('directive')] || '');
+    });
+
+    preview(pane);
+  }
+
+  function previewAll() {
+    $('.csp-policy').each(function () { preview($(this)); });
+  }
+
+  $('#form-module').on('input change', '.csp-policy input, #input-nonce, #input-reporting', previewAll);
+
+  $('#input-reporting').on('change', function () {
+    $('#row-report-url').toggle($(this).val() == 'remote');
+  }).trigger('change');
+
+  $('[data-csp-preset]').on('click', function () {
+    var pane = $(this).closest('.csp-policy'), preset = $(this).data('csp-preset'), policy = {};
+
+    if (preset == 'copy') {
+      $('#tab-report .csp-directive').each(function () { policy[$(this).data('directive')] = $(this).val(); });
+    } else if (presets[preset]) {
+      policy = presets[preset];
+    }
+
+    if (preset == 'strict') {
+      $('#input-nonce').prop('checked', true);
+    }
+
+    fill(pane.data('type'), policy);
+  });
+
+  // Saving cleans the values (quotes around 'self', no semicolons); show what was stored.
+  $(document).ajaxSuccess(function (event, xhr, settings) {
+    var json = xhr.responseJSON;
+
+    if (settings.url && settings.url.indexOf('csp.save') != -1 && json && json.policy) {
+      fill('enforce', json.policy.enforce);
+      fill('report', json.policy.report);
+    }
+  });
+
+  function alertBox(type, text) {
+    $('#alert').prepend('<div class="alert alert-' + type + ' alert-dismissible"><i class="fa-solid fa-circle-' + (type == 'success' ? 'check' : 'exclamation') + '"></i> ' + text + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+  }
+
+  function loadReports(url) {
+    $('#csp-report').load(url || (base + '.report&user_token=' + token), function () {
+      $('#badge-violations').text($('#csp-report [data-total]').data('total') || 0);
+    });
+  }
+
+  $('#csp-report').on('click', '.pagination a', function (e) {
+    e.preventDefault();
+    loadReports(this.href);
+  });
+
+  $('#button-csp-refresh').on('click', function () { loadReports(); });
+
+  $('#button-csp-clear').on('click', function () {
+    if (!confirm('{{ text_confirm_clear|e('js') }}')) {
+      return;
+    }
+
+    $.post(base + '.delete&all=1&user_token=' + token, function (json) {
+      alertBox(json.error ? 'danger' : 'success', json.error || json.success);
+      loadReports();
+    }, 'json');
+  });
+
+  $('#csp-report').on('click', '[data-csp-delete]', function () {
+    $.post(base + '.delete&report_id=' + $(this).data('csp-delete') + '&user_token=' + token, function () {
+      loadReports();
+    }, 'json');
+  });
+
+  $('#csp-report').on('click', '[data-csp-allow]', function () {
+    var button = $(this).prop('disabled', true);
+
+    $.post(base + '.allow&report_id=' + button.data('csp-allow') + '&user_token=' + token, function (json) {
+      if (json.policy) {
+        fill('enforce', json.policy.enforce);
+        fill('report', json.policy.report);
+      }
+
+      alertBox(json.error ? 'warning' : 'success', json.error || json.success);
+      loadReports();
+    }, 'json');
+  });
+
+  previewAll();
+})();
+//--></script>
+{{ footer }}
