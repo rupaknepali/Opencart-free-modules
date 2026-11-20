@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-12">
+    <table id="module-content-full" class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="text-center">{{ fw_title }} <i class="fa-solid fa-circle-question text-muted" data-bs-toggle="tooltip" title="{{ fw_help }}"></i></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for layout_module in layout_modules %}
+          <tr id="module-row-{{ layout_module.row }}">
+            <td>
+              <div class="input-group input-group-sm">
+                <select name="layout_module[{{ layout_module.row }}][code]" class="form-select input-sm">
+                  {% for extension in extensions %}
+                    <optgroup label="{{ extension.name }}">
+                      {% if not extension.module %}
+                        <option value="{{ extension.code }}"{% if extension.code == layout_module.code %} selected{% endif %}>{{ extension.name }}</option>
+                      {% else %}
+                        {% for module in extension.module %}
+                          <option value="{{ module.code }}"{% if module.code == layout_module.code %} selected{% endif %}>{{ module.name }}</option>
+                        {% endfor %}
+                      {% endif %}
+                    </optgroup>
+                  {% endfor %}
+                </select>
+                <input type="hidden" name="layout_module[{{ layout_module.row }}][position]" value="content_full"/>
+                <input type="hidden" name="layout_module[{{ layout_module.row }}][sort_order]" value="{{ layout_module.sort_order }}"/>
+                <a href="{{ layout_module.edit }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil fa-fw"></i></a>
+                <button type="button" onclick="$('#module-row-{{ layout_module.row }}').remove();" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger btn-sm"><i class="fa-solid fa-minus-circle fa-fw"></i></button>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td class="text-end"><button type="button" onclick="addModule('content-full');" data-bs-toggle="tooltip" title="{{ button_module_add }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus-circle fa-fw"></i></button></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<script type="text/javascript"><!--
+// The core form only updates the edit link for its own four tables.
+$(document).on('change', '#module-content-full select[name*=\'code\']', function() {
+    var part = this.value.split('.');
+    var href = 'index.php?route=extension/' + part[0] + '/module/' + part[1] + '&user_token={{ user_token }}';
+
+    if (typeof part[2] != 'undefined') {
+        href += '&module_id=' + part[2];
+    }
+
+    $(this).parent().find('a').attr('href', href);
+});
+//--></script>

@@ -1,0 +1,55 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ add }}" data-bs-toggle="tooltip" title="{{ text_add_testimonial }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+        <button type="button" id="button-delete" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></button>
+      </div>
+      <h1>{{ text_testimonials }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-list"></i> {{ text_testimonials }}</div>
+      <div class="card-body"><form id="form-testimonial" method="post"><div id="testimonial">{{ list }}</div></form></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#testimonial').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+    $('#testimonial').load(this.href);
+});
+
+$('#button-delete').on('click', function() {
+    if (!confirm('{{ text_confirm|escape('js') }}')) {
+        return;
+    }
+
+    $.ajax({
+        url: 'index.php?route=extension/testimonial/module/testimonial.delete&user_token={{ user_token }}',
+        type: 'post',
+        dataType: 'json',
+        data: $('#form-testimonial').serialize(),
+        success: function(json) {
+            $('.alert-dismissible').remove();
+
+            if (json['error']) {
+                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+            }
+
+            if (json['success']) {
+                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                $('#testimonial').load('index.php?route=extension/testimonial/module/testimonial.list&user_token={{ user_token }}');
+            }
+        }
+    });
+});
+//--></script>
+{{ footer }}

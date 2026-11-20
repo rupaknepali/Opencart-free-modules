@@ -1,0 +1,36 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <td class="text-center" style="width: 1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', $(this).prop('checked'));" class="form-check-input"/></td>
+        <td class="text-center" style="width: 1px;">{{ column_image }}</td>
+        <td>{{ column_customer }}</td>
+        <td>{{ column_testimonial }}</td>
+        <td class="text-center">{{ column_rating }}</td>
+        <td class="text-end">{{ column_sort_order }}</td>
+        <td>{{ column_status }}</td>
+        <td class="text-end">{{ column_action }}</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for testimonial in testimonials %}
+        <tr>
+          <td class="text-center"><input type="checkbox" name="selected[]" value="{{ testimonial.testimonial_id }}" class="form-check-input"/></td>
+          <td class="text-center"><img src="{{ testimonial.thumb }}" alt="" class="img-thumbnail"/></td>
+          <td>{{ testimonial.name }}</td>
+          <td class="text-muted">{{ testimonial.excerpt|e }}</td>
+          <td class="text-center text-nowrap">{% for i in 1..5 %}<i class="fa-{{ testimonial.rating >= i ? 'solid' : 'regular' }} fa-star text-warning"></i>{% endfor %}</td>
+          <td class="text-end">{{ testimonial.sort_order }}</td>
+          <td>{% if testimonial.status %}<span class="badge bg-success">{{ text_enabled }}</span>{% else %}<span class="badge bg-secondary">{{ text_disabled }}</span>{% endif %}</td>
+          <td class="text-end"><a href="{{ testimonial.edit }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8" class="text-center">{{ text_no_results }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-sm-6 text-start">{{ pagination }}</div>
+  <div class="col-sm-6 text-end">{{ results }}</div>
+</div>

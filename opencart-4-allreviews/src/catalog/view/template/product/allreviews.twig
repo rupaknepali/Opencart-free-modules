@@ -1,0 +1,46 @@
+{{ header }}
+<div id="extension-allreviews" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    <div id="content" class="col">{{ content_top }}
+      <h1>{{ heading_title }}</h1>
+      {% if description %}<p>{{ description }}</p>{% endif %}
+      {% if summary %}
+        <p class="lead">
+          {% for i in 1..5 %}<i class="fa-{{ average >= i - 0.25 ? 'solid' : 'regular' }} fa-star text-warning"></i>{% endfor %}
+          <span class="ms-2">{{ summary }}</span>
+        </p>
+      {% endif %}
+      {% if reviews %}
+        <div class="list-group mb-3">
+          {% for review in reviews %}
+            <div class="list-group-item py-3">
+              <div class="d-flex gap-3">
+                <a href="{{ review.href }}" class="flex-shrink-0"><img src="{{ review.thumb }}" alt="{{ review.name }}" class="img-thumbnail" loading="lazy"/></a>
+                <div class="flex-grow-1">
+                  <div class="mb-1">
+                    {% for i in 1..5 %}<i class="fa-{{ review.rating >= i ? 'solid' : 'regular' }} fa-star text-warning"></i>{% endfor %}
+                    <span class="visually-hidden">{{ review.rating }}/5</span>
+                  </div>
+                  <p class="mb-2">{{ review.text }}</p>
+                  <p class="small text-muted mb-0"><strong>{{ review.author }}</strong> · {{ review.date_added }} · {{ ar_on }} <a href="{{ review.href }}">{{ review.name }}</a></p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="row">
+          <div class="col-sm-6 text-start">{{ pagination }}</div>
+          <div class="col-sm-6 text-end">{{ results }}</div>
+        </div>
+      {% else %}
+        <p>{{ ar_none }}</p>
+      {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

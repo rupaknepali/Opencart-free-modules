@@ -1,0 +1,13 @@
+<div class="oc-featured-categories mb-4">
+  {% if heading_title %}<h3>{{ heading_title }}</h3>{% endif %}
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-{{ columns }} g-3">
+    {% for category in categories %}
+      <div class="col">
+        <a href="{{ category.href }}" class="card h-100 text-decoration-none text-center">
+          <img src="{{ category.thumb }}" alt="{{ category.name }}" width="{{ width }}" height="{{ height }}" class="card-img-top img-fluid" loading="lazy"/>
+          <span class="card-body py-2 fw-semibold">{{ category.name }}</span>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>

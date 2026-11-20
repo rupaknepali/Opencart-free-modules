@@ -1,0 +1,23 @@
+<section class="oc-testimonials mb-4">
+  {% if heading_title %}<h3 class="text-center">{{ heading_title }}</h3>{% endif %}
+  <div id="carousel-testimonial-{{ module }}" class="carousel carousel-dark slide" data-bs-ride="{{ interval == 'false' ? 'false' : 'carousel' }}" data-bs-interval="{{ interval }}">
+    <div class="carousel-inner">
+      {% for testimonial in testimonials %}
+        <div class="carousel-item{% if loop.first %} active{% endif %}">
+          <figure class="text-center px-5 py-3 mx-auto mb-0" style="max-width: 760px;">
+            {% if testimonial.thumb %}<img src="{{ testimonial.thumb }}" alt="{{ testimonial.name }}" width="{{ width }}" height="{{ height }}" class="rounded-circle mb-3" loading="lazy"/>{% endif %}
+            {% if testimonial.rating %}
+              <div class="mb-2" aria-label="{{ tm_rating|format(testimonial.rating) }}">{% for i in 1..5 %}<i class="fa-{{ testimonial.rating >= i ? 'solid' : 'regular' }} fa-star text-warning"></i>{% endfor %}</div>
+            {% endif %}
+            <blockquote class="blockquote"><p class="fs-5 fst-italic">“{{ testimonial.description }}”</p></blockquote>
+            <figcaption class="blockquote-footer mt-2 mb-0">{{ testimonial.name }}</figcaption>
+          </figure>
+        </div>
+      {% endfor %}
+    </div>
+    {% if testimonials|length > 1 %}
+      <button class="carousel-control-prev" type="button" data-bs-target="#carousel-testimonial-{{ module }}" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">{{ tm_previous }}</span></button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carousel-testimonial-{{ module }}" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">{{ tm_next }}</span></button>
+    {% endif %}
+  </div>
+</section>
