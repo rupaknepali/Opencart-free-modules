@@ -1,0 +1,138 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-file-csv"></i> {{ text_export }}</div>
+      <div class="card-body">
+        <form id="form-export" action="{{ download }}" method="post">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-date-from">{{ entry_date_from }}</label>
+            <div class="col-sm-10">
+              <div class="row g-2 align-items-center">
+                <div class="col-auto"><input type="date" name="filter_date_from" value="{{ date_from }}" id="input-date-from" class="form-control"/></div>
+                <div class="col-auto">–</div>
+                <div class="col-auto"><input type="date" name="filter_date_to" value="{{ date_to }}" id="input-date-to" class="form-control" aria-label="{{ entry_date_to }}"/></div>
+              </div>
+              <div class="form-text">{{ text_quick }}
+                <a href="#" data-range="this-month">{{ text_this_month }}</a> ·
+                <a href="#" data-range="last-month">{{ text_last_month }}</a> ·
+                <a href="#" data-range="this-year">{{ text_this_year }}</a> ·
+                <a href="#" data-range="last-year">{{ text_last_year }}</a>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_statuses }}</label>
+            <div class="col-sm-10">
+              <div class="row">
+                {% for order_status in order_statuses %}
+                  <div class="col-sm-6 col-lg-3">
+                    <div class="form-check">
+                      <input type="checkbox" name="statuses[]" value="{{ order_status.order_status_id }}" id="input-status-{{ order_status.order_status_id }}" class="form-check-input"{% if order_status.order_status_id in selected_statuses %} checked{% endif %}/>
+                      <label for="input-status-{{ order_status.order_status_id }}" class="form-check-label">{{ order_status.name }}</label>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              <div class="form-text">{{ text_all_statuses }}</div>
+            </div>
+          </div>
+          {% if stores|length > 1 %}
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-store">{{ entry_store }}</label>
+              <div class="col-sm-10">
+                <select name="filter_store_id" id="input-store" class="form-select">
+                  <option value="">{{ text_all }}</option>
+                  {% for store in stores %}
+                    <option value="{{ store.store_id }}">{{ store.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          {% endif %}
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_rows }}</label>
+            <div class="col-sm-10">
+              <div class="form-check"><input type="radio" name="rows" value="orders" id="input-rows-orders" class="form-check-input" checked/><label for="input-rows-orders" class="form-check-label">{{ text_orders }}</label></div>
+              <div class="form-check"><input type="radio" name="rows" value="products" id="input-rows-products" class="form-check-input"/><label for="input-rows-products" class="form-check-label">{{ text_products }}</label></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-delimiter">{{ entry_delimiter }}</label>
+            <div class="col-sm-10">
+              <select name="delimiter" id="input-delimiter" class="form-select">
+                <option value=","{% if module_orderexport_delimiter == ',' %} selected{% endif %}>{{ text_comma }}</option>
+                <option value=";"{% if module_orderexport_delimiter == ';' %} selected{% endif %}>{{ text_semicolon }}</option>
+                <option value="tab"{% if module_orderexport_delimiter == 'tab' %} selected{% endif %}>{{ text_tab }}</option>
+              </select>
+              <div class="form-text">{{ help_delimiter }}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-10 offset-sm-2"><button type="submit" id="button-download" class="btn btn-primary"><i class="fa-solid fa-download"></i> {{ button_download }}</button></div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-gear"></i> {{ text_settings }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_orderexport_status" value="0"/><input type="checkbox" name="module_orderexport_status" value="1" id="input-status" class="form-check-input"{% if module_orderexport_status %} checked{% endif %}/></div>
+              <div class="form-text">{{ help_status }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-default-delimiter" class="col-sm-2 col-form-label">{{ entry_delimiter }}</label>
+            <div class="col-sm-10">
+              <select name="module_orderexport_delimiter" id="input-default-delimiter" class="form-select">
+                <option value=","{% if module_orderexport_delimiter == ',' %} selected{% endif %}>{{ text_comma }}</option>
+                <option value=";"{% if module_orderexport_delimiter == ';' %} selected{% endif %}>{{ text_semicolon }}</option>
+                <option value="tab"{% if module_orderexport_delimiter == 'tab' %} selected{% endif %}>{{ text_tab }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-10 offset-sm-2"><button type="submit" class="btn btn-light"><i class="fa-solid fa-floppy-disk"></i> {{ button_save }}</button></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('[data-range]').on('click', function(e) {
+    e.preventDefault();
+
+    var now = new Date(), y = now.getFullYear(), m = now.getMonth(), from, to;
+    var fmt = function(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); };
+
+    switch ($(this).data('range')) {
+        case 'this-month': from = new Date(y, m, 1); to = new Date(y, m + 1, 0); break;
+        case 'last-month': from = new Date(y, m - 1, 1); to = new Date(y, m, 0); break;
+        case 'this-year': from = new Date(y, 0, 1); to = new Date(y, 11, 31); break;
+        case 'last-year': from = new Date(y - 1, 0, 1); to = new Date(y - 1, 11, 31); break;
+    }
+
+    $('#input-date-from').val(fmt(from));
+    $('#input-date-to').val(fmt(to));
+});
+//--></script>
+{{ footer }}

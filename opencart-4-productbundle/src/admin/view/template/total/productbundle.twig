@@ -1,0 +1,153 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-total" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-total" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <fieldset>
+            <legend>{{ text_bundles }}</legend>
+            <div id="bundles">
+              {% set bundle_row = 0 %}
+              {% for bundle in bundles %}
+                <div id="bundle-{{ bundle_row }}" class="border rounded p-3 mb-3" data-row="{{ bundle_row }}">
+                  <div class="row g-3">
+                    <div class="col-md-5">
+                      <label class="form-label">{{ entry_name }}</label>
+                      <input type="text" name="total_productbundle_bundles[{{ bundle_row }}][name]" value="{{ bundle.name|e }}" id="input-bundle-{{ bundle_row }}" class="form-control"/>
+                      <div id="error-bundle-{{ bundle_row }}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">{{ entry_discount }}</label>
+                      <input type="text" name="total_productbundle_bundles[{{ bundle_row }}][discount]" value="{{ bundle.discount }}" class="form-control"/>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">{{ entry_add_product }}</label>
+                      <input type="text" value="" data-oc-target="autocomplete-bundle-{{ bundle_row }}" class="form-control pb-search" autocomplete="off"/>
+                      <ul id="autocomplete-bundle-{{ bundle_row }}" class="dropdown-menu"></ul>
+                    </div>
+                    <div class="col-md-1 text-end">
+                      <label class="form-label d-block">{{ entry_enabled }}</label>
+                      <div class="d-flex justify-content-end gap-2 align-items-center">
+                        <input type="hidden" name="total_productbundle_bundles[{{ bundle_row }}][status]" value="0"/>
+                        <input type="checkbox" name="total_productbundle_bundles[{{ bundle_row }}][status]" value="1" class="form-check-input mt-0"{% if bundle.status %} checked{% endif %}/>
+                        <button type="button" onclick="$('#bundle-{{ bundle_row }}').remove();" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus-circle"></i></button>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="pb-products d-flex flex-wrap gap-2">
+                        {% for product in bundle.products %}
+                          <span class="badge text-bg-light border fs-6 fw-normal pb-product">{{ product.name }} <a href="#" class="text-danger ms-1 pb-remove"><i class="fa-solid fa-xmark"></i></a><input type="hidden" name="total_productbundle_bundles[{{ bundle_row }}][products][]" value="{{ product.product_id }}"/></span>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% set bundle_row = bundle_row + 1 %}
+              {% endfor %}
+            </div>
+            <button type="button" id="button-add-bundle" class="btn btn-primary"><i class="fa-solid fa-plus-circle"></i> {{ text_add_bundle }}</button>
+            <div class="form-text mt-2">{{ help_name }} {{ help_discount }}</div>
+          </fieldset>
+          <fieldset class="mt-4">
+            <legend>{{ text_settings }}</legend>
+            {% for key in ['product', 'cart', 'coupon'] %}
+              <div class="row mb-3">
+                <label for="input-{{ key }}" class="col-sm-2 col-form-label">{{ attribute(_context, 'entry_' ~ key) }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg"><input type="hidden" name="total_productbundle_{{ key }}" value="0"/><input type="checkbox" name="total_productbundle_{{ key }}" value="1" id="input-{{ key }}" class="form-check-input"{% if attribute(_context, 'total_productbundle_' ~ key) %} checked{% endif %}/></div>
+                  <div class="form-text">{{ attribute(_context, 'help_' ~ key) }}</div>
+                </div>
+              </div>
+            {% endfor %}
+            <div class="row mb-3">
+              <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+              <div class="col-sm-10"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="total_productbundle_status" value="0"/><input type="checkbox" name="total_productbundle_status" value="1" id="input-status" class="form-check-input"{% if total_productbundle_status %} checked{% endif %}/></div></div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-sort-order" class="col-sm-2 col-form-label">{{ entry_sort_order }}</label>
+              <div class="col-sm-10"><input type="text" name="total_productbundle_sort_order" value="{{ total_productbundle_sort_order }}" id="input-sort-order" class="form-control"/><div class="form-text">{{ help_sort_order }}</div></div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+var bundle_row = {{ bundle_row }};
+
+function pbInit(box) {
+    var row = box.data('row');
+
+    box.find('.pb-search').autocomplete({
+        'source': function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product.autocomplete&user_token={{ user_token }}&filter_name=' + encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {label: item['name'], value: item['product_id']};
+                    }));
+                }
+            });
+        },
+        'select': function(item) {
+            var list = box.find('.pb-products');
+
+            box.find('.pb-search').val('');
+
+            if (list.find('input[value="' + item['value'] + '"]').length) {
+                return;
+            }
+
+            list.append('<span class="badge text-bg-light border fs-6 fw-normal pb-product">' + item['label'] + ' <a href="#" class="text-danger ms-1 pb-remove"><i class="fa-solid fa-xmark"></i></a><input type="hidden" name="total_productbundle_bundles[' + row + '][products][]" value="' + item['value'] + '"/></span>');
+        }
+    });
+}
+
+$('#bundles > div').each(function() {
+    pbInit($(this));
+});
+
+$('#bundles').on('click', '.pb-remove', function(e) {
+    e.preventDefault();
+
+    $(this).closest('.pb-product').remove();
+});
+
+$('#button-add-bundle').on('click', function() {
+    var r = bundle_row;
+    var html = '<div id="bundle-' + r + '" class="border rounded p-3 mb-3" data-row="' + r + '"><div class="row g-3">';
+    html += '<div class="col-md-5"><label class="form-label">{{ entry_name|escape('js') }}</label><input type="text" name="total_productbundle_bundles[' + r + '][name]" value="" id="input-bundle-' + r + '" class="form-control"/><div id="error-bundle-' + r + '" class="invalid-feedback"></div></div>';
+    html += '<div class="col-md-2"><label class="form-label">{{ entry_discount|escape('js') }}</label><input type="text" name="total_productbundle_bundles[' + r + '][discount]" value="10" class="form-control"/></div>';
+    html += '<div class="col-md-4"><label class="form-label">{{ entry_add_product|escape('js') }}</label><input type="text" value="" data-oc-target="autocomplete-bundle-' + r + '" class="form-control pb-search" autocomplete="off"/><ul id="autocomplete-bundle-' + r + '" class="dropdown-menu"></ul></div>';
+    html += '<div class="col-md-1 text-end"><label class="form-label d-block">{{ entry_enabled|escape('js') }}</label><div class="d-flex justify-content-end gap-2 align-items-center"><input type="hidden" name="total_productbundle_bundles[' + r + '][status]" value="0"/><input type="checkbox" name="total_productbundle_bundles[' + r + '][status]" value="1" class="form-check-input mt-0" checked/><button type="button" onclick="$(\'#bundle-' + r + '\').remove();" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus-circle"></i></button></div></div>';
+    html += '<div class="col-12"><div class="pb-products d-flex flex-wrap gap-2"></div></div>';
+    html += '</div></div>';
+
+    $('#bundles').append(html);
+
+    pbInit($('#bundle-' + r));
+
+    $('#input-bundle-' + r).focus();
+
+    bundle_row++;
+});
+//--></script>
+{{ footer }}

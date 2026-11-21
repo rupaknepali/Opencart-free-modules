@@ -1,0 +1,112 @@
+<style>.productbundle-item { width: 120px; } @media (max-width: 575px) { .productbundle-item { width: 86px; } }</style>
+<div id="productbundle-{{ id }}" class="card mb-4 productbundle">
+  <div class="card-body">
+    <h3 class="h5 mb-3"><i class="fa-solid fa-tags text-primary"></i> {{ heading }} <span class="text-body-secondary fw-normal fs-6">· {{ name|e }}</span></h3>
+    <div class="row align-items-center g-3">
+      <div class="col-lg-8">
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          {% for item in items %}
+            {% if not loop.first %}<span class="fs-4 text-body-secondary">+</span>{% endif %}
+            <div class="text-center productbundle-item">
+              <a href="{{ item.href }}"><img src="{{ item.thumb }}" alt="{{ item.name|e }}" class="img-thumbnail" width="100" height="100" style="max-width: 100%; height: auto;"/></a>
+              <div class="small mt-1 lh-sm"><a href="{{ item.href }}" class="text-decoration-none">{{ item.name }}</a></div>
+              <div class="small fw-bold">{{ item.price }}</div>
+              {% if item.is_this %}
+                <div class="small text-body-secondary">{{ pb_this }}</div>
+              {% elseif item.needs_options %}
+                <div class="small"><a href="{{ item.href }}" class="link-warning">{{ pb_options }}</a></div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="small text-body-secondary">{{ total_text }}</div>
+        <div class="mb-1"><span class="fs-4 fw-bold">{{ price }}</span> <del class="text-body-secondary ms-1">{{ full }}</del></div>
+        <div class="text-success small mb-2">{{ save }}</div>
+        <button type="button" class="btn btn-primary w-100 productbundle-add">{{ pb_button }}</button>
+        {% if has_options %}<div class="form-text">{{ pb_options_help }}</div>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#productbundle-{{ id }} .productbundle-add').on('click', function() {
+    var button = $(this);
+    var queue = [];
+
+    {% for item in items %}
+    {% if item.is_this %}
+    queue.push({name: {{ item.name|json_encode }}, mine: true, needs: {{ item.needs_options ? 'true' : 'false' }}, data: 'product_id={{ item.product_id }}&quantity={{ item.minimum }}'});
+    {% elseif not item.needs_options %}
+    queue.push({name: {{ item.name|json_encode }}, data: 'product_id={{ item.product_id }}&quantity={{ item.minimum }}'});
+    {% endif %}
+    {% endfor %}
+
+    var failed = [];
+
+    function done() {
+        button.prop('disabled', false);
+
+        var html = failed.length ? {{ failed|json_encode }}.replace('%s', failed.join(', ')).replace('%s', {{ cart_link|json_encode }}) : {{ added|json_encode }};
+
+        $('#alert').prepend('<div class="alert alert-' + (failed.length ? 'warning' : 'success') + ' alert-dismissible"><i class="fa-solid fa-circle-' + (failed.length ? 'exclamation' : 'check') + '"></i> ' + html + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+        $('#cart').load('index.php?route=common/cart.info&language={{ language }}');
+    }
+
+    function next() {
+        if (!queue.length) {
+            done();
+            return;
+        }
+
+        var item = queue.shift();
+
+        // The page's own product goes in with the options chosen above, when it has any.
+        var data = item.mine && item.needs ? $('#form-product').serialize().replace(/(^|&)quantity=[^&]*/, '$1quantity={{ items[0].minimum }}') : item.data;
+
+        $.ajax({
+            url: 'index.php?route=checkout/cart.add&language={{ language }}',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            success: function(json) {
+                if (json['error'] && item.mine && item.needs) {
+                    // Show OpenCart's own messages under the options and stop, so nothing is half added.
+                    $('#form-product').find('.is-invalid').removeClass('is-invalid');
+                    $('#form-product').find('.invalid-feedback').removeClass('d-block');
+
+                    for (var key in json['error']) {
+                        $('#input-' + key.replaceAll('_', '-')).addClass('is-invalid').find('.form-control, .form-select, .form-check-input, .form-check-label').addClass('is-invalid');
+                        $('#error-' + key.replaceAll('_', '-')).html(json['error'][key]).addClass('d-block');
+                    }
+
+                    button.prop('disabled', false);
+
+                    $('#alert').prepend('<div class="alert alert-warning alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ pb_choose|e('js') }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+                    $('html, body').animate({scrollTop: $('#form-product').offset().top - 80}, 300);
+
+                    queue = [];
+                    return;
+                }
+
+                if (!json['success']) {
+                    failed.push(item.name);
+                }
+
+                next();
+            },
+            error: function() {
+                failed.push(item.name);
+                next();
+            }
+        });
+    }
+
+    button.prop('disabled', true);
+
+    next();
+});
+//--></script>

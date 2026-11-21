@@ -1,0 +1,125 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_sellinpacks_status" value="0"/>
+                <input type="checkbox" name="module_sellinpacks_status" value="1" id="input-status" class="form-check-input"{% if module_sellinpacks_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <fieldset>
+            <legend>{{ text_rules }}</legend>
+            <div class="row g-2 align-items-end mb-3">
+              <div class="col-md-6">
+                <label for="input-product" class="form-label">{{ entry_product }}</label>
+                <input type="text" value="" id="input-product" data-oc-target="autocomplete-product" class="form-control" autocomplete="off"/>
+                <ul id="autocomplete-product" class="dropdown-menu"></ul>
+                <input type="hidden" value="" id="input-product-id"/>
+              </div>
+              <div class="col-md-2">
+                <label for="input-step" class="form-label">{{ column_step }}</label>
+                <input type="number" min="1" value="6" id="input-step" class="form-control"/>
+              </div>
+              <div class="col-md-2">
+                <label for="input-max" class="form-label">{{ column_max }}</label>
+                <input type="number" min="0" value="0" id="input-max" class="form-control"/>
+              </div>
+              <div class="col-md-2"><button type="button" id="button-add-rule" class="btn btn-primary w-100"><i class="fa-solid fa-plus-circle"></i> {{ text_add }}</button></div>
+              <div class="col-12 form-text">{{ help_step }} {{ help_max }}</div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <td>{{ column_product }}</td>
+                    <td style="width: 20%;">{{ column_step }}</td>
+                    <td style="width: 20%;">{{ column_max }}</td>
+                    <td style="width: 1px;"></td>
+                  </tr>
+                </thead>
+                <tbody id="rules">
+                  {% for rule in rules %}
+                    <tr id="rule-{{ rule.product_id }}">
+                      <td>{{ rule.name }} <span class="text-muted small">({{ rule.model }})</span><input type="hidden" name="module_sellinpacks_rule[{{ rule.product_id }}][product_id]" value="{{ rule.product_id }}"/></td>
+                      <td><input type="number" min="1" name="module_sellinpacks_rule[{{ rule.product_id }}][step]" value="{{ rule.step }}" class="form-control"/></td>
+                      <td><input type="number" min="0" name="module_sellinpacks_rule[{{ rule.product_id }}][max]" value="{{ rule.max }}" class="form-control"/></td>
+                      <td><button type="button" onclick="$('#rule-{{ rule.product_id }}').remove();" class="btn btn-danger"><i class="fa-solid fa-minus-circle"></i></button></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#input-product').autocomplete({
+    'source': function(request, response) {
+        $.ajax({
+            url: 'index.php?route=catalog/product.autocomplete&user_token={{ user_token }}&filter_name=' + encodeURIComponent(request),
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {label: item['name'], value: item['product_id']};
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+        $('#input-product').val(decodeHTMLEntities(item['label']));
+        $('#input-product-id').val(item['value']);
+    }
+});
+
+$('#button-add-rule').on('click', function() {
+    var id = parseInt($('#input-product-id').val(), 10);
+
+    if (!id) {
+        $('#input-product').focus();
+        return;
+    }
+
+    var name = $('<div/>').text($('#input-product').val()).html();
+    var step = Math.max(1, parseInt($('#input-step').val(), 10) || 1);
+    var max = Math.max(0, parseInt($('#input-max').val(), 10) || 0);
+
+    $('#rule-' + id).remove();
+
+    var html = '<tr id="rule-' + id + '">';
+    html += '<td>' + name + '<input type="hidden" name="module_sellinpacks_rule[' + id + '][product_id]" value="' + id + '"/></td>';
+    html += '<td><input type="number" min="1" name="module_sellinpacks_rule[' + id + '][step]" value="' + step + '" class="form-control"/></td>';
+    html += '<td><input type="number" min="0" name="module_sellinpacks_rule[' + id + '][max]" value="' + max + '" class="form-control"/></td>';
+    html += '<td><button type="button" onclick="$(\'#rule-' + id + '\').remove();" class="btn btn-danger"><i class="fa-solid fa-minus-circle"></i></button></td>';
+    html += '</tr>';
+
+    $('#rules').append(html);
+
+    $('#input-product, #input-product-id').val('');
+});
+//--></script>
+{{ footer }}

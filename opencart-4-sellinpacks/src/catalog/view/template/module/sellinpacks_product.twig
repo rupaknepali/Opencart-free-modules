@@ -1,0 +1,42 @@
+<div class="form-text text-body mt-1"><i class="fa-solid fa-box"></i> {{ note }}</div>
+<script type="text/javascript"><!--
+(function () {
+    var input = document.querySelector('input[name="quantity"][data-sip-step]');
+
+    if (!input) {
+        return;
+    }
+
+    var step = parseInt(input.getAttribute('data-sip-step'), 10) || 1;
+    var max = parseInt(input.getAttribute('data-sip-max'), 10) || 0;
+    var min = parseInt(input.getAttribute('data-sip-min'), 10) || step;
+
+    // Round up to a whole number of packs, within the minimum and maximum.
+    var fix = function () {
+        var value = parseInt(input.value, 10) || min;
+
+        value = Math.ceil(value / step) * step;
+        value = Math.max(min, value);
+
+        if (max) {
+            value = Math.min(max, value);
+        }
+
+        input.value = value;
+    };
+
+    input.addEventListener('change', fix);
+    input.addEventListener('blur', fix);
+
+    // Before the Add to Cart form is sent.
+    if (input.form) {
+        input.form.addEventListener('submit', fix, true);
+    }
+
+    var button = document.getElementById('button-cart');
+
+    if (button) {
+        button.addEventListener('click', fix, true);
+    }
+})();
+//--></script>

@@ -1,0 +1,8 @@
+<div class="alert alert-warning oc-sellinpacks" role="alert">
+  <p class="mb-1"><i class="fa-solid fa-box"></i> <strong>{{ sip_heading }}</strong></p>
+  <ul class="mb-0">
+    {% for problem in problems %}
+      <li>{{ problem }}</li>
+    {% endfor %}
+  </ul>
+</div>

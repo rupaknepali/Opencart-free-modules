@@ -1,0 +1,75 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_buyagain_status" value="0"/>
+                <input type="checkbox" name="module_buyagain_status" value="1" id="input-status" class="form-check-input"{% if module_buyagain_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-reorder" class="col-sm-2 col-form-label">{{ entry_reorder }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_buyagain_reorder" value="0"/>
+                <input type="checkbox" name="module_buyagain_reorder" value="1" id="input-reorder" class="form-check-input"{% if module_buyagain_reorder %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_reorder }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-account" class="col-sm-2 col-form-label">{{ entry_account }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_buyagain_account" value="0"/>
+                <input type="checkbox" name="module_buyagain_account" value="1" id="input-account" class="form-check-input"{% if module_buyagain_account %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_account }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-heading" class="col-sm-2 col-form-label">{{ entry_heading }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_buyagain_heading" value="{{ module_buyagain_heading }}" id="input-heading" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-limit" class="col-sm-2 col-form-label">{{ entry_limit }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_buyagain_limit" value="{{ module_buyagain_limit }}" id="input-limit" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-image" class="col-sm-2 col-form-label">{{ entry_image }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_buyagain_image" value="{{ module_buyagain_image }}" id="input-image" class="form-control"/>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

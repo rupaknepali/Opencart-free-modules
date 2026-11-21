@@ -1,0 +1,51 @@
+<div id="oc-buyagain-reorder" class="d-flex flex-wrap align-items-center gap-2 mb-3">
+  <button type="button" id="button-buyagain" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> {{ ba_button|format(count) }}</button>
+  <span class="text-muted small">{{ ba_help }}</span>
+</div>
+<script type="text/javascript"><!--
+$('#button-buyagain').on('click', function() {
+    var button = this;
+    var forms = $('#content form[id^="form-product-"]').toArray();
+    var added = 0, failed = 0;
+
+    $(button).button('loading');
+
+    // One line at a time, through OpenCart's own cart.add, so its checks apply to every line.
+    var next = function() {
+        if (!forms.length) {
+            $(button).button('reset');
+            $('.alert-dismissible').remove();
+
+            var message = '{{ ba_done|escape('js') }}'.replace('%s', added).replace('%s', added + failed);
+
+            if (failed) {
+                message += ' ' + '{{ ba_skipped|escape('js') }}'.replace('%s', failed);
+            }
+
+            message += ' <a href="{{ cart|escape('js') }}" class="alert-link">{{ ba_view|escape('js') }}</a>';
+
+            $('#alert').prepend('<div class="alert alert-' + (failed ? 'warning' : 'success') + ' alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + message + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+            $('#cart').load('index.php?route=common/cart.info&language={{ language }}');
+
+            return;
+        }
+
+        $.ajax({
+            url: 'index.php?route=checkout/cart.add&language={{ language }}',
+            type: 'post',
+            data: $(forms.shift()).serialize(),
+            dataType: 'json',
+            success: function(json) {
+                if (json['success']) { added++; } else { failed++; }
+            },
+            error: function() {
+                failed++;
+            },
+            complete: next
+        });
+    };
+
+    next();
+});
+//--></script>

@@ -1,0 +1,24 @@
+{% if logs %}
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0 align-top">
+      <thead>
+        <tr><th class="ps-3">{{ column_date }}</th><th>{{ column_trigger }}</th><th>{{ column_urls }}</th><th>{{ column_result }}</th></tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+          <tr>
+            <td class="ps-3 text-nowrap">{{ log.date }}</td>
+            <td>{{ attribute(_context, 'text_trigger_' ~ log.trigger) }}</td>
+            <td class="small">
+              {% for url in log.urls %}<div class="text-break">{{ url|e }}</div>{% endfor %}
+              {% if log.more %}<div class="text-body-secondary">{{ text_more|format(log.more) }}</div>{% endif %}
+            </td>
+            <td class="text-nowrap"><span class="badge {% if log.ok %}bg-success{% else %}bg-danger{% endif %}">{{ log.code ?: '—' }}</span> <span class="small">{{ log.message|e }}</span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p class="p-3 mb-0 text-body-secondary">{{ text_no_log }}</p>
+{% endif %}
