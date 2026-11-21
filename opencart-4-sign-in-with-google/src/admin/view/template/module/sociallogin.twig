@@ -1,0 +1,105 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    {% if not https %}
+      <div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_https }}</div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <fieldset>
+            <legend>{{ text_google }}</legend>
+            <div class="row mb-3">
+              <label for="input-redirect-uri" class="col-sm-2 col-form-label">{{ entry_redirect_uri }}</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <input type="text" value="{{ redirect_uri }}" id="input-redirect-uri" class="form-control font-monospace" readonly/>
+                  <button type="button" class="btn btn-outline-secondary" onclick="navigator.clipboard.writeText($('#input-redirect-uri').val()); $(this).text('✓');">{{ text_copy }}</button>
+                </div>
+                <div class="form-text">{{ help_redirect_uri }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-origin" class="col-sm-2 col-form-label">{{ entry_javascript_origin }}</label>
+              <div class="col-sm-10">
+                <input type="text" value="{{ javascript_origin }}" id="input-origin" class="form-control font-monospace" readonly/>
+                <div class="form-text">{{ help_javascript_origin }}</div>
+              </div>
+            </div>
+            <div class="row mb-3 required">
+              <label for="input-client-id" class="col-sm-2 col-form-label">{{ entry_client_id }}</label>
+              <div class="col-sm-10">
+                <input type="text" name="module_sociallogin_client_id" value="{{ module_sociallogin_client_id }}" placeholder="1234567890-abc123.apps.googleusercontent.com" id="input-client-id" class="form-control" autocomplete="off"/>
+                <div id="error-client-id" class="invalid-feedback"></div>
+              </div>
+            </div>
+            <div class="row mb-3 required">
+              <label for="input-client-secret" class="col-sm-2 col-form-label">{{ entry_client_secret }}</label>
+              <div class="col-sm-10">
+                <input type="password" name="module_sociallogin_client_secret" value="{{ module_sociallogin_client_secret }}" id="input-client-secret" class="form-control" autocomplete="new-password"/>
+                <div class="form-text">{{ help_client_secret }}</div>
+                <div id="error-client-secret" class="invalid-feedback"></div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>{{ text_pages }}</legend>
+            {% for key in ['login', 'register', 'checkout'] %}
+              <div class="row mb-3">
+                <label for="input-{{ key }}" class="col-sm-2 col-form-label">{{ attribute(_context, 'entry_' ~ key) }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_sociallogin_{{ key }}" value="0"/>
+                    <input type="checkbox" name="module_sociallogin_{{ key }}" value="1" id="input-{{ key }}" class="form-check-input"{% if attribute(_context, 'module_sociallogin_' ~ key) %} checked{% endif %}/>
+                  </div>
+                  {% if key == 'checkout' %}<div class="form-text">{{ help_checkout }}</div>{% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </fieldset>
+          <fieldset>
+            <legend>{{ text_accounts }}</legend>
+            {% for key in ['link_existing', 'create'] %}
+              <div class="row mb-3">
+                <label for="input-{{ key }}" class="col-sm-2 col-form-label">{{ attribute(_context, 'entry_' ~ key) }}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="module_sociallogin_{{ key }}" value="0"/>
+                    <input type="checkbox" name="module_sociallogin_{{ key }}" value="1" id="input-{{ key }}" class="form-check-input"{% if attribute(_context, 'module_sociallogin_' ~ key) %} checked{% endif %}/>
+                  </div>
+                  <div class="form-text">{{ attribute(_context, 'help_' ~ key) }}</div>
+                </div>
+              </div>
+            {% endfor %}
+            <div class="row mb-3">
+              <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-switch form-switch-lg">
+                  <input type="hidden" name="module_sociallogin_status" value="0"/>
+                  <input type="checkbox" name="module_sociallogin_status" value="1" id="input-status" class="form-check-input"{% if module_sociallogin_status %} checked{% endif %}/>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
