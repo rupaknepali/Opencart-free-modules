@@ -1,0 +1,95 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <fieldset>
+            <legend>{{ text_pixel }}</legend>
+            <div class="row mb-3">
+              <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+              <div class="col-sm-10"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_tiktok_status" value="0"/><input type="checkbox" name="module_tiktok_status" value="1" id="input-status" class="form-check-input"{% if module_tiktok_status %} checked{% endif %}/></div></div>
+            </div>
+            <div class="row mb-3 required">
+              <label for="input-pixel-id" class="col-sm-2 col-form-label">{{ entry_pixel_id }}</label>
+              <div class="col-sm-10"><input type="text" name="module_tiktok_pixel_id" value="{{ module_tiktok_pixel_id|e }}" id="input-pixel-id" class="form-control font-monospace"/><div id="error-pixel-id" class="invalid-feedback"></div><div class="form-text">{{ help_pixel_id }}</div></div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-content-id" class="col-sm-2 col-form-label">{{ entry_content_id }}</label>
+              <div class="col-sm-10">
+                <select name="module_tiktok_content_id" id="input-content-id" class="form-select">
+                  <option value="product_id"{% if module_tiktok_content_id == 'product_id' %} selected{% endif %}>{{ text_content_product_id }}</option>
+                  <option value="model"{% if module_tiktok_content_id == 'model' %} selected{% endif %}>{{ text_content_model }}</option>
+                </select>
+                <div class="form-text">{{ help_content_id }}</div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>{{ text_events_api }}</legend>
+            <div class="row mb-3">
+              <label for="input-access-token" class="col-sm-2 col-form-label">{{ entry_access_token }}</label>
+              <div class="col-sm-10"><input type="password" name="module_tiktok_access_token" value="{{ module_tiktok_access_token|e }}" id="input-access-token" class="form-control" autocomplete="off"/><div class="form-text">{{ help_access_token }}</div></div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-test-code" class="col-sm-2 col-form-label">{{ entry_test_code }}</label>
+              <div class="col-sm-10"><input type="text" name="module_tiktok_test_code" value="{{ module_tiktok_test_code|e }}" id="input-test-code" class="form-control"/><div class="form-text">{{ help_test_code }}</div></div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>{{ text_privacy }}</legend>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">{{ entry_consent }}</label>
+              <div class="col-sm-10">
+                {% for mode in ['opencart', 'custom', 'none'] %}
+                  <div class="form-check"><input type="radio" name="module_tiktok_consent" value="{{ mode }}" id="input-consent-{{ mode }}" class="form-check-input"{% if module_tiktok_consent == mode %} checked{% endif %}/><label for="input-consent-{{ mode }}" class="form-check-label">{{ attribute(_context, 'text_consent_' ~ mode) }}</label></div>
+                {% endfor %}
+                {% if module_tiktok_consent == 'opencart' and not cookie_bar %}
+                  <div class="alert alert-warning mt-2 mb-0"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_no_cookie_bar|format(setting_link) }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-matching" class="col-sm-2 col-form-label">{{ entry_matching }}</label>
+              <div class="col-sm-10"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_tiktok_matching" value="0"/><input type="checkbox" name="module_tiktok_matching" value="1" id="input-matching" class="form-check-input"{% if module_tiktok_matching %} checked{% endif %}/></div><div class="form-text">{{ help_matching }}</div></div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-server"></i> {{ text_log }}</div>
+      <div class="card-body p-0">
+        {% if log %}
+          <table class="table table-sm mb-0">
+            <thead><tr><th class="ps-3">{{ column_order }}</th><th>{{ column_date }}</th><th>{{ column_result }}</th></tr></thead>
+            <tbody>
+              {% for row in log %}
+                <tr><td class="ps-3">#{{ row.order_id }}</td><td>{{ row.date }}</td><td><span class="badge {% if row.ok %}bg-success{% else %}bg-danger{% endif %}">{{ row.ok ? 'OK' : 'Error' }}</span> {{ row.message|e }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="p-3 mb-0 text-body-secondary">{{ text_no_log }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
