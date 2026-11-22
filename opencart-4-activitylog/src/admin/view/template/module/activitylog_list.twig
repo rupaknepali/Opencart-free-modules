@@ -1,0 +1,30 @@
+<div class="table-responsive">
+  <table class="table table-hover align-top">
+    <thead><tr><th>{{ column_date }}</th><th>{{ column_user }}</th><th>{{ column_action }}</th><th>{{ column_object }}</th><th>{{ column_changes }}</th></tr></thead>
+    <tbody>
+      {% for entry in entries %}
+        <tr>
+          <td class="text-nowrap small">{{ entry.date }}</td>
+          <td class="text-nowrap">{{ entry.username|e }}<div class="small text-body-secondary">{{ entry.ip }}</div></td>
+          <td class="text-nowrap">
+            {% set badge = {'add': 'success', 'edit': 'primary', 'delete': 'danger', 'copy': 'info', 'status': 'warning', 'login': 'secondary', 'login_failed': 'danger'} %}
+            <span class="badge bg-{{ badge[entry.action] ?? 'secondary' }}">{{ attribute(_context, 'action_' ~ entry.action) }}</span>
+          </td>
+          <td>{{ entry.object }}{% if entry.object_id %} <span class="text-body-secondary">#{{ entry.object_id }}</span>{% endif %}{% if entry.name %}<div class="fw-semibold">{{ entry.name|e }}</div>{% endif %}<div class="small text-body-secondary font-monospace">{{ entry.method }}</div></td>
+          <td>
+            {% if entry.changes %}
+              <table class="table table-sm table-bordered mb-0 small">
+                <thead><tr><th>{{ column_field }}</th><th>{{ column_old }}</th><th>{{ column_new }}</th></tr></thead>
+                {% for change in entry.changes|slice(0, 8) %}<tr><td class="font-monospace">{{ change[0]|e }}</td><td class="text-danger text-break">{{ change[1]|e }}</td><td class="text-success text-break">{{ change[2]|e }}</td></tr>{% endfor %}
+              </table>
+              {% if entry.changes|length > 8 %}<div class="small text-body-secondary">{{ text_changes|format(entry.changes|length) }}</div>{% endif %}
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="text-center text-body-secondary">{{ text_no_results }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row"><div class="col-sm-6 text-start">{{ pagination }}</div><div class="col-sm-6 text-end">{{ results }}</div></div>
