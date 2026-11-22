@@ -1,0 +1,123 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-tab" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">{% for breadcrumb in breadcrumbs %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endfor %}</ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_form }}</div>
+      <div class="card-body">
+        <form id="form-tab" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <input type="hidden" name="tab_id" value="{{ tab_id }}" id="input-tab-id"/>
+          <ul class="nav nav-tabs">
+            {% for language in languages %}<li class="nav-item"><a href="#language-{{ language.language_id }}" data-bs-toggle="tab" class="nav-link{% if loop.first %} active{% endif %}"><img src="{{ language.image }}" title="{{ language.name }}"/> {{ language.name }}</a></li>{% endfor %}
+          </ul>
+          <div class="tab-content">
+            {% for language in languages %}
+              <div id="language-{{ language.language_id }}" class="tab-pane{% if loop.first %} active{% endif %}">
+                <div class="row mb-3 required">
+                  <label for="input-title-{{ language.language_id }}" class="col-sm-2 col-form-label">{{ entry_title }}</label>
+                  <div class="col-sm-10"><input type="text" name="description[{{ language.language_id }}][title]" value="{{ descriptions[language.language_id].title ?? '' }}" placeholder="Shipping &amp; Returns" id="input-title-{{ language.language_id }}" class="form-control"/><div id="error-title-{{ language.language_id }}" class="invalid-feedback"></div></div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-content-{{ language.language_id }}" class="col-sm-2 col-form-label">{{ entry_content }}</label>
+                  <div class="col-sm-10"><textarea name="description[{{ language.language_id }}][content]" id="input-content-{{ language.language_id }}" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="form-control">{{ descriptions[language.language_id].content ?? '' }}</textarea><div class="form-text">{{ text_placeholders }}</div></div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_scope }}</label>
+            <div class="col-sm-10" id="input-scope">
+              {% for scope in ['all', 'category', 'product'] %}<div class="form-check form-check-inline"><input type="radio" name="scope" value="{{ scope }}" id="input-scope-{{ scope }}" class="form-check-input"{% if scope == current_scope %} checked{% endif %}/><label for="input-scope-{{ scope }}" class="form-check-label">{{ attribute(_context, 'text_scope_' ~ scope) }}</label></div>{% endfor %}
+              <div id="error-scope" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 pt-scope pt-category">
+            <label for="input-category" class="col-sm-2 col-form-label">{{ entry_category }}</label>
+            <div class="col-sm-10">
+              <input type="text" value="" id="input-category" data-oc-target="autocomplete-category" class="form-control" autocomplete="off"/>
+              <ul id="autocomplete-category" class="dropdown-menu"></ul>
+              <div class="form-control p-0 mt-1" style="height: 150px; overflow: auto;"><table id="list-category" class="table table-sm m-0"><tbody>
+                {% for category in categories %}<tr><td>{{ category.name }}<input type="hidden" name="category[]" value="{{ category.category_id }}"/></td><td class="text-end"><button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-minus-circle"></i></button></td></tr>{% endfor %}
+              </tbody></table></div>
+            </div>
+          </div>
+          <div class="row mb-3 pt-scope pt-product">
+            <label for="input-product" class="col-sm-2 col-form-label">{{ entry_product }}</label>
+            <div class="col-sm-10">
+              <input type="text" value="" id="input-product" data-oc-target="autocomplete-product" class="form-control" autocomplete="off"/>
+              <ul id="autocomplete-product" class="dropdown-menu"></ul>
+              <div class="form-control p-0 mt-1" style="height: 150px; overflow: auto;"><table id="list-product" class="table table-sm m-0"><tbody>
+                {% for product in products %}<tr><td>{{ product.name }}<input type="hidden" name="product[]" value="{{ product.product_id }}"/></td><td class="text-end"><button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-minus-circle"></i></button></td></tr>{% endfor %}
+              </tbody></table></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-sort-order" class="col-sm-2 col-form-label">{{ entry_sort_order }}</label>
+            <div class="col-sm-10"><input type="number" name="sort_order" value="{{ sort_order }}" id="input-sort-order" class="form-control" style="max-width: 8rem;"/><div class="form-text">{{ help_sort_order }}</div></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="status" value="0"/><input type="checkbox" name="status" value="1" id="input-status" class="form-check-input"{% if status %} checked{% endif %}/></div></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('textarea[data-oc-toggle=\'ckeditor\']').ckeditor({language: '{{ ckeditor }}'});
+
+function producttabsScope() {
+    var scope = $('input[name=\'scope\']:checked').val();
+
+    $('.pt-scope').hide();
+    $('.pt-' + scope).show();
+}
+
+$('input[name=\'scope\']').on('change', producttabsScope);
+
+producttabsScope();
+
+function producttabsAutocomplete(type, url, key) {
+    $('#input-' + type).autocomplete({
+        'source': function(request, response) {
+            $.ajax({
+                url: url + encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) { return {label: item['name'], value: item[key]}; }));
+                }
+            });
+        },
+        'select': function(item) {
+            $('#input-' + type).val('');
+
+            if (!$('#list-' + type + ' input[value=\'' + item['value'] + '\']').length) {
+                $('#list-' + type + ' tbody').append('<tr><td>' + item['label'] + '<input type="hidden" name="' + type + '[]" value="' + item['value'] + '"/></td><td class="text-end"><button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-minus-circle"></i></button></td></tr>');
+            }
+        }
+    });
+
+    $('#list-' + type).on('click', 'button', function() { $(this).closest('tr').remove(); });
+}
+
+producttabsAutocomplete('category', 'index.php?route=catalog/category.autocomplete&user_token={{ user_token }}&filter_name=', 'category_id');
+producttabsAutocomplete('product', 'index.php?route=catalog/product.autocomplete&user_token={{ user_token }}&filter_name=', 'product_id');
+
+// After the first save of a new tab, later saves update it instead of adding another.
+$(document).ajaxSuccess(function(e, xhr, settings) {
+    if (settings.url.indexOf('producttabs.save') !== -1 && xhr.responseJSON && xhr.responseJSON['tab_id']) {
+        $('#input-tab-id').val(xhr.responseJSON['tab_id']);
+    }
+});
+//--></script>
+{{ footer }}

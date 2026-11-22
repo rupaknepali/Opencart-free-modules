@@ -1,0 +1,24 @@
+<?php
+$_['heading_title']        = 'Instant Pages (Speculation Rules)';
+$_['text_extension']       = 'Extensions';
+$_['text_success']         = 'Success: You have modified Instant Pages!';
+$_['text_edit']            = 'Edit Instant Pages';
+$_['text_info']            = 'Tells the browser to load the page a visitor is about to open, in the background, so it appears instantly when they click. Uses the Speculation Rules API (Chrome, Edge and other Chromium browsers; other browsers ignore it). No JavaScript library is added.';
+$_['text_prerender']       = 'Prerender: load and render the whole page (instant)';
+$_['text_prefetch']        = 'Prefetch: download the HTML only (faster, never runs scripts early)';
+$_['text_conservative']    = 'Conservative: when the visitor presses the link';
+$_['text_moderate']        = 'Moderate: when the pointer rests on a link (recommended)';
+$_['text_eager']           = 'Eager: as soon as a link is close to the pointer or visible';
+$_['text_test']            = 'How to test: open a product category in Chrome, rest the pointer on a product for a moment and click. In DevTools, Application > Speculative loads lists what was prerendered. In the Console, performance.getEntriesByType(\'navigation\')[0].activationStart is above 0 on a prerendered page.';
+$_['entry_status']         = 'Status';
+$_['entry_mode']           = 'Mode';
+$_['entry_eagerness']      = 'Start';
+$_['entry_logged']         = 'For logged-in customers';
+$_['entry_exclude']        = 'Never prerender';
+$_['help_mode']            = 'Prerendered pages run their scripts before they are shown. Google Analytics 4, Google Tag Manager and the Meta Pixel wait until the page is actually opened; if another tracking script counts visits too early, use Prefetch.';
+$_['help_eagerness']       = 'Moderate loads only the page the visitor is very likely to open (a pointer resting 200 ms on a link). On phones, Chrome decides from what is on screen.';
+$_['help_logged']          = 'Pages are prerendered with the visitor\'s own session, so this is safe; turn it off to keep server load down for logged-in customers.';
+$_['help_exclude']         = 'URL patterns, one per line: * matches anything and \? is a literal question mark. Checkout, account, logout, language and currency links are excluded by default, and so are links to images and files (product pages link to the full-size photos). Add a link\'s class no-prerender to exclude it in a template.';
+$_['error_permission']     = 'Warning: You do not have permission to modify Instant Pages!';
+$_['error_warning']        = 'Warning: Please check the form carefully for errors!';
+$_['error_pattern']        = '%s isn\'t a URL pattern: start it with / (for example /*\?*route=checkout*).';

@@ -1,0 +1,134 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">{% for breadcrumb in breadcrumbs %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endfor %}</ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-bars"></i> {{ text_info }}</div>
+    <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+      <div class="card mb-3">
+        <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_menu }}</div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-3 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_megamenu_status" value="0"/><input type="checkbox" name="module_megamenu_status" value="1" id="input-status" class="form-check-input"{% if module_megamenu_status %} checked{% endif %}/></div></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-third" class="col-sm-3 col-form-label">{{ entry_third }}</label>
+            <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_megamenu_third" value="0"/><input type="checkbox" name="module_megamenu_third" value="1" id="input-third" class="form-check-input"{% if module_megamenu_third %} checked{% endif %}/></div><div class="form-text">{{ help_third }}</div></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-limit" class="col-sm-3 col-form-label">{{ entry_limit }}</label>
+            <div class="col-sm-9"><input type="number" name="module_megamenu_limit" value="{{ module_megamenu_limit }}" min="1" max="20" id="input-limit" class="form-control" style="max-width: 8rem;"/><div class="form-text">{{ help_limit }}</div></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-image" class="col-sm-3 col-form-label">{{ entry_image }}</label>
+            <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_megamenu_image" value="0"/><input type="checkbox" name="module_megamenu_image" value="1" id="input-image" class="form-check-input"{% if module_megamenu_image %} checked{% endif %}/></div><div class="form-text">{{ help_image }}</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-header"><i class="fa-solid fa-sitemap"></i> {{ text_categories }}</div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead><tr><th class="ps-3">{{ column_category }}</th><th class="text-center">{{ column_show }}</th><th>{{ column_columns }}</th><th style="min-width: 260px;">{{ column_product }}</th></tr></thead>
+            <tbody>
+              {% for category in categories %}
+                <tr>
+                  <td class="ps-3">{{ category.name }}{% if not category.enabled %} <span class="badge bg-secondary">{{ text_disabled }}</span>{% endif %}{% if not category.children %}<div class="small text-body-secondary">{{ text_no_children }}</div>{% endif %}</td>
+                  <td class="text-center"><input type="hidden" name="module_megamenu_categories[{{ category.category_id }}][show]" value="0"/><input type="checkbox" name="module_megamenu_categories[{{ category.category_id }}][show]" value="1" class="form-check-input"{% if category.show %} checked{% endif %}/></td>
+                  <td>
+                    <select name="module_megamenu_categories[{{ category.category_id }}][columns]" class="form-select form-select-sm" style="width: 5rem;">
+                      {% for i in 1..4 %}<option value="{{ i }}"{% if i == category.columns %} selected{% endif %}>{{ i }}</option>{% endfor %}
+                    </select>
+                  </td>
+                  <td>
+                    <div class="input-group input-group-sm mm-product">
+                      <input type="text" value="{{ category.product|e }}" placeholder="{{ text_search }}" data-oc-target="autocomplete-{{ category.category_id }}" class="form-control mm-search" autocomplete="off"/>
+                      <button type="button" class="btn btn-outline-secondary mm-clear"><i class="fa-solid fa-xmark"></i></button>
+                      <input type="hidden" name="module_megamenu_categories[{{ category.category_id }}][product_id]" value="{{ category.product_id }}" class="mm-product-id"/>
+                    </div>
+                    <ul id="autocomplete-{{ category.category_id }}" class="dropdown-menu"></ul>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><i class="fa-solid fa-link"></i> {{ text_links }}</div>
+        <div class="card-body">
+          <p class="form-text mt-0">{{ text_links_help }}</p>
+          <table class="table table-sm align-middle" id="mm-links">
+            <thead><tr><th>{{ column_title }}</th><th>{{ column_href }}</th><th></th></tr></thead>
+            <tbody>
+              {% set link_row = 0 %}
+              {% for link in module_megamenu_links %}
+                <tr>
+                  <td>{% for language in languages %}<div class="input-group input-group-sm mb-1"><span class="input-group-text"><img src="{{ language.image }}" alt="{{ language.name }}"/></span><input type="text" name="module_megamenu_links[{{ link_row }}][title][{{ language.language_id }}]" value="{{ link.title[language.language_id] }}" class="form-control"/></div>{% endfor %}</td>
+                  <td><input type="text" name="module_megamenu_links[{{ link_row }}][href]" value="{{ link.href }}" placeholder="product/special" class="form-control form-control-sm"/></td>
+                  <td class="text-end"><button type="button" class="btn btn-sm btn-danger mm-remove"><i class="fa-solid fa-minus-circle"></i></button></td>
+                </tr>
+                {% set link_row = link_row + 1 %}
+              {% endfor %}
+            </tbody>
+          </table>
+          <button type="button" id="button-add-link" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus-circle"></i> {{ button_add_link }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('.mm-search').each(function() {
+    var input = $(this), box = input.closest('td');
+
+    input.autocomplete({
+        'source': function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product.autocomplete&user_token={{ user_token }}&filter_name=' + encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) { return {label: item['name'], value: item['product_id']}; }));
+                }
+            });
+        },
+        'select': function(item) {
+            input.val(item['label']);
+            box.find('.mm-product-id').val(item['value']);
+        }
+    });
+});
+
+$('.mm-clear').on('click', function() {
+    var box = $(this).closest('td');
+
+    box.find('.mm-search').val('');
+    box.find('.mm-product-id').val(0);
+});
+
+var link_row = {{ link_row }};
+
+$('#button-add-link').on('click', function() {
+    var html = '<tr><td>';
+    {% for language in languages %}
+    html += '<div class="input-group input-group-sm mb-1"><span class="input-group-text"><img src="{{ language.image }}" alt="{{ language.name }}"/></span><input type="text" name="module_megamenu_links[' + link_row + '][title][{{ language.language_id }}]" value="" class="form-control"/></div>';
+    {% endfor %}
+    html += '</td><td><input type="text" name="module_megamenu_links[' + link_row + '][href]" value="" placeholder="product/special" class="form-control form-control-sm"/></td><td class="text-end"><button type="button" class="btn btn-sm btn-danger mm-remove"><i class="fa-solid fa-minus-circle"></i></button></td></tr>';
+
+    $('#mm-links tbody').append(html);
+
+    link_row++;
+});
+
+$('#mm-links').on('click', '.mm-remove', function() { $(this).closest('tr').remove(); });
+//--></script>
+{{ footer }}

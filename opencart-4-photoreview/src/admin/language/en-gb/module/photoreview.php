@@ -1,0 +1,23 @@
+<?php
+$_['heading_title']   = 'Photo Reviews';
+$_['text_extension']  = 'Extensions';
+$_['text_success']    = 'Success: You have modified Photo Reviews!';
+$_['text_edit']       = 'Edit Photo Reviews';
+$_['text_info']       = 'Customers can add photos to their product reviews. Photos are checked, resized, re-saved as JPEG (which removes hidden data such as the GPS location) and only appear once you approve the review in Catalog > Reviews.';
+$_['text_latest']     = 'Latest photos';
+$_['text_none']       = 'No photos yet.';
+$_['text_pending']    = 'Waiting for approval';
+$_['text_reviews_off']= 'Reviews are switched off in System > Settings > Option, so customers can\'t send reviews or photos.';
+$_['text_confirm']    = 'Delete this photo?';
+$_['entry_status']    = 'Status';
+$_['entry_max']       = 'Photos per review';
+$_['entry_size']      = 'Largest photo (MB)';
+$_['entry_thumb']     = 'Thumbnail size (px)';
+$_['entry_gallery']   = 'Customer photo gallery';
+$_['entry_photos']    = 'Photos';
+$_['help_size']       = 'Phone photos are 2 to 6 MB. Photos are resized to 1600 px, so large uploads don\'t take space.';
+$_['help_gallery']    = 'Shows the latest 12 photos at the top of the reviews.';
+$_['help_photos']     = 'Click a photo to open it. Photos show on the storefront while this review is enabled.';
+$_['button_delete']   = 'Delete photo';
+$_['button_reviews']  = 'Go to reviews';
+$_['error_permission']= 'Warning: You do not have permission to modify Photo Reviews!';

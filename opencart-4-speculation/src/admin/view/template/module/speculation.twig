@@ -1,0 +1,55 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">{% for breadcrumb in breadcrumbs %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endfor %}</ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-bolt"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_speculation_status" value="0"/><input type="checkbox" name="module_speculation_status" value="1" id="input-status" class="form-check-input"{% if module_speculation_status %} checked{% endif %}/></div></div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_mode }}</label>
+            <div class="col-sm-10">
+              {% for mode in ['prerender', 'prefetch'] %}<div class="form-check"><input type="radio" name="module_speculation_mode" value="{{ mode }}" id="input-mode-{{ mode }}" class="form-check-input"{% if module_speculation_mode == mode %} checked{% endif %}/><label for="input-mode-{{ mode }}" class="form-check-label">{{ attribute(_context, 'text_' ~ mode) }}</label></div>{% endfor %}
+              <div class="form-text">{{ help_mode }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_eagerness }}</label>
+            <div class="col-sm-10">
+              {% for eagerness in ['conservative', 'moderate', 'eager'] %}<div class="form-check"><input type="radio" name="module_speculation_eagerness" value="{{ eagerness }}" id="input-eagerness-{{ eagerness }}" class="form-check-input"{% if module_speculation_eagerness == eagerness %} checked{% endif %}/><label for="input-eagerness-{{ eagerness }}" class="form-check-label">{{ attribute(_context, 'text_' ~ eagerness) }}</label></div>{% endfor %}
+              <div class="form-text">{{ help_eagerness }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-logged" class="col-sm-2 col-form-label">{{ entry_logged }}</label>
+            <div class="col-sm-10"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_speculation_logged" value="0"/><input type="checkbox" name="module_speculation_logged" value="1" id="input-logged" class="form-check-input"{% if module_speculation_logged %} checked{% endif %}/></div><div class="form-text">{{ help_logged }}</div></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-exclude" class="col-sm-2 col-form-label">{{ entry_exclude }}</label>
+            <div class="col-sm-10">
+              <textarea name="module_speculation_exclude" rows="10" id="input-exclude" class="form-control font-monospace">{{ module_speculation_exclude|e }}</textarea>
+              <div id="error-exclude" class="invalid-feedback"></div>
+              <div class="form-text">{{ help_exclude }}</div>
+            </div>
+          </div>
+        </form>
+        <div class="text-body-secondary small"><i class="fa-solid fa-flask"></i> {{ text_test }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

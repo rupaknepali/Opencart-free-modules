@@ -1,0 +1,207 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-magnifying-glass-chart"></i> {{ text_info }}</div>
+    <ul class="nav nav-tabs">
+      <li class="nav-item"><a href="#tab-audit" data-bs-toggle="tab" class="nav-link active"><i class="fa-solid fa-list-check"></i> {{ text_audit }}</a></li>
+      <li class="nav-item"><a href="#tab-settings" data-bs-toggle="tab" class="nav-link"><i class="fa-solid fa-gear"></i> {{ text_settings }}</a></li>
+      <li class="nav-item"><a href="#tab-robots" data-bs-toggle="tab" class="nav-link"><i class="fa-solid fa-robot"></i> {{ text_robots }}</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="tab-audit" class="tab-pane active">
+        <div class="card border-top-0 rounded-top-0">
+          <div class="card-header">
+            <div class="float-end">
+              <button type="button" data-action="generate" class="btn btn-sm btn-primary"><i class="fa-solid fa-link"></i> {{ button_generate }}</button>
+              <button type="button" data-action="fill" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen-to-square"></i> {{ button_fill }}</button>
+              <button type="button" id="button-audit" class="btn btn-sm btn-light"><i class="fa-solid fa-rotate"></i> {{ button_audit }}</button>
+            </div>
+            <i class="fa-solid fa-list-check"></i> {{ text_audit }}
+          </div>
+          <div class="card-body" id="seotoolkit-audit"><p class="mb-0 text-body-secondary"><i class="fa-solid fa-circle-notch fa-spin"></i> {{ text_audit_loading }}</p></div>
+        </div>
+      </div>
+      <div id="tab-settings" class="tab-pane">
+        <div class="card border-top-0 rounded-top-0">
+          <div class="card-body">
+            <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+              <div class="row mb-3">
+                <label for="input-status" class="col-sm-3 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_seotoolkit_status" value="0"/><input type="checkbox" name="module_seotoolkit_status" value="1" id="input-status" class="form-check-input"{% if module_seotoolkit_status %} checked{% endif %}/></div></div>
+              </div>
+              <fieldset>
+                <legend>{{ text_meta }}</legend>
+                <p class="form-text">{{ text_meta_help }}</p>
+                <div class="row mb-3">
+                  <label for="input-meta-mode" class="col-sm-3 col-form-label">{{ entry_meta_mode }}</label>
+                  <div class="col-sm-9">
+                    <select name="module_seotoolkit_meta_mode" id="input-meta-mode" class="form-select">
+                      <option value="empty"{% if module_seotoolkit_meta_mode != 'always' %} selected{% endif %}>{{ text_mode_empty }}</option>
+                      <option value="always"{% if module_seotoolkit_meta_mode == 'always' %} selected{% endif %}>{{ text_mode_always }}</option>
+                    </select>
+                  </div>
+                </div>
+                {% for type in types %}
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ attribute(_context, 'text_type_' ~ type) }}</label>
+                    <div class="col-sm-9">
+                      <div class="input-group mb-1"><span class="input-group-text" style="min-width: 7.5rem;">{{ text_title }}</span><input type="text" name="module_seotoolkit_{{ type }}_title" value="{{ attribute(_context, 'module_seotoolkit_' ~ type ~ '_title')|e }}" class="form-control font-monospace"/></div>
+                      <div class="input-group"><span class="input-group-text" style="min-width: 7.5rem;">{{ text_description }}</span><input type="text" name="module_seotoolkit_{{ type }}_description" value="{{ attribute(_context, 'module_seotoolkit_' ~ type ~ '_description')|e }}" class="form-control font-monospace"/></div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </fieldset>
+              <fieldset>
+                <legend>{{ text_indexing }}</legend>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label">{{ entry_noindex }}</label>
+                  <div class="col-sm-9">
+                    {% for rule in ['search', 'params', 'page', 'private'] %}
+                      <div class="form-check">
+                        <input type="checkbox" name="module_seotoolkit_noindex[]" value="{{ rule }}" id="input-noindex-{{ rule }}" class="form-check-input"{% if rule in module_seotoolkit_noindex %} checked{% endif %}/>
+                        <label for="input-noindex-{{ rule }}" class="form-check-label">{{ attribute(_context, 'text_noindex_' ~ rule) }}</label>
+                      </div>
+                    {% endfor %}
+                    <div class="form-text">{{ help_noindex|e }}</div>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>{{ text_schema }}</legend>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label">{{ entry_schema }}</label>
+                  <div class="col-sm-9">
+                    {% for schema in ['organization', 'website', 'breadcrumb'] %}
+                      <div class="form-check">
+                        <input type="checkbox" name="module_seotoolkit_schema[]" value="{{ schema }}" id="input-schema-{{ schema }}" class="form-check-input"{% if schema in module_seotoolkit_schema %} checked{% endif %}/>
+                        <label for="input-schema-{{ schema }}" class="form-check-label">{{ attribute(_context, 'text_schema_' ~ schema) }}</label>
+                      </div>
+                    {% endfor %}
+                    <div class="form-text">{{ help_schema }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-same-as" class="col-sm-3 col-form-label">{{ entry_same_as }}</label>
+                  <div class="col-sm-9">
+                    <textarea name="module_seotoolkit_same_as" rows="4" id="input-same-as" class="form-control font-monospace" placeholder="https://www.facebook.com/yourstore">{{ module_seotoolkit_same_as|e }}</textarea>
+                    <div class="form-text">{{ help_same_as }}</div>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>{{ text_editor }}</legend>
+                <div class="row mb-3">
+                  <label for="input-auto-keyword" class="col-sm-3 col-form-label">{{ entry_auto_keyword }}</label>
+                  <div class="col-sm-9">
+                    <div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_seotoolkit_auto_keyword" value="0"/><input type="checkbox" name="module_seotoolkit_auto_keyword" value="1" id="input-auto-keyword" class="form-check-input"{% if module_seotoolkit_auto_keyword %} checked{% endif %}/></div>
+                    <div class="form-text">{{ help_auto_keyword }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-transliterate" class="col-sm-3 col-form-label">{{ entry_transliterate }}</label>
+                  <div class="col-sm-9">
+                    <div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_seotoolkit_transliterate" value="0"/><input type="checkbox" name="module_seotoolkit_transliterate" value="1" id="input-transliterate" class="form-check-input"{% if module_seotoolkit_transliterate %} checked{% endif %}/></div>
+                    <div class="form-text">{{ help_transliterate }}</div>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div id="tab-robots" class="tab-pane">
+        <div class="card border-top-0 rounded-top-0">
+          <div class="card-body">
+            {% if not robots_exists %}<div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_robots_missing }}</div>{% endif %}
+            {% if not robots_writable %}<div class="alert alert-danger"><i class="fa-solid fa-lock"></i> {{ text_robots_readonly }}</div>{% endif %}
+            <textarea id="input-robots" rows="16" class="form-control font-monospace mb-2" spellcheck="false">{{ robots|e }}</textarea>
+            <div class="form-text mb-3">{{ text_robots_help }} {% if robots_exists %}<a href="{{ robots_url }}" target="_blank" rel="noopener">{{ text_robots_open }}</a>{% endif %}</div>
+            <button type="button" id="button-robots-save" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> {{ button_robots_save }}</button>
+            <button type="button" id="button-robots-recommended" class="btn btn-outline-secondary"><i class="fa-solid fa-wand-magic-sparkles"></i> {{ button_robots_recommended }}</button>
+            <textarea id="robots-recommended" class="d-none">{{ robots_recommended|e }}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+function seotoolkitAlert(json) {
+    $('.alert-dismissible').remove();
+
+    if (json['error']) {
+        $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+    }
+
+    if (json['success']) {
+        $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+    }
+}
+
+function seotoolkitAudit() {
+    $('#seotoolkit-audit').load('{{ audit|replace({'&amp;': '&'}) }}');
+}
+
+seotoolkitAudit();
+
+$('#button-audit').on('click', seotoolkitAudit);
+
+var seotoolkitUrls = {
+    generate: ['{{ generate|replace({'&amp;': '&'}) }}', '{{ text_confirm_generate|escape('js') }}'],
+    fill: ['{{ fill|replace({'&amp;': '&'}) }}', '{{ text_confirm_fill|escape('js') }}']
+};
+
+$('#tab-audit').on('click', '[data-action]', function() {
+    var action = seotoolkitUrls[$(this).attr('data-action')];
+
+    if (!action || !confirm(action[1])) {
+        return;
+    }
+
+    var button = $(this);
+
+    $.ajax({
+        url: action[0] + ($(this).attr('data-type') ? '&type=' + encodeURIComponent($(this).attr('data-type')) : ''),
+        dataType: 'json',
+        beforeSend: function() { button.button('loading'); },
+        complete: function() { button.button('reset'); },
+        success: function(json) {
+            seotoolkitAlert(json);
+            seotoolkitAudit();
+        }
+    });
+});
+
+$('#button-robots-recommended').on('click', function() {
+    $('#input-robots').val($('#robots-recommended').val());
+});
+
+$('#button-robots-save').on('click', function() {
+    var button = $(this);
+
+    $.ajax({
+        url: '{{ robots_save|replace({'&amp;': '&'}) }}',
+        type: 'post',
+        data: {robots: $('#input-robots').val()},
+        dataType: 'json',
+        beforeSend: function() { button.button('loading'); },
+        complete: function() { button.button('reset'); },
+        success: seotoolkitAlert
+    });
+});
+//--></script>
+{{ footer }}

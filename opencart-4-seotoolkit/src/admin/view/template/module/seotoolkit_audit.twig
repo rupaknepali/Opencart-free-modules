@@ -1,0 +1,35 @@
+<div class="row g-3">
+  {% for section in sections %}
+    <div class="col-xl-6">
+      <div class="border rounded h-100">
+        <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom bg-body-tertiary">
+          <strong>{{ section.name }}</strong>
+          <span class="small text-body-secondary">{{ text_items|format(section.total) }} · {% if section.count %}<span class="text-danger">{{ text_issues|format(section.count) }}</span>{% else %}<span class="text-success">{{ text_issues|format(0) }}</span>{% endif %}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for issue in section.issues %}
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  {% if issue.count %}<i class="fa-solid fa-triangle-exclamation text-warning"></i>{% else %}<i class="fa-solid fa-circle-check text-success"></i>{% endif %}
+                  {{ issue.text }}
+                  <div class="small text-body-secondary">{{ issue.help }}</div>
+                </div>
+                <div class="text-nowrap ms-2">
+                  <span class="badge {% if issue.count %}bg-warning text-dark{% else %}bg-success{% endif %}">{{ issue.count }}</span>
+                  {% if issue.fix %}<button type="button" data-action="{{ issue.fix }}" data-type="{{ section.type }}" class="btn btn-sm btn-outline-primary ms-1"><i class="fa-solid fa-wrench"></i> {{ attribute(_context, 'button_fix_' ~ issue.fix) }}</button>{% endif %}
+                </div>
+              </div>
+              {% if issue.items %}
+                <div class="small mt-1">
+                  {% for item in issue.items %}<a href="{{ item.edit }}" target="_blank" class="me-2 text-nowrap">{{ item.name|e }}</a>{% endfor %}
+                  {% if issue.more %}<span class="text-body-secondary">{{ text_more|format(issue.more) }}</span>{% endif %}
+                </div>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+</div>

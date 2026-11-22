@@ -1,0 +1,37 @@
+<div class="table-responsive">
+  <table class="table table-hover mb-0 align-middle">
+    <thead>
+      <tr><th class="ps-3">{{ column_check }}</th><th>{{ column_value }}</th><th>{{ column_advice }}</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for check in checks %}
+        <tr>
+          <td class="ps-3 text-nowrap">
+            {% if check.state == 'ok' %}<i class="fa-solid fa-circle-check text-success"></i>{% elseif check.state == 'warn' %}<i class="fa-solid fa-triangle-exclamation text-warning"></i>{% elseif check.state == 'bad' %}<i class="fa-solid fa-circle-xmark text-danger"></i>{% else %}<i class="fa-solid fa-circle-info text-info"></i>{% endif %}
+            {{ check.name }}
+          </td>
+          <td class="text-nowrap">{{ check.value|e }}</td>
+          <td class="small text-body-secondary">{{ check.advice }}</td>
+          <td class="text-end pe-3">{% if check.fix %}<button type="button" data-fix="{{ check.fix }}" class="btn btn-sm btn-outline-primary text-nowrap"><i class="fa-solid fa-wrench"></i> {{ button_fix }}</button>{% endif %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="p-3 border-top">
+  <h5 class="mb-2"><i class="fa-solid fa-database"></i> {{ text_indexes }}</h5>
+  {% if indexes %}
+    <p class="small text-body-secondary">{{ text_indexes_missing }}</p>
+    <table class="table table-sm w-auto">
+      <thead><tr><th>{{ column_table }}</th><th>{{ column_column }}</th><th class="text-end">{{ column_rows }}</th></tr></thead>
+      <tbody>
+        {% for index in indexes %}
+          <tr><td class="font-monospace">{{ index.table }}</td><td class="font-monospace">{{ index.column }}</td><td class="text-end">{{ index.rows }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="button" data-fix="indexes" class="btn btn-primary"><i class="fa-solid fa-plus"></i> {{ button_add_indexes }}</button>
+  {% else %}
+    <p class="mb-0"><i class="fa-solid fa-circle-check text-success"></i> {{ text_indexes_ok }}</p>
+  {% endif %}
+</div>

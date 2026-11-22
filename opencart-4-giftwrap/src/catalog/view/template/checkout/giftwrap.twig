@@ -1,0 +1,23 @@
+<div class="accordion-item">
+  <h2 class="accordion-header"><button type="button" class="accordion-button{% if not giftwrap %} collapsed{% endif %}" data-bs-toggle="collapse" data-bs-target="#collapse-giftwrap"><i class="fa-solid fa-gift me-2"></i> {{ heading_title }}</button></h2>
+  <div id="collapse-giftwrap" class="accordion-collapse collapse{% if giftwrap %} show{% endif %}" data-bs-parent="#accordion">
+    <div class="accordion-body">
+      <form id="form-giftwrap" action="{{ save }}" method="post" data-oc-toggle="ajax" data-oc-load="{{ list }}" data-oc-target="#shopping-cart">
+        {% if description %}<p class="text-body-secondary">{{ description }}</p>{% endif %}
+        <div class="form-check mb-3">
+          <input type="hidden" name="giftwrap" value="0"/>
+          <input type="checkbox" name="giftwrap" value="1" id="input-giftwrap" class="form-check-input"{% if giftwrap %} checked{% endif %}/>
+          <label for="input-giftwrap" class="form-check-label">{{ entry_giftwrap }}</label>
+        </div>
+        {% if message_status %}
+          <div class="mb-3">
+            <label for="input-giftwrap-message" class="form-label">{{ entry_message }}</label>
+            <textarea name="giftwrap_message" rows="3" maxlength="{{ max_length }}" id="input-giftwrap-message" class="form-control">{{ message|e }}</textarea>
+            <div class="form-text">{{ help_message }}</div>
+          </div>
+        {% endif %}
+        <div class="text-end"><button type="submit" class="btn btn-primary">{{ button_save }}</button></div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ add }}" data-bs-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+        <button type="button" id="button-delete" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">{% for breadcrumb in breadcrumbs %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endfor %}</ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-folder-open"></i> {{ text_info }}</div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax" class="d-flex align-items-center gap-3">
+          <label for="input-status" class="col-form-label fw-semibold">{{ entry_status }}</label>
+          <div class="form-check form-switch form-switch-lg mb-0"><input type="hidden" name="module_producttabs_status" value="0"/><input type="checkbox" name="module_producttabs_status" value="1" id="input-status" class="form-check-input"{% if module_producttabs_status %} checked{% endif %}/></div>
+          <button type="submit" class="btn btn-primary btn-sm ms-2"><i class="fa-solid fa-floppy-disk"></i> {{ button_save }}</button>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-list"></i> {{ text_tabs }}</div>
+      <div class="card-body p-0">
+        <form id="form-tabs">
+          <table class="table table-hover mb-0 align-middle">
+            <thead><tr><th class="text-center" style="width: 1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', $(this).prop('checked'));" class="form-check-input"/></th><th>{{ column_title }}</th><th>{{ column_scope }}</th><th class="text-end">{{ column_sort_order }}</th><th>{{ column_status }}</th><th class="text-end pe-3">{{ column_action }}</th></tr></thead>
+            <tbody>
+              {% for tab in tabs %}
+                <tr>
+                  <td class="text-center"><input type="checkbox" name="selected[]" value="{{ tab.tab_id }}" class="form-check-input"/></td>
+                  <td>{{ tab.title }}</td>
+                  <td>{% if tab.scope == 'category' %}{{ text_categories|format(tab.categories) }}{% elseif tab.scope == 'product' %}{{ text_products|format(tab.products) }}{% else %}{{ text_scope_all }}{% endif %}</td>
+                  <td class="text-end">{{ tab.sort_order }}</td>
+                  <td>{% if tab.status %}<span class="badge bg-success">{{ text_enabled }}</span>{% else %}<span class="badge bg-secondary">{{ text_disabled }}</span>{% endif %}</td>
+                  <td class="text-end pe-3"><a href="{{ tab.edit }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil"></i></a></td>
+                </tr>
+              {% else %}
+                <tr><td colspan="6" class="text-center text-body-secondary p-3">{{ text_no_tabs }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#button-delete').on('click', function() {
+    if (!$('input[name*=\'selected\']:checked').length || !confirm('{{ text_confirm|escape('js') }}')) {
+        return;
+    }
+
+    $.post('{{ delete|replace({'&amp;': '&'}) }}', $('#form-tabs').serialize(), function(json) {
+        if (json['success']) {
+            location.reload();
+        }
+
+        if (json['error']) {
+            alert(json['error']);
+        }
+    }, 'json');
+});
+//--></script>
+{{ footer }}

@@ -1,0 +1,108 @@
+<div class="container">
+  <nav id="menu" class="navbar navbar-expand-lg bg-primary megamenu" aria-label="{{ text_category }}">
+    <div id="category" class="d-block d-lg-none">{{ text_category }}</div>
+    <button type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" class="navbar-toggler d-lg-none" aria-controls="navbar-menu" aria-expanded="false" aria-label="{{ text_category }}"><i class="fa-solid fa-bars"></i></button>
+    <div id="navbar-menu" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav mm-list">
+        {% for item in items %}
+          {% if item.children %}
+            <li class="nav-item mm-item">
+              <div class="mm-top">
+                <a href="{{ item.href }}" class="nav-link">{{ item.name }}</a>
+                <button type="button" class="mm-toggle" aria-expanded="false" aria-controls="mm-panel-{{ item.id }}" aria-label="{{ text_open|format(item.name|striptags) }}"><i class="fa-solid fa-chevron-down"></i></button>
+              </div>
+              <div id="mm-panel-{{ item.id }}" class="mm-panel">
+                <div class="mm-inner">
+                  <div class="mm-columns" style="--mm-cols: {{ item.columns }};">
+                    {% for child in item.children %}
+                      <div class="mm-group">
+                        <a href="{{ child.href }}" class="mm-heading">{{ child.name }}</a>
+                        {% if child.children %}
+                          <ul class="list-unstyled mm-links">
+                            {% for grandchild in child.children %}<li><a href="{{ grandchild.href }}">{{ grandchild.name }}</a></li>{% endfor %}
+                            {% if child.more %}<li><a href="{{ child.href }}" class="mm-more">{{ text_more }}</a></li>{% endif %}
+                          </ul>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  {% if item.featured %}
+                    <a href="{{ item.featured.href }}" class="mm-feature">
+                      <span class="mm-feature-label">{{ text_featured }}</span>
+                      <img src="{{ item.featured.thumb }}" alt="{{ item.featured.name|striptags|e }}" width="220" height="220" loading="lazy"/>
+                      <span class="mm-feature-name">{{ item.featured.name }}</span>
+                      {% if item.featured.price %}<span class="mm-feature-price">{% if item.featured.special %}<span class="text-danger">{{ item.featured.special }}</span> <s class="text-body-secondary">{{ item.featured.price }}</s>{% else %}{{ item.featured.price }}{% endif %}</span>{% endif %}
+                    </a>
+                  {% elseif item.image %}
+                    <a href="{{ item.href }}" class="mm-feature"><img src="{{ item.image }}" alt="{{ item.name|striptags|e }}" width="220" height="220" loading="lazy"/></a>
+                  {% endif %}
+                </div>
+                <a href="{{ item.href }}" class="mm-all">{{ text_all|format(item.name) }} <i class="fa-solid fa-arrow-right"></i></a>
+              </div>
+            </li>
+          {% else %}
+            <li class="nav-item mm-item"><div class="mm-top"><a href="{{ item.href }}" class="nav-link">{{ item.name }}</a></div></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </nav>
+</div>
+<style>
+#menu.megamenu { position: relative; }
+#menu.megamenu .mm-top { display: flex; align-items: center; justify-content: space-between; }
+#menu.megamenu .mm-top > .nav-link { color: #fff; text-shadow: 0 -1px 0 rgba(0, 0, 0, .25); padding: 10px 15px; }
+#menu.megamenu .mm-top > .nav-link:hover, #menu.megamenu .mm-item:hover .mm-top > .nav-link { background-color: rgba(0, 0, 0, .1); }
+#menu.megamenu .mm-toggle { background: transparent; border: 0; color: #fff; padding: 10px 14px; line-height: 1; }
+#menu.megamenu .mm-panel { display: none; background: #fff; color: #333; padding: 1rem; border-radius: 0 0 .375rem .375rem; }
+#menu.megamenu .mm-panel.show { display: block; }
+#menu.megamenu .mm-inner { display: flex; gap: 1.5rem; }
+#menu.megamenu .mm-columns { flex: 1; display: grid; grid-template-columns: 1fr; gap: 1rem 1.5rem; align-content: start; }
+#menu.megamenu .mm-heading { display: block; font-weight: 600; color: #222; text-decoration: none; margin-bottom: .35rem; }
+#menu.megamenu .mm-links a { display: block; color: #555; text-decoration: none; padding: .15rem 0; font-size: .925rem; }
+#menu.megamenu .mm-heading:hover, #menu.megamenu .mm-links a:hover, #menu.megamenu .mm-all:hover { color: var(--bs-primary, #229ac8); text-decoration: underline; }
+#menu.megamenu .mm-more { font-style: italic; }
+#menu.megamenu .mm-feature { display: none; flex: 0 0 220px; text-align: center; color: #222; text-decoration: none; }
+#menu.megamenu .mm-feature img { max-width: 100%; height: auto; border-radius: .375rem; }
+#menu.megamenu .mm-feature-label { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: #888; margin-bottom: .25rem; }
+#menu.megamenu .mm-feature-name { display: block; font-weight: 600; margin-top: .4rem; }
+#menu.megamenu .mm-feature-price { display: block; }
+#menu.megamenu .mm-all { display: inline-block; margin-top: 1rem; font-weight: 600; color: #222; text-decoration: none; }
+@media (min-width: 992px) {
+  #menu.megamenu .mm-toggle { display: none; }
+  #menu.megamenu .mm-item { position: static; }
+  #menu.megamenu .mm-panel { position: absolute; left: 0; right: 0; top: 100%; z-index: 1000; box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .15); border: 1px solid rgba(0, 0, 0, .1); border-top: 0; }
+  #menu.megamenu .mm-item:hover > .mm-panel, #menu.megamenu .mm-item:focus-within > .mm-panel { display: block; }
+  #menu.megamenu .mm-item.mm-closed > .mm-panel { display: none; }
+  #menu.megamenu .mm-columns { grid-template-columns: repeat(var(--mm-cols, 3), minmax(0, 1fr)); }
+  #menu.megamenu .mm-feature { display: block; }
+}
+@media (max-width: 991.98px) {
+  #menu.megamenu .mm-item { border-top: 1px solid rgba(255, 255, 255, .15); }
+  #menu.megamenu .mm-panel { margin: 0 0 .5rem; }
+  #menu.megamenu .mm-toggle[aria-expanded="true"] i { transform: rotate(180deg); }
+}
+</style>
+<script type="text/javascript"><!--
+$('#menu.megamenu').on('click', '.mm-toggle', function() {
+    var open = $(this).attr('aria-expanded') !== 'true';
+
+    $(this).attr('aria-expanded', open ? 'true' : 'false');
+    $('#' + $(this).attr('aria-controls')).toggleClass('show', open);
+});
+
+// Escape closes the open panel and puts focus back on its top link; it opens again on the next hover or Tab.
+$('#menu.megamenu').on('keydown', function(e) {
+    var item = $(document.activeElement).closest('.mm-item');
+
+    if (e.key === 'Escape' && item.length) {
+        item.addClass('mm-closed').find('.nav-link').first().trigger('focus');
+    }
+}).on('mouseleave focusout', '.mm-item', function(e) {
+    if (!e.relatedTarget || !$.contains(this, e.relatedTarget)) {
+        $(this).removeClass('mm-closed');
+    }
+}).on('mouseenter', '.mm-item', function() {
+    $(this).removeClass('mm-closed');
+});
+//--></script>

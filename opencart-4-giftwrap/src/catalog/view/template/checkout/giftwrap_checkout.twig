@@ -1,0 +1,43 @@
+<fieldset id="checkout-giftwrap" class="mb-4">
+  <legend><i class="fa-solid fa-gift"></i> {{ heading_title }}</legend>
+  {% if description %}<p class="text-body-secondary">{{ description }}</p>{% endif %}
+  <div class="form-check mb-2">
+    <input type="checkbox" value="1" id="input-checkout-giftwrap" class="form-check-input"{% if giftwrap %} checked{% endif %}/>
+    <label for="input-checkout-giftwrap" class="form-check-label">{{ entry_giftwrap }}</label>
+  </div>
+  {% if message_status %}
+    <div id="checkout-giftwrap-message"{% if not giftwrap %} style="display: none;"{% endif %}>
+      <label for="input-checkout-giftwrap-message" class="form-label">{{ entry_message }}</label>
+      <textarea rows="3" maxlength="{{ max_length }}" id="input-checkout-giftwrap-message" class="form-control">{{ message|e }}</textarea>
+      <div class="form-text">{{ help_message }}</div>
+      <button type="button" id="button-giftwrap-message" class="btn btn-light btn-sm mt-2">{{ button_save }}</button>
+    </div>
+  {% endif %}
+</fieldset>
+<script type="text/javascript"><!--
+function giftwrapSave() {
+    $.ajax({
+        url: '{{ save|replace({'&amp;': '&'}) }}',
+        type: 'post',
+        data: {giftwrap: $('#input-checkout-giftwrap').prop('checked') ? 1 : 0, giftwrap_message: $('#input-checkout-giftwrap-message').val() || ''},
+        dataType: 'json',
+        success: function(json) {
+            $('#checkout-giftwrap .alert').remove();
+
+            if (json['error']) {
+                $('#checkout-giftwrap').append('<div class="alert alert-danger mt-2 mb-0">' + json['error'] + '</div>');
+            } else {
+                // New total: reload the confirmation, as OpenCart does after a shipping or payment change.
+                $('#checkout-confirm').load('index.php?route=checkout/confirm.confirm&language={{ language }}');
+            }
+        }
+    });
+}
+
+$('#input-checkout-giftwrap').on('change', function() {
+    $('#checkout-giftwrap-message').toggle(this.checked);
+    giftwrapSave();
+});
+
+$('#button-giftwrap-message').on('click', giftwrapSave);
+//--></script>

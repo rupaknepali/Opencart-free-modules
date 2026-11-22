@@ -1,0 +1,67 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ reviews }}" class="btn btn-light"><i class="fa-solid fa-comments"></i> {{ button_reviews }}</a>
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-camera"></i> {{ text_info }}</div>
+    {% if not review_status %}<div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_reviews_off }}</div>{% endif %}
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_photoreview_status" value="0"/><input type="checkbox" name="module_photoreview_status" value="1" id="input-status" class="form-check-input"{% if module_photoreview_status %} checked{% endif %}/></div></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-max" class="col-sm-2 col-form-label">{{ entry_max }}</label>
+            <div class="col-sm-10"><input type="number" name="module_photoreview_max" value="{{ module_photoreview_max }}" min="1" max="10" id="input-max" class="form-control" style="max-width: 8rem;"/></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-size" class="col-sm-2 col-form-label">{{ entry_size }}</label>
+            <div class="col-sm-10"><input type="number" name="module_photoreview_size" value="{{ module_photoreview_size }}" min="1" max="20" id="input-size" class="form-control" style="max-width: 8rem;"/><div class="form-text">{{ help_size }}</div></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-thumb" class="col-sm-2 col-form-label">{{ entry_thumb }}</label>
+            <div class="col-sm-10"><input type="number" name="module_photoreview_thumb" value="{{ module_photoreview_thumb }}" min="40" max="300" id="input-thumb" class="form-control" style="max-width: 8rem;"/></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-gallery" class="col-sm-2 col-form-label">{{ entry_gallery }}</label>
+            <div class="col-sm-10"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="module_photoreview_gallery" value="0"/><input type="checkbox" name="module_photoreview_gallery" value="1" id="input-gallery" class="form-check-input"{% if module_photoreview_gallery %} checked{% endif %}/></div><div class="form-text">{{ help_gallery }}</div></div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-images"></i> {{ text_latest }}</div>
+      <div class="card-body">
+        {% if photos %}
+          <div class="d-flex flex-wrap gap-3">
+            {% for photo in photos %}
+              <a href="{{ photo.edit }}" class="text-decoration-none text-body small" style="width: 120px;">
+                <img src="{{ photo.thumb }}" alt="" class="img-thumbnail mb-1"/>
+                <div class="text-truncate">{{ photo.product|e }}</div>
+                <div class="text-truncate text-body-secondary">{{ photo.author|e }}</div>
+                {% if not photo.status %}<span class="badge bg-warning text-dark">{{ text_pending }}</span>{% endif %}
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="mb-0 text-body-secondary">{{ text_none }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
