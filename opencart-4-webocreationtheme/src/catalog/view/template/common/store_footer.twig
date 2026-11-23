@@ -1,0 +1,74 @@
+<footer class="wt-store-footer">
+  <div class="container">
+    {% if logo or about %}
+      <div class="wt-sf-brand">
+        {% if logo %}<a href="{{ home }}" class="wt-sf-logo"><img src="{{ logo }}" alt="{{ name }}" title="{{ name }}" loading="lazy"/></a>{% else %}<a href="{{ home }}" class="wt-sf-name">{{ name }}</a>{% endif %}
+        {% if about %}<p>{{ about }}</p>{% endif %}
+      </div>
+    {% endif %}
+    <div class="row wt-sf-cols">
+      {% if informations or blog %}
+        <div class="col-6 col-lg">
+          <h5>{{ text_information }}</h5>
+          <ul class="list-unstyled">
+            {% if blog %}<li><a href="{{ blog }}">{{ text_blog }}</a></li>{% endif %}
+            {% for information in informations %}<li><a href="{{ information.href }}">{{ information.title }}</a></li>{% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <div class="col-6 col-lg">
+        <h5>{{ text_service }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ contact }}">{{ text_contact }}</a></li>
+          <li><a href="{{ return }}">{{ text_return }}</a></li>
+          {% if gdpr %}<li><a href="{{ gdpr }}">{{ text_gdpr }}</a></li>{% endif %}
+          <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
+          <li><a href="{{ manufacturer }}">{{ text_manufacturer }}</a></li>
+          <li><a href="{{ special }}">{{ text_special }}</a></li>
+          {% if affiliate %}<li><a href="{{ affiliate }}">{{ text_affiliate }}</a></li>{% endif %}
+        </ul>
+      </div>
+      <div class="col-6 col-lg">
+        <h5>{{ text_account }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ account }}">{{ text_account }}</a></li>
+          <li><a href="{{ order }}">{{ text_order }}</a></li>
+          <li><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
+          <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+        </ul>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        {% if telephone or email or address %}
+          <h5>{{ text_wt_contact }}</h5>
+          <ul class="list-unstyled wt-sf-contact">
+            {% if telephone %}<li><span class="wt-sf-icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span><a href="tel:{{ telephone_link }}" aria-label="{{ text_wt_phone }}">{{ telephone }}</a></li>{% endif %}
+            {% if email %}<li><span class="wt-sf-icon" aria-hidden="true"><i class="fa-regular fa-envelope"></i></span><a href="mailto:{{ email }}">{{ email }}</a></li>{% endif %}
+            {% if address %}<li><span class="wt-sf-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span><address aria-label="{{ text_wt_address }}">{{ address }}</address></li>{% endif %}
+          </ul>
+        {% endif %}
+        {% if newsletter_box %}
+          <h5 class="wt-sf-news-title">{{ text_wt_newsletter }}</h5>
+          {% if subscribed %}
+            <p>{{ text_wt_subscribed }} <a href="{{ newsletter }}">{{ text_wt_manage }}</a></p>
+          {% elseif logged %}
+            <p>{{ text_wt_join }}</p>
+            <a href="{{ newsletter }}" class="btn btn-primary btn-lg wt-sf-subscribe">{{ text_wt_subscribe }}</a>
+          {% else %}
+            <p>{{ text_wt_join }}</p>
+            <form action="{{ register_action }}" method="get" class="wt-sf-form">
+              <input type="hidden" name="route" value="account/register"/>
+              <input type="hidden" name="language" value="{{ language }}"/>
+              <label for="wt-sf-email" class="form-label">{{ text_wt_email }} <span class="text-danger">*</span></label>
+              <input type="email" name="email" id="wt-sf-email" class="form-control form-control-lg" placeholder="{{ text_wt_email_ph }}" autocomplete="email" required/>
+              <button type="submit" class="btn btn-primary btn-lg wt-sf-subscribe">{{ text_wt_subscribe }}</button>
+            </form>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="wt-sf-bottom">
+      <p>{{ powered }}</p>
+      {% if social %}<div class="wt-sf-social">{{ social }}</div>{% endif %}
+    </div>
+  </div>
+</footer>

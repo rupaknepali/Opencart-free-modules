@@ -1,0 +1,24 @@
+<?php
+$_['heading_title']     = 'Webocreation Hero';
+$_['text_extension']    = 'Extensions';
+$_['text_success']      = 'Success: You have modified Webocreation Hero!';
+$_['text_edit']         = 'Edit Webocreation Hero';
+$_['text_info']         = 'A slideshow made from one of your banners (Design > Banners), with each slide\'s title as a tab underneath, and an optional side panel. Add it to the Home layout in Design > Layouts, in Content Top.';
+$_['text_none']         = 'No panel (slideshow full width)';
+$_['text_articles']     = 'Latest blog articles (CMS > Articles)';
+$_['text_specials']     = 'Products on special';
+$_['text_latest']       = 'Newest products';
+$_['entry_name']        = 'Module name';
+$_['entry_banner']      = 'Banner';
+$_['entry_size']        = 'Slide size (px)';
+$_['entry_tabs']        = 'Slide titles as tabs';
+$_['entry_panel']       = 'Side panel';
+$_['entry_panel_title'] = 'Panel title';
+$_['entry_panel_limit'] = 'Items in the panel';
+$_['entry_status']      = 'Status';
+$_['help_banner']       = 'Each image\'s title becomes its tab, and its link is where the slide goes.';
+$_['help_size']         = 'Images are resized to this size. 1140 × 500 suits a 2/3-width slider next to the panel.';
+$_['error_permission']  = 'Warning: You do not have permission to modify Webocreation Hero!';
+$_['error_warning']     = 'Warning: Please check the form carefully for errors!';
+$_['error_name']        = 'Module name must be between 3 and 64 characters!';
+$_['error_banner']      = 'Choose a banner.';

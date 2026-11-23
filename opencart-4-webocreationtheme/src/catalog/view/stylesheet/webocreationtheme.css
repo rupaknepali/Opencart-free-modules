@@ -1,0 +1,346 @@
+/* Webocreation theme for OpenCart 4: maps the theme settings (CSS variables printed in the page head) onto the default templates. */
+
+/* ---- Bootstrap's own variables ---- */
+body.wt {
+  --bs-body-font-family: var(--wt-font-body);
+  --bs-body-font-size: var(--wt-font-size);
+  --bs-body-line-height: var(--wt-line-height);
+  --bs-body-bg: var(--wt-background);
+  --bs-body-color: var(--wt-text);
+  --bs-body-color-rgb: var(--wt-text-rgb);
+  --bs-secondary-color: var(--wt-muted);
+  --bs-link-color: var(--wt-link);
+  --bs-link-color-rgb: var(--wt-link-rgb);
+  --bs-link-hover-color: var(--wt-link-hover);
+  --bs-link-hover-color-rgb: var(--wt-link-rgb);
+  --bs-primary: var(--wt-primary);
+  --bs-primary-rgb: var(--wt-primary-rgb);
+  --bs-border-color: var(--wt-border);
+  --bs-border-radius: var(--wt-radius);
+  --bs-border-radius-sm: calc(var(--wt-radius) * .75);
+  --bs-border-radius-lg: calc(var(--wt-radius) * 1.25);
+  --bs-heading-color: inherit;
+  font-family: var(--wt-font-body);
+  font-size: var(--wt-font-size);
+  line-height: var(--wt-line-height);
+  background-color: var(--wt-background);
+  color: var(--wt-text);
+}
+
+body.wt h1, body.wt h2, body.wt h3, body.wt h4, body.wt h5, body.wt h6,
+body.wt .h1, body.wt .h2, body.wt .h3, body.wt .h4, body.wt .h5, body.wt .h6 {
+  font-family: var(--wt-font-heading);
+  font-weight: var(--wt-heading-weight);
+  letter-spacing: var(--wt-heading-spacing);
+  color: inherit;
+}
+body.wt-headings-upper h1, body.wt-headings-upper h2, body.wt-headings-upper h3, body.wt-headings-upper h4 { text-transform: uppercase; }
+
+/* Links, but not links styled as buttons. :where() adds no specificity, so Bootstrap's active states
+   (list groups, dropdowns, pagination) and the footer's own link color still win. */
+body.wt a:where(:not(.btn)) { color: var(--wt-link); }
+body.wt a:where(:not(.btn)):hover { color: var(--wt-link-hover); }
+body.wt .text-muted, body.wt .text-body-secondary { color: var(--wt-muted) !important; }
+
+/* ---- Width ---- */
+@media (min-width: 1200px) {
+  body.wt .container, body.wt .container-lg, body.wt .container-xl, body.wt .container-xxl { max-width: var(--wt-container); }
+}
+
+/* ---- Buttons ---- */
+body.wt .btn { --bs-btn-border-radius: var(--wt-button-radius); border-radius: var(--wt-button-radius); font-family: var(--wt-font-body); }
+body.wt-buttons-upper .btn { text-transform: uppercase; letter-spacing: .04em; }
+body.wt .btn-primary {
+  --bs-btn-bg: var(--wt-primary); --bs-btn-border-color: var(--wt-primary); --bs-btn-color: var(--wt-primary-text);
+  --bs-btn-hover-bg: var(--wt-link-hover); --bs-btn-hover-border-color: var(--wt-link-hover); --bs-btn-hover-color: var(--wt-primary-text);
+  --bs-btn-active-bg: var(--wt-link-hover); --bs-btn-active-border-color: var(--wt-link-hover); --bs-btn-active-color: var(--wt-primary-text);
+  --bs-btn-disabled-bg: var(--wt-primary); --bs-btn-disabled-border-color: var(--wt-primary);
+  background-image: none;
+}
+body.wt .btn-outline-primary { --bs-btn-color: var(--wt-primary); --bs-btn-border-color: var(--wt-primary); --bs-btn-hover-bg: var(--wt-primary); --bs-btn-hover-border-color: var(--wt-primary); --bs-btn-hover-color: var(--wt-primary-text); }
+body.wt .btn-warning { --bs-btn-bg: var(--wt-secondary); --bs-btn-border-color: var(--wt-secondary); }
+
+/* ---- Forms ---- */
+body.wt .form-control, body.wt .form-select, body.wt .input-group-text { border-radius: var(--wt-radius); border-color: var(--wt-border); }
+body.wt .input-group > :not(:first-child) { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+body.wt .input-group > :not(:last-child) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+body.wt .form-control:focus, body.wt .form-select:focus { border-color: var(--wt-primary); box-shadow: 0 0 0 .2rem rgba(var(--wt-primary-rgb), .2); }
+body.wt .form-check-input:checked { background-color: var(--wt-primary); border-color: var(--wt-primary); }
+
+/* ---- Top bar ---- */
+body.wt #top { background: var(--wt-topbar-bg); border-bottom: 1px solid rgba(0, 0, 0, .06); font-size: .875rem; margin-bottom: 0; }
+/* White logo on a colored header (logos are usually dark or colored PNGs). */
+body.wt-logo-white header #logo img { filter: brightness(0) invert(1); }
+body.wt #top, body.wt #top .list-inline-item > a, body.wt #top .list-inline-item .dropdown > a, body.wt #top .list-inline-item .dropdown > span, body.wt #top .btn-link { color: var(--wt-topbar-text); text-shadow: none; }
+body.wt-no-topbar #top { display: none; }
+
+/* ---- Header ---- */
+body.wt header { background: var(--wt-header-bg); color: var(--wt-header-text); padding-top: 1rem; padding-bottom: .5rem; }
+body.wt header #logo h1 a, body.wt header #logo h1 { color: var(--wt-header-text); }
+body.wt header #cart .btn { background: var(--wt-primary); border-color: var(--wt-primary); color: var(--wt-primary-text); background-image: none; }
+/* The search box (OpenCart 4.1 has no #search id: find it by its input). Its outer ends follow the button
+   roundness, so field and button read as one pill. */
+body.wt header .input-group:has(input[name="search"]) .btn { border-color: var(--wt-border); }
+body.wt header .input-group:has(input[name="search"]) .form-control { border-top-left-radius: var(--wt-button-radius); border-bottom-left-radius: var(--wt-button-radius); padding-left: 1.1rem; }
+body.wt header .input-group:has(input[name="search"]) .btn:last-child { border-top-right-radius: var(--wt-button-radius); border-bottom-right-radius: var(--wt-button-radius); }
+
+body.wt-logo-center header .row > div:first-child { flex: 0 0 100%; max-width: 100%; text-align: center; margin-bottom: .75rem; }
+body.wt-logo-center header #logo { display: flex; justify-content: center; margin: 0; }
+@media (min-width: 768px) {
+  body.wt-logo-center header .row > div:nth-child(2) { flex: 1 1 0; max-width: none; }
+  body.wt-logo-center header .row > div:nth-child(3) { flex: 0 0 auto; width: auto; max-width: none; }
+}
+
+body.wt-sticky-header header { position: sticky; top: 0; z-index: 1020; box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
+/* The menu sits in its own .container, so that wrapper is what sticks. */
+body.wt-sticky-menu main > .container:has(> #menu) { position: sticky; top: 0; z-index: 1020; }
+body.wt-sticky-menu main > .container:has(> #menu) #menu { box-shadow: 0 4px 12px rgba(0, 0, 0, .08); }
+
+/* ---- Menu ---- */
+/* The menu has Bootstrap's bg-primary class, which sets the background with !important. */
+body.wt #menu { background-color: var(--wt-menu-bg) !important; background-image: none; border: 0; border-radius: var(--wt-radius); }
+body.wt #menu .navbar-nav > li > a, body.wt #menu .mm-top > .nav-link, body.wt #menu .mm-toggle, body.wt #menu #category, body.wt #menu .navbar-toggler { color: var(--wt-menu-text); text-shadow: none; font-family: var(--wt-font-body); }
+body.wt #menu .navbar-nav > li > a:hover { background-color: rgba(0, 0, 0, .1); }
+body.wt #menu .dropdown-menu { border-radius: 0 0 var(--wt-radius) var(--wt-radius); }
+
+/* ---- Product cards ---- */
+body.wt .product-thumb { background: var(--wt-surface); border: 1px solid var(--wt-border); border-radius: var(--wt-radius); overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
+body.wt-card-shadow .product-thumb { border-color: transparent; box-shadow: 0 2px 12px rgba(0, 0, 0, .08); }
+body.wt-card-flat .product-thumb { border-color: transparent; box-shadow: none; }
+body.wt-card-hover .product-thumb:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0, 0, 0, .10); }
+body.wt .product-thumb .button { display: flex; border-top: 1px solid var(--wt-border); }
+body.wt .product-thumb .button button { flex: 1 1 0; width: auto; background: transparent; color: var(--wt-muted); border-top: 0; }
+body.wt .product-thumb .button button + button { border-left: 1px solid var(--wt-border); }
+body.wt .product-thumb .button button:hover { background: var(--wt-primary); color: var(--wt-primary-text); }
+body.wt-no-wishlist button[formaction*="wishlist"] { display: none !important; }
+body.wt-no-compare button[formaction*="compare"], body.wt-no-compare #compare-total { display: none !important; }
+/* The product page puts wishlist and compare in a button group: drop it when both are hidden. */
+body.wt-no-wishlist.wt-no-compare .btn-group:has(> button[formaction*="wishlist"]) { display: none; }
+
+/* ---- Prices ---- */
+body.wt .price, body.wt .price-new { color: var(--wt-price); }
+body.wt .price-old + .price-new, body.wt .price-new:has(+ .price-old) { color: var(--wt-special); }
+body.wt .price-old { color: var(--wt-muted); }
+
+/* ---- Other components ---- */
+body.wt .breadcrumb { background: transparent; border-radius: var(--wt-radius); }
+body.wt .nav-tabs .nav-link.active { color: var(--wt-primary); border-bottom-color: var(--wt-background); }
+body.wt .pagination { --bs-pagination-active-bg: var(--wt-primary); --bs-pagination-active-border-color: var(--wt-primary); --bs-pagination-color: var(--wt-link); }
+body.wt .list-group-item.active { background-color: var(--wt-primary); border-color: var(--wt-primary); color: var(--wt-primary-text); }
+body.wt .card { --bs-card-bg: var(--wt-surface); --bs-card-border-color: var(--wt-border); --bs-card-border-radius: var(--wt-radius); }
+body.wt .badge.bg-primary, body.wt .text-bg-primary { background-color: var(--wt-primary) !important; color: var(--wt-primary-text) !important; }
+body.wt .dropdown-menu { --bs-dropdown-link-active-bg: var(--wt-primary); }
+
+/* ---- Footer ---- */
+body.wt footer { background: var(--wt-footer-bg); color: var(--wt-footer-text); border: 0; }
+body.wt footer a, body.wt footer h5 { color: var(--wt-footer-text); }
+body.wt footer a:hover { color: var(--wt-footer-text); opacity: .8; }
+body.wt footer hr { border-color: currentColor; opacity: .15; }
+body.wt .wt-social { display: flex; gap: .5rem; justify-content: center; padding: 0 0 1.25rem; }
+body.wt .wt-social a { display: inline-flex; width: 2.25rem; height: 2.25rem; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid currentColor; opacity: .85; text-decoration: none; }
+body.wt .wt-social a:hover { opacity: 1; background: var(--wt-primary); border-color: var(--wt-primary); color: var(--wt-primary-text); }
+
+/* ---- Back to top ---- */
+.wt-top { position: fixed; right: 1rem; bottom: 1rem; z-index: 1030; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 0; background: var(--wt-primary); color: var(--wt-primary-text); box-shadow: 0 4px 12px rgba(0, 0, 0, .2); }
+.wt-top:focus-visible { outline: 3px solid var(--wt-link-hover); outline-offset: 2px; }
+
+/* ======== 1.1: store-front layout options ======== */
+
+/* ---- Category icon bar (menu style: icons) ---- */
+body.wt-menu-icons main > .container:has(> #menu) { display: none; }
+body.wt .wt-catbar { background: var(--wt-catbar-bg); border-bottom: 1px solid var(--wt-border); box-shadow: 0 2px 8px rgba(0, 0, 0, .04); margin-bottom: 20px; }
+body.wt .wt-catbar ul { display: flex; justify-content: space-between; gap: .5rem; list-style: none; margin: 0; padding: .6rem 0; overflow-x: auto; scrollbar-width: thin; }
+body.wt .wt-catbar li { flex: 1 0 auto; }
+body.wt .wt-catbar a { display: flex; flex-direction: column; align-items: center; gap: .35rem; padding: .35rem .75rem; color: var(--wt-catbar-text); text-decoration: none; border-radius: var(--wt-radius); white-space: nowrap; }
+/* Hover follows the bar's own text color, so it stays visible on any background. */
+body.wt .wt-catbar a:hover, body.wt .wt-catbar a:focus-visible { color: var(--wt-catbar-text); background: rgba(var(--wt-catbar-text-rgb), .1); }
+body.wt .wt-catbar-icon { display: flex; align-items: center; justify-content: center; height: 40px; font-size: 1.75rem; color: var(--wt-catbar-text); }
+body.wt .wt-catbar-icon img { width: 40px; height: 40px; object-fit: contain; }
+body.wt .wt-catbar-name { font-size: .9em; }
+@media (max-width: 767.98px) { body.wt .wt-catbar ul { justify-content: flex-start; } body.wt .wt-catbar-icon { font-size: 1.4rem; height: 32px; } }
+
+/* ---- Section headings: product blocks (Featured, Related...) and the Webocreation modules ---- */
+/* H = OpenCart's block headings (an h3 followed by the product row); T = the showcase module head. */
+body.wt[class*="wt-heading-"] #content h3:has(+ .row), body.wt[class*="wt-heading-"] .wt-section-title {
+  font-size: 1.15rem; font-weight: var(--wt-heading-weight); text-transform: uppercase; letter-spacing: .03em;
+  margin: 2rem 0 1.25rem; line-height: 1.3;
+}
+
+/* Underlined: a full-width line in the primary color. */
+body.wt-heading-underline #content h3:has(+ .row), body.wt-heading-underline .wt-section-title {
+  padding-bottom: .65rem; border-bottom: 2px solid var(--wt-primary);
+}
+
+/* Accent: a thin full-width line with a short, thick bar under the title. */
+body.wt-heading-accent #content h3:has(+ .row), body.wt-heading-accent .wt-section-title {
+  position: relative; padding-bottom: .75rem; border-bottom: 1px solid var(--wt-border);
+}
+body.wt-heading-accent #content h3:has(+ .row)::after, body.wt-heading-accent .wt-section-title::after {
+  content: ""; position: absolute; left: 0; bottom: -2px; width: 64px; height: 3px; border-radius: 3px; background: var(--wt-primary);
+}
+
+/* Centered: the title between two thin lines. */
+body.wt-heading-centered #content h3:has(+ .row), body.wt-heading-centered .wt-showcase-head h3 {
+  display: flex; align-items: center; gap: 1.25rem; text-align: center; justify-content: center;
+}
+body.wt-heading-centered #content h3:has(+ .row)::before, body.wt-heading-centered #content h3:has(+ .row)::after,
+body.wt-heading-centered .wt-showcase-head h3::before, body.wt-heading-centered .wt-showcase-head h3::after {
+  content: ""; flex: 1 1 0; height: 1px; background: var(--wt-border);
+}
+body.wt-heading-centered .wt-showcase-head { flex-direction: column; align-items: stretch; gap: .5rem; }
+body.wt-heading-centered .wt-showcase-head .wt-brands { justify-content: center; }
+
+/* Boxed: a compact bar with a colored top edge. */
+body.wt-heading-boxed #content h3:has(+ .row), body.wt-heading-boxed .wt-section-title {
+  color: var(--wt-primary); padding: .6rem 1rem; background: rgba(var(--wt-primary-rgb), .04);
+  border: 1px solid var(--wt-border); border-top: 3px solid var(--wt-primary); border-radius: 0 0 var(--wt-radius) var(--wt-radius);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+}
+body.wt-heading-boxed .wt-section-title h3 { font-size: inherit; }
+
+/* ---- Badges as corner ribbons (works with the Product Badges extension) ---- */
+body.wt-badge-ribbon .oc-badges { top: 0; right: 0; left: auto; align-items: flex-end; gap: 2px; }
+body.wt-badge-ribbon .oc-badge { border-radius: 0; padding: .3rem .7rem .3rem 1.1rem; font-size: .68rem; box-shadow: none; clip-path: polygon(.6rem 0, 100% 0, 100% 100%, .6rem 100%, 0 50%); }
+body.wt-badge-ribbon .oc-badge::before { content: ""; display: inline-block; width: .35rem; height: .35rem; border-radius: 50%; background: currentColor; margin-right: .4rem; vertical-align: middle; opacity: .9; }
+
+/* ---- Page title band behind the breadcrumb ---- */
+body.wt-band .breadcrumb { position: relative; border: 0; margin-bottom: 1.5rem; padding: 1rem 0; background: rgba(var(--wt-text-rgb), .05); box-shadow: 0 0 0 100vmax rgba(var(--wt-text-rgb), .05); clip-path: inset(0 -100vmax); border-radius: 0; }
+body.wt-band .breadcrumb > li.breadcrumb-item { padding: 0; text-shadow: none; }
+body.wt-band .breadcrumb > li.breadcrumb-item::after { display: none; }
+body.wt-band .breadcrumb > li.breadcrumb-item + li.breadcrumb-item { padding-left: .5rem; }
+body.wt-band .breadcrumb > li.breadcrumb-item + li.breadcrumb-item::before { content: "\203A"; padding-right: .5rem; color: var(--wt-muted); float: none; }
+
+/* ---- Product page ---- */
+body.wt #content h2 .price-new { font-size: 1.9rem; font-weight: 700; }
+body.wt #content .price-old { font-size: 1.15rem; }
+body.wt #content .price-old ~ li .price-new, body.wt #content li:has(.price-old) + li .price-new { color: var(--wt-special); }
+body.wt .image.magnific-popup img.img-thumbnail, body.wt .magnific-popup .img-thumbnail { border-radius: var(--wt-radius); border-color: var(--wt-border); }
+body.wt .wt-qty { min-width: 2.5rem; font-weight: 700; border: 1px solid var(--wt-border); }
+body.wt .wt-qty-input { text-align: center; max-width: 4.5rem; }
+body.wt-wide-cart #form-product .input-group:has(#button-cart) { flex-wrap: wrap; }
+body.wt-wide-cart #button-cart { flex: 0 0 100%; width: 100%; margin: .9rem 0 0 !important; border-radius: var(--wt-button-radius) !important; padding: .8rem 1rem; font-size: 1.05rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+
+/* ---- Boxed tabs ---- */
+body.wt-tabs-boxed .nav-tabs { border-bottom: 0; gap: .25rem; margin-bottom: 0 !important; }
+body.wt-tabs-boxed .nav-tabs .nav-link { border: 1px solid var(--wt-border); border-bottom: 0; border-radius: 0; background: rgba(var(--wt-text-rgb), .05); color: var(--wt-muted); text-transform: uppercase; font-size: .9rem; padding: .75rem 1.25rem; }
+body.wt-tabs-boxed .nav-tabs .nav-link.active { background: var(--wt-surface); color: var(--wt-text); position: relative; z-index: 1; margin-bottom: -1px; }
+body.wt-tabs-boxed .tab-content { border: 1px solid var(--wt-border); padding: 1.25rem 1.5rem; background: var(--wt-surface); }
+
+/* ---- Sidebar module boxes (column left/right): heading bar in the primary color ---- */
+body.wt-heading-boxed #column-left > h3, body.wt-heading-boxed #column-right > h3, body.wt-heading-boxed aside .list-group:first-child { margin-top: 0; }
+body.wt aside .list-group { border-radius: var(--wt-radius); }
+
+/* ======== Webocreation modules ======== */
+
+/* ---- Webocreation Hero: slideshow with text tabs, and a side panel ---- */
+body.wt .wt-hero { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+body.wt .wt-hero.wt-hero-full { grid-template-columns: 1fr; }
+/* The slider fills the panel's height; slides cover the space, the tabs stay at the bottom. */
+body.wt .wt-hero-slider { border: 1px solid var(--wt-border); background: var(--wt-surface); border-radius: var(--wt-radius); overflow: hidden; display: flex; flex-direction: column; }
+/* OpenCart styles every .carousel with a 4px white border and a 50px bottom margin (for its own slideshow). */
+body.wt .wt-hero-slider .carousel { flex: 1 1 auto; position: relative; min-height: 220px; margin: 0; border: 0; box-shadow: none; border-radius: 0; }
+body.wt .wt-hero-slider .carousel-inner { position: absolute; inset: 0; }
+body.wt .wt-hero-slider .carousel-item, body.wt .wt-hero-slider .carousel-item > a { height: 100%; }
+@media (max-width: 991.98px) { body.wt .wt-hero-slider .carousel { min-height: 0; aspect-ratio: 3 / 1; } }
+body.wt .wt-hero-slider .carousel-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+body.wt .wt-hero-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border-top: 1px solid var(--wt-border); }
+body.wt .wt-hero-tabs button { background: none; border: 0; border-right: 1px solid var(--wt-border); padding: .9rem .5rem; font-size: .9rem; color: var(--wt-text); line-height: 1.3; }
+body.wt .wt-hero-tabs button:last-child { border-right: 0; }
+body.wt .wt-hero-tabs button.active { color: var(--wt-primary); box-shadow: inset 0 3px 0 var(--wt-primary); font-weight: 600; }
+body.wt .wt-panel { border: 1px solid var(--wt-border); background: var(--wt-surface); border-radius: var(--wt-radius); overflow: hidden; display: flex; flex-direction: column; }
+body.wt .wt-panel-head { display: flex; justify-content: space-between; align-items: center; background: var(--wt-primary); color: var(--wt-primary-text); padding: .8rem 1.1rem; }
+body.wt .wt-panel-head h3 { margin: 0; font-size: 1.05rem; text-transform: uppercase; color: inherit; }
+body.wt .wt-panel-head a { color: var(--wt-primary-text); font-size: .8rem; text-transform: uppercase; text-decoration: none; opacity: .9; }
+body.wt .wt-panel-item { display: flex; gap: .9rem; align-items: center; justify-content: space-between; padding: .85rem 1.1rem; border-top: 1px solid var(--wt-border); color: var(--wt-text); text-decoration: none; flex: 1; }
+body.wt .wt-panel-item:first-of-type { border-top: 0; }
+body.wt .wt-panel-item:hover .wt-panel-name { color: var(--wt-primary); }
+body.wt .wt-panel-name { font-weight: 500; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+body.wt .wt-panel-meta { color: var(--wt-muted); font-size: .9em; }
+body.wt .wt-panel-meta .wt-special { color: var(--wt-special); }
+body.wt .wt-panel-meta s { margin-left: .3rem; }
+body.wt .wt-panel-item img { width: 84px; height: 56px; object-fit: cover; flex: none; border-radius: calc(var(--wt-radius) * .5); }
+@media (max-width: 991.98px) { body.wt .wt-hero { grid-template-columns: 1fr; } }
+@media (max-width: 575.98px) { body.wt .wt-hero-tabs { grid-auto-flow: row; grid-template-columns: 1fr 1fr; } body.wt .wt-hero-tabs button { border-bottom: 1px solid var(--wt-border); } }
+
+/* ---- Webocreation Category Showcase ---- */
+body.wt .wt-showcase { margin: 2rem 0; }
+body.wt .wt-showcase-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin: 0 0 1.25rem; }
+body.wt .wt-showcase-head h3 { margin: 0; display: flex; align-items: center; gap: .6rem; }
+body.wt .wt-showcase-head h3 a { color: inherit; text-decoration: none; }
+body.wt .wt-showcase-head h3 i { color: var(--wt-primary); font-size: 1.3em; }
+body.wt-heading-boxed .wt-showcase-head, body.wt-heading-underline .wt-showcase-head { margin-top: 0; }
+body.wt .wt-brands { display: flex; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+body.wt .wt-brands li + li { border-left: 1px solid var(--wt-border); }
+body.wt .wt-brands a { padding: 0 1rem; color: var(--wt-muted); font-size: .9rem; text-transform: none; letter-spacing: 0; font-weight: 400; }
+body.wt .wt-brands a:hover { color: var(--wt-primary); }
+body.wt .wt-showcase-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 1.25rem; }
+body.wt .wt-showcase-body.wt-no-banner { grid-template-columns: 1fr; }
+body.wt .wt-showcase-banner { display: block; align-self: start; border-radius: var(--wt-radius); overflow: hidden; }
+body.wt .wt-showcase-banner img { width: 100%; height: auto; display: block; }
+body.wt .wt-showcase .row { --bs-gutter-x: 1.25rem; align-self: start; }
+/* With few products, keep cards their natural height instead of stretching to the banner. */
+body.wt .wt-showcase .row > .col { align-self: flex-start; }
+@media (max-width: 991.98px) { body.wt .wt-showcase-body { grid-template-columns: 1fr; } body.wt .wt-showcase-banner { max-height: 220px; } }
+
+/* ---- Compact product cards: image, name, price ---- */
+body.wt-card-compact .product-thumb .description > p, body.wt-card-compact .product-thumb .oc-availability, body.wt-card-compact .product-thumb .price-tax { display: none; }
+body.wt-card-compact .product-thumb h4 { font-size: 1rem; margin-bottom: .35rem; }
+body.wt-card-compact .product-thumb .description { padding-bottom: .25rem; }
+
+/* ---- Compact header: less padding, a smaller logo, slimmer search and cart ---- */
+body.wt-header-compact header { padding-top: .4rem; padding-bottom: .4rem; }
+body.wt-header-compact header .row { align-items: center; row-gap: .4rem; }
+body.wt-header-compact header .input-group, body.wt-header-compact header #cart { margin-bottom: 0 !important; }
+body.wt-header-compact header #logo { margin: 0; }
+body.wt-header-compact header #logo img { max-height: 42px; width: auto; }
+body.wt-header-compact header #logo h1 { font-size: 1.5rem; margin: 0; }
+body.wt-header-compact header .form-control-lg { height: 38px; font-size: .95rem; }
+body.wt-header-compact header .btn-lg { padding-top: .45rem; padding-bottom: .45rem; font-size: .95rem; }
+body.wt-header-compact #cart .btn-lg { padding: .55rem 1.25rem; }
+
+/* ---- Sticky header and category menu: the menu sits under the header (height measured by a script) ---- */
+body.wt-sticky-both header { position: sticky; top: 0; z-index: 1021; }
+body.wt-sticky-both .wt-catbar, body.wt-sticky-both main > .container:has(> #menu) { position: sticky; top: var(--wt-header-h, 0px); z-index: 1020; }
+body.wt-sticky-both .wt-catbar { box-shadow: 0 4px 12px rgba(0, 0, 0, .06); }
+/* Once scrolled, the icon bar keeps only the category names. */
+body.wt-sticky-both.wt-scrolled .wt-catbar-icon { display: none; }
+body.wt-sticky-both.wt-scrolled .wt-catbar ul { padding: .2rem 0; }
+body.wt-sticky-both.wt-scrolled .wt-catbar a { padding: .35rem .75rem; }
+body.wt-sticky-both.wt-scrolled .wt-catbar-name { font-weight: 600; }
+/* On phones the header would take too much of the screen: only the slim category menu sticks. */
+@media (max-width: 767.98px) {
+  body.wt-sticky-both header { position: static; }
+  body.wt-sticky-both .wt-catbar, body.wt-sticky-both main > .container:has(> #menu) { top: 0; }
+}
+
+/* ======== Store footer layout ======== */
+/* OpenCart pins its footer to the bottom of #container (position: absolute) and reserves 400px (730px on
+   phones) of padding under the content for it. The store footer is taller, so it goes back into the page flow. */
+body.wt-footer-store footer.wt-store-footer { position: static; bottom: auto; padding: 3.5rem 0 0; margin-top: 2rem; border-top: 1px solid var(--wt-border); }
+body.wt-footer-store #content, body.wt-footer-store #column-left, body.wt-footer-store #column-right { padding-bottom: 1.5rem; }
+body.wt-footer-store #container { margin-bottom: 0; }
+body.wt .wt-sf-brand { text-align: center; max-width: 52rem; margin: 0 auto 3rem; }
+body.wt .wt-sf-logo img { max-height: 64px; width: auto; }
+body.wt .wt-sf-name { font-family: var(--wt-font-heading); font-size: 1.75rem; font-weight: var(--wt-heading-weight); text-decoration: none; }
+body.wt .wt-sf-brand p { margin: 1.25rem 0 0; font-size: 1.05rem; line-height: 1.75; opacity: .85; }
+body.wt .wt-store-footer h5 { font-family: var(--wt-font-heading); font-weight: 700; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .02em; margin: 0 0 1.25rem; }
+body.wt .wt-sf-cols > div { margin-bottom: 2rem; }
+body.wt .wt-sf-cols ul li { margin-bottom: .7rem; }
+body.wt .wt-sf-cols ul a { text-decoration: none; opacity: .85; }
+body.wt .wt-sf-cols ul a:hover { opacity: 1; color: var(--wt-primary); }
+body.wt .wt-sf-contact li { display: flex; align-items: center; gap: .9rem; margin-bottom: 1rem; }
+body.wt .wt-sf-contact address { margin: 0; opacity: .85; line-height: 1.6; }
+body.wt .wt-sf-icon { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; color: var(--wt-primary); background: color-mix(in srgb, var(--wt-primary) 12%, transparent); }
+body.wt .wt-sf-news-title { margin-top: 1.75rem !important; }
+body.wt .wt-store-footer p { opacity: .85; }
+body.wt .wt-sf-form .form-label { font-weight: 600; font-size: .925rem; }
+body.wt .wt-sf-form .form-control { margin-bottom: 1rem; }
+body.wt .wt-sf-subscribe { display: block; width: 100%; text-align: left; font-weight: 600; }
+body.wt .wt-sf-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent); padding: 1.5rem 0 1.75rem; margin-top: 1rem; }
+body.wt .wt-sf-bottom p { margin: 0; font-size: .925rem; }
+body.wt .wt-sf-social { display: flex; gap: 1.25rem; }
+body.wt .wt-sf-social a { color: var(--wt-primary); font-size: 1.5rem; text-decoration: none; opacity: 1; }
+body.wt .wt-sf-social a:hover { opacity: .75; color: var(--wt-primary); }
+@media (max-width: 767.98px) {
+	body.wt .wt-sf-bottom { flex-direction: column; text-align: center; }
+}

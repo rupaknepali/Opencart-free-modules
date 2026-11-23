@@ -1,0 +1,456 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-theme" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">{% for breadcrumb in breadcrumbs %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endfor %}</ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-palette"></i> {{ text_info }} <strong>{{ text_store|format(store_name) }}</strong></div>
+    {% if not active %}<div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_not_active }} <a href="{{ settings }}">{{ text_go_settings }}</a></div>{% endif %}
+    <form id="form-theme" action="{{ save }}" method="post" data-oc-toggle="ajax">
+      <div class="row">
+        <div class="col-xl-7">
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="row mb-3">
+                <label for="input-status" class="col-sm-3 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="status" value="0"/><input type="checkbox" name="status" value="1" id="input-status" class="form-check-input"{% if s.status %} checked{% endif %}/></div></div>
+              </div>
+              <ul class="nav nav-tabs">
+                <li class="nav-item"><a href="#tab-colors" data-bs-toggle="tab" class="nav-link active">{{ text_colors }}</a></li>
+                <li class="nav-item"><a href="#tab-typography" data-bs-toggle="tab" class="nav-link">{{ text_typography }}</a></li>
+                <li class="nav-item"><a href="#tab-layout" data-bs-toggle="tab" class="nav-link">{{ text_layout }}</a></li>
+                <li class="nav-item"><a href="#tab-store" data-bs-toggle="tab" class="nav-link">{{ text_store_layout }}</a></li>
+                <li class="nav-item"><a href="#tab-header" data-bs-toggle="tab" class="nav-link">{{ text_header_footer }}</a></li>
+                <li class="nav-item"><a href="#tab-css" data-bs-toggle="tab" class="nav-link">{{ text_custom_css }}</a></li>
+              </ul>
+              <div class="tab-content pt-3">
+                <div id="tab-colors" class="tab-pane active">
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ text_presets }}</label>
+                    <div class="d-flex flex-wrap gap-2" id="wt-presets"></div>
+                    <div class="form-text">{{ text_preset_note }}</div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_scheme }}</label>
+                    <div class="col-sm-9">
+                      {% for scheme in ['light', 'dark'] %}<div class="form-check form-check-inline"><input type="radio" name="scheme" value="{{ scheme }}" id="input-scheme-{{ scheme }}" class="form-check-input"{% if s.scheme == scheme %} checked{% endif %}/><label for="input-scheme-{{ scheme }}" class="form-check-label">{{ attribute(_context, 'text_' ~ scheme) }}</label></div>{% endfor %}
+                      <div class="form-text">{{ help_scheme }}</div>
+                    </div>
+                  </div>
+                  {% for group, keys in color_groups %}
+                    <h5 class="mt-3 mb-2">{{ attribute(_context, group) }}</h5>
+                    <div class="row g-2">
+                      {% for key in keys %}
+                        <div class="col-md-6">
+                          <label for="input-color-{{ key }}" class="form-label small mb-1">{{ attribute(_context, 'entry_color_' ~ key) }}</label>
+                          <div class="input-group input-group-sm">
+                            <input type="color" value="{{ attribute(s, 'color_' ~ key) }}" class="form-control form-control-color wt-picker" data-for="input-color-{{ key }}" aria-label="{{ attribute(_context, 'entry_color_' ~ key) }}"/>
+                            <input type="text" name="color_{{ key }}" value="{{ attribute(s, 'color_' ~ key) }}" id="input-color-{{ key }}" class="form-control font-monospace wt-color" maxlength="7"/>
+                          </div>
+                          <div id="error-color-{{ key|replace({'_': '-'}) }}" class="invalid-feedback"></div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  {% endfor %}
+                </div>
+                <div id="tab-typography" class="tab-pane">
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_font_source }}</label>
+                    <div class="col-sm-9">
+                      {% for source in ['google', 'system'] %}<div class="form-check"><input type="radio" name="font_source" value="{{ source }}" id="input-font-source-{{ source }}" class="form-check-input"{% if s.font_source == source %} checked{% endif %}/><label for="input-font-source-{{ source }}" class="form-check-label">{{ attribute(_context, 'text_' ~ source) }}</label></div>{% endfor %}
+                      <div class="form-text">{{ help_font_source }}</div>
+                    </div>
+                  </div>
+                  {% for key in ['font_body', 'font_heading'] %}
+                    <div class="row mb-3">
+                      <label for="input-{{ key }}" class="col-sm-3 col-form-label">{{ attribute(_context, 'entry_' ~ key) }}</label>
+                      <div class="col-sm-9"><select name="{{ key }}" id="input-{{ key }}" class="form-select">{% for value, name in fonts %}<option value="{{ value }}"{% if attribute(s, key) == value %} selected{% endif %}>{{ name }}</option>{% endfor %}</select></div>
+                    </div>
+                  {% endfor %}
+                  <div class="row mb-3">
+                    <label for="input-font-size" class="col-sm-3 col-form-label">{{ entry_font_size }}</label>
+                    <div class="col-sm-9"><div class="d-flex align-items-center gap-3"><input type="range" name="font_size" value="{{ s.font_size }}" min="13" max="20" step="1" id="input-font-size" class="form-range wt-range"/><output class="badge text-bg-secondary" style="min-width: 3rem;">{{ s.font_size }}</output></div><div class="form-text">{{ help_font_size }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-line-height" class="col-sm-3 col-form-label">{{ entry_line_height }}</label>
+                    <div class="col-sm-9"><div class="d-flex align-items-center gap-3"><input type="range" name="line_height" value="{{ s.line_height }}" min="1.2" max="2" step="0.05" id="input-line-height" class="form-range wt-range"/><output class="badge text-bg-secondary" style="min-width: 3rem;">{{ s.line_height }}</output></div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-heading-weight" class="col-sm-3 col-form-label">{{ entry_heading_weight }}</label>
+                    <div class="col-sm-9"><select name="heading_weight" id="input-heading-weight" class="form-select">{% for w in [300, 400, 500, 600, 700, 800] %}<option value="{{ w }}"{% if s.heading_weight == w %} selected{% endif %}>{{ w }}</option>{% endfor %}</select></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-heading-spacing" class="col-sm-3 col-form-label">{{ entry_heading_spacing }}</label>
+                    <div class="col-sm-9"><div class="d-flex align-items-center gap-3"><input type="range" name="heading_spacing" value="{{ s.heading_spacing }}" min="-0.05" max="0.2" step="0.01" id="input-heading-spacing" class="form-range wt-range"/><output class="badge text-bg-secondary" style="min-width: 3rem;">{{ s.heading_spacing }}</output></div></div>
+                  </div>
+                  {% for key in ['heading_case', 'button_case'] %}
+                    <div class="row mb-3">
+                      <label class="col-sm-3 col-form-label">{{ attribute(_context, 'entry_' ~ key) }}</label>
+                      <div class="col-sm-9">{% for value in ['none', 'uppercase'] %}<div class="form-check form-check-inline"><input type="radio" name="{{ key }}" value="{{ value }}" id="input-{{ key }}-{{ value }}" class="form-check-input"{% if attribute(s, key) == value %} checked{% endif %}/><label for="input-{{ key }}-{{ value }}" class="form-check-label">{{ attribute(_context, 'text_' ~ value) }}</label></div>{% endfor %}</div>
+                    </div>
+                  {% endfor %}
+                </div>
+                <div id="tab-layout" class="tab-pane">
+                  <div class="row mb-3">
+                    <label for="input-container" class="col-sm-3 col-form-label">{{ entry_container }}</label>
+                    <div class="col-sm-9"><select name="container" id="input-container" class="form-select">{% for value in ['1140', '1320', '1500'] %}<option value="{{ value }}"{% if s.container == value %} selected{% endif %}>{{ value }} px</option>{% endfor %}<option value="fluid"{% if s.container == 'fluid' %} selected{% endif %}>{{ text_fluid }}</option></select></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-radius" class="col-sm-3 col-form-label">{{ entry_radius }}</label>
+                    <div class="col-sm-9"><div class="d-flex align-items-center gap-3"><input type="range" name="radius" value="{{ s.radius }}" min="0" max="24" step="1" id="input-radius" class="form-range wt-range"/><output class="badge text-bg-secondary" style="min-width: 3rem;">{{ s.radius }}</output></div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-button-radius" class="col-sm-3 col-form-label">{{ entry_button_radius }}</label>
+                    <div class="col-sm-9"><input type="number" name="button_radius" value="{{ s.button_radius }}" min="0" max="999" id="input-button-radius" class="form-control" style="max-width: 8rem;"/><div class="form-text">{{ help_button_radius }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_card_style }}</label>
+                    <div class="col-sm-9">{% for value in ['border', 'shadow', 'flat'] %}<div class="form-check form-check-inline"><input type="radio" name="card_style" value="{{ value }}" id="input-card-{{ value }}" class="form-check-input"{% if s.card_style == value %} checked{% endif %}/><label for="input-card-{{ value }}" class="form-check-label">{{ attribute(_context, 'text_' ~ value) }}</label></div>{% endfor %}</div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-card-compact" class="col-sm-3 col-form-label">{{ entry_card_compact }}</label>
+                    <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="card_compact" value="0"/><input type="checkbox" name="card_compact" value="1" id="input-card-compact" class="form-check-input"{% if s.card_compact %} checked{% endif %}/></div><div class="form-text">{{ help_card_compact }}</div></div>
+                  </div>
+                  {% for key in ['card_hover', 'wishlist', 'compare'] %}
+                    <div class="row mb-3">
+                      <label for="input-{{ key }}" class="col-sm-3 col-form-label">{{ attribute(_context, 'entry_' ~ key) }}</label>
+                      <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="{{ key }}" value="0"/><input type="checkbox" name="{{ key }}" value="1" id="input-{{ key }}" class="form-check-input"{% if attribute(s, key) %} checked{% endif %}/></div></div>
+                    </div>
+                  {% endfor %}
+                </div>
+                <div id="tab-store" class="tab-pane">
+                  <div class="alert alert-light border small"><i class="fa-solid fa-circle-info"></i> {{ text_modules_tip }}</div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_menu_style }}</label>
+                    <div class="col-sm-9">
+                      {% for value, label in {'text': text_menu_text, 'icons': text_menu_icons} %}<div class="form-check"><input type="radio" name="menu_style" value="{{ value }}" id="input-menu-style-{{ value }}" class="form-check-input"{% if s.menu_style == value %} checked{% endif %}/><label for="input-menu-style-{{ value }}" class="form-check-label">{{ label }}</label></div>{% endfor %}
+                      <div class="form-text">{{ help_menu_style }}</div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_icon_source }}</label>
+                    <div class="col-sm-9">{% for value in ['icons', 'images'] %}<div class="form-check form-check-inline"><input type="radio" name="icon_source" value="{{ value }}" id="input-icon-source-{{ value }}" class="form-check-input"{% if s.icon_source == value %} checked{% endif %}/><label for="input-icon-source-{{ value }}" class="form-check-label">{{ attribute(_context, 'text_' ~ value) }}</label></div>{% endfor %}</div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ text_category_icons }}</label>
+                    <div class="col-sm-9">
+                      <table class="table table-sm align-middle mb-0">
+                        {% for category in categories %}
+                          <tr>
+                            <td style="width: 2.5rem;" class="text-center fs-5"><i class="fa-solid {{ category.icon ?: category.auto }}" id="icon-preview-{{ category.category_id }}"></i></td>
+                            <td>{{ category.name }}</td>
+                            <td style="width: 55%;"><select name="cat_icons[{{ category.category_id }}]" class="form-select form-select-sm wt-icon-select" data-preview="icon-preview-{{ category.category_id }}" data-auto="{{ category.auto }}"><option value="">{{ text_auto|format(category.auto|replace({'fa-': ''})) }}</option>{% for icon in icons %}<option value="{{ icon }}"{% if category.icon == icon %} selected{% endif %}>{{ icon|replace({'fa-': ''}) }}</option>{% endfor %}</select></td>
+                          </tr>
+                        {% endfor %}
+                      </table>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_heading_style }}</label>
+                    <div class="col-sm-9">{% for value in ['plain', 'underline', 'accent', 'centered', 'boxed'] %}<div class="form-check"><input type="radio" name="heading_style" value="{{ value }}" id="input-heading-style-{{ value }}" class="form-check-input"{% if s.heading_style == value %} checked{% endif %}/><label for="input-heading-style-{{ value }}" class="form-check-label">{{ attribute(_context, 'text_' ~ value) }}</label></div>{% endfor %}<div class="form-text">{{ help_heading_style }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_badge_style }}</label>
+                    <div class="col-sm-9">{% for value in ['rounded', 'ribbon'] %}<div class="form-check form-check-inline"><input type="radio" name="badge_style" value="{{ value }}" id="input-badge-style-{{ value }}" class="form-check-input"{% if s.badge_style == value %} checked{% endif %}/><label for="input-badge-style-{{ value }}" class="form-check-label">{{ attribute(_context, 'text_' ~ value) }}</label></div>{% endfor %}<div class="form-text">{{ help_badge_style }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-breadcrumb-band" class="col-sm-3 col-form-label">{{ entry_breadcrumb_band }}</label>
+                    <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="breadcrumb_band" value="0"/><input type="checkbox" name="breadcrumb_band" value="1" id="input-breadcrumb-band" class="form-check-input"{% if s.breadcrumb_band %} checked{% endif %}/></div><div class="form-text">{{ help_breadcrumb_band }}</div></div>
+                  </div>
+                  <h5 class="mt-4 mb-3">{{ text_product_page }}</h5>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_tabs_style }}</label>
+                    <div class="col-sm-9">{% for value, label in {'default': text_default, 'boxed': text_boxed_tabs} %}<div class="form-check form-check-inline"><input type="radio" name="tabs_style" value="{{ value }}" id="input-tabs-style-{{ value }}" class="form-check-input"{% if s.tabs_style == value %} checked{% endif %}/><label for="input-tabs-style-{{ value }}" class="form-check-label">{{ label }}</label></div>{% endfor %}</div>
+                  </div>
+                  {% for key in ['qty_stepper', 'wide_cart'] %}
+                    <div class="row mb-3">
+                      <label for="input-{{ key }}" class="col-sm-3 col-form-label">{{ attribute(_context, 'entry_' ~ key) }}</label>
+                      <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="{{ key }}" value="0"/><input type="checkbox" name="{{ key }}" value="1" id="input-{{ key }}" class="form-check-input"{% if attribute(s, key) %} checked{% endif %}/></div></div>
+                    </div>
+                  {% endfor %}
+                </div>
+                <div id="tab-header" class="tab-pane">
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_sticky }}</label>
+                    <div class="col-sm-9">{% for value, label in {'off': text_off, 'header': text_sticky_header, 'menu': text_sticky_menu, 'both': text_sticky_both} %}<div class="form-check"><input type="radio" name="sticky" value="{{ value }}" id="input-sticky-{{ value }}" class="form-check-input"{% if s.sticky == value %} checked{% endif %}/><label for="input-sticky-{{ value }}" class="form-check-label">{{ label }}</label></div>{% endfor %}</div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_logo }}</label>
+                    <div class="col-sm-9">{% for value in ['left', 'center'] %}<div class="form-check form-check-inline"><input type="radio" name="logo" value="{{ value }}" id="input-logo-{{ value }}" class="form-check-input"{% if s.logo == value %} checked{% endif %}/><label for="input-logo-{{ value }}" class="form-check-label">{{ attribute(_context, 'text_' ~ value) }}</label></div>{% endfor %}</div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-header-compact" class="col-sm-3 col-form-label">{{ entry_header_compact }}</label>
+                    <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="header_compact" value="0"/><input type="checkbox" name="header_compact" value="1" id="input-header-compact" class="form-check-input"{% if s.header_compact %} checked{% endif %}/></div><div class="form-text">{{ help_header_compact }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-logo-white" class="col-sm-3 col-form-label">{{ entry_logo_white }}</label>
+                    <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="logo_white" value="0"/><input type="checkbox" name="logo_white" value="1" id="input-logo-white" class="form-check-input"{% if s.logo_white %} checked{% endif %}/></div><div class="form-text">{{ help_logo_white }}</div></div>
+                  </div>
+                  {% for key in ['topbar', 'back_to_top'] %}
+                    <div class="row mb-3">
+                      <label for="input-{{ key }}" class="col-sm-3 col-form-label">{{ attribute(_context, 'entry_' ~ key) }}</label>
+                      <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="{{ key }}" value="0"/><input type="checkbox" name="{{ key }}" value="1" id="input-{{ key }}" class="form-check-input"{% if attribute(s, key) %} checked{% endif %}/></div></div>
+                    </div>
+                  {% endfor %}
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_footer_layout }}</label>
+                    <div class="col-sm-9">{% for value in ['classic', 'store'] %}<div class="form-check"><input type="radio" name="footer_layout" value="{{ value }}" id="input-footer-layout-{{ value }}" class="form-check-input"{% if s.footer_layout == value %} checked{% endif %}/><label for="input-footer-layout-{{ value }}" class="form-check-label">{{ attribute(_context, 'text_footer_' ~ value) }}</label></div>{% endfor %}<div class="form-text">{{ help_footer_layout }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-footer-about" class="col-sm-3 col-form-label">{{ entry_footer_about }}</label>
+                    <div class="col-sm-9"><textarea name="footer_about" rows="3" maxlength="500" id="input-footer-about" class="form-control">{{ s.footer_about|e }}</textarea><div class="form-text">{{ help_footer_about }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-footer-newsletter" class="col-sm-3 col-form-label">{{ entry_footer_newsletter }}</label>
+                    <div class="col-sm-9"><div class="form-check form-switch form-switch-lg"><input type="hidden" name="footer_newsletter" value="0"/><input type="checkbox" name="footer_newsletter" value="1" id="input-footer-newsletter" class="form-check-input"{% if s.footer_newsletter %} checked{% endif %}/></div><div class="form-text">{{ help_footer_newsletter }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="input-footer-text" class="col-sm-3 col-form-label">{{ entry_footer_text }}</label>
+                    <div class="col-sm-9"><input type="text" name="footer_text" value="{{ s.footer_text|e }}" id="input-footer-text" class="form-control" placeholder="© {year} {store}. All rights reserved."/><div class="form-text">{{ help_footer_text }}</div></div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">{{ entry_social }}</label>
+                    <div class="col-sm-9">
+                      {% for key, icon in {'facebook': 'fa-facebook-f', 'instagram': 'fa-instagram', 'x': 'fa-x-twitter', 'youtube': 'fa-youtube', 'tiktok': 'fa-tiktok', 'pinterest': 'fa-pinterest-p', 'linkedin': 'fa-linkedin-in'} %}
+                        <div class="input-group input-group-sm mb-1"><span class="input-group-text" style="width: 2.5rem;"><i class="fa-brands {{ icon }}"></i></span><input type="text" name="social_{{ key }}" value="{{ attribute(s, 'social_' ~ key)|e }}" id="input-social-{{ key }}" class="form-control" placeholder="https://"/></div>
+                        <div id="error-social-{{ key }}" class="invalid-feedback"></div>
+                      {% endfor %}
+                      <div class="form-text">{{ help_social }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div id="tab-css" class="tab-pane">
+                  <label for="input-custom-css" class="form-label">{{ entry_custom_css }}</label>
+                  <textarea name="custom_css" rows="14" id="input-custom-css" class="form-control font-monospace" spellcheck="false" placeholder="body.wt .product-thumb h4 { font-size: 1rem; }">{{ s.custom_css|e }}</textarea>
+                  <div class="form-text">{{ help_custom_css }}</div>
+                </div>
+              </div>
+              <hr/>
+              <button type="button" id="wt-reset" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-rotate-left"></i> {{ text_reset }}</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-5">
+          <div class="card mb-3" style="position: sticky; top: 1rem;">
+            <div class="card-header"><i class="fa-solid fa-eye"></i> {{ text_preview }}</div>
+            <div class="card-body p-2">
+              <div id="wt-preview">
+                <div class="p-top"><span><i class="fa-solid fa-phone"></i> 123456789</span><span><i class="fa-solid fa-user"></i> My Account &nbsp; <i class="fa-solid fa-cart-shopping"></i> Cart</span></div>
+                <div class="p-header"><div class="p-logo">Your Store</div><div class="p-search">Search</div><div class="p-cart"><i class="fa-solid fa-cart-shopping"></i> 2 items</div></div>
+                <div class="p-catbar"><span><i class="fa-solid fa-desktop"></i>Desktops</span><span><i class="fa-solid fa-laptop"></i>Laptops</span><span><i class="fa-solid fa-mobile-screen-button"></i>Phones</span><span><i class="fa-solid fa-camera"></i>Cameras</span></div>
+                <div class="p-wrap">
+                  <div class="p-menu"><span>Desktops</span><span>Laptops</span><span>Phones</span><span>Cameras</span></div>
+                  <h2 class="p-h">Featured</h2>
+                  <div class="p-grid">
+                    {% for i in 1..2 %}
+                      <div class="p-card">
+                        <div class="p-img"><i class="fa-solid fa-headphones"></i></div>
+                        <div class="p-body">
+                          <div class="p-title">{{ text_preview_title }}</div>
+                          <p class="p-text">{{ text_preview_text }}</p>
+                          <div class="p-price">{% if i == 2 %}<span class="p-special">$79.00</span> <s class="p-old">$99.00</s>{% else %}$129.00{% endif %}</div>
+                          <div class="p-btn">{{ text_preview_add }}</div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <p class="p-note"><a href="#">{{ text_preview_note }}</a></p>
+                </div>
+                <div class="p-footer">© 2026 {{ store_name }} <span class="p-social"><i class="fa-brands fa-facebook-f"></i><i class="fa-brands fa-instagram"></i></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<link id="wt-preview-fonts" rel="stylesheet" href=""/>
+<style>
+#wt-preview { font-family: var(--wt-font-body); font-size: var(--wt-font-size); line-height: var(--wt-line-height); background: var(--wt-background); color: var(--wt-text); border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
+#wt-preview .p-top { display: flex; justify-content: space-between; padding: .3rem .75rem; font-size: .8em; background: var(--wt-topbar-bg); color: var(--wt-topbar-text); }
+#wt-preview.no-top .p-top { display: none; }
+#wt-preview .p-header { display: flex; align-items: center; gap: .75rem; padding: .75rem; background: var(--wt-header-bg); color: var(--wt-header-text); }
+#wt-preview.logo-center .p-header { flex-wrap: wrap; justify-content: center; }
+#wt-preview.logo-center .p-logo { flex: 0 0 100%; text-align: center; }
+#wt-preview .p-logo { font-family: var(--wt-font-heading); font-weight: var(--wt-heading-weight); font-size: 1.25em; letter-spacing: var(--wt-heading-spacing); }
+#wt-preview .p-search { flex: 1; border: 1px solid var(--wt-border); border-radius: var(--wt-radius); padding: .3rem .6rem; color: var(--wt-muted); background: var(--wt-background); font-size: .85em; }
+#wt-preview .p-cart { background: var(--wt-primary); color: var(--wt-primary-text); border-radius: var(--wt-button-radius); padding: .35rem .7rem; font-size: .85em; white-space: nowrap; }
+#wt-preview .p-wrap { padding: .75rem; }
+#wt-preview .p-catbar { display: none; justify-content: space-around; padding: .5rem .25rem; background: var(--wt-catbar-bg); color: var(--wt-catbar-text); border-bottom: 1px solid var(--wt-border); font-size: .8em; }
+#wt-preview .p-catbar span { display: flex; flex-direction: column; align-items: center; gap: .2rem; }
+#wt-preview .p-catbar i { font-size: 1.3em; }
+#wt-preview.menu-icons .p-catbar { display: flex; }
+#wt-preview.menu-icons .p-menu { display: none; }
+#wt-preview .p-menu { display: flex; gap: 1rem; padding: .5rem .75rem; background: var(--wt-menu-bg); color: var(--wt-menu-text); border-radius: var(--wt-radius); font-size: .9em; }
+#wt-preview .p-h { font-family: var(--wt-font-heading); font-weight: var(--wt-heading-weight); letter-spacing: var(--wt-heading-spacing); font-size: 1.4em; margin: 1rem 0 .6rem; color: inherit; }
+#wt-preview.h-upper .p-h, #wt-preview.h-upper .p-title { text-transform: uppercase; }
+#wt-preview .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+#wt-preview .p-card { background: var(--wt-surface); border: 1px solid var(--wt-border); border-radius: var(--wt-radius); overflow: hidden; }
+#wt-preview.card-shadow .p-card { border-color: transparent; box-shadow: 0 2px 12px rgba(0, 0, 0, .1); }
+#wt-preview.card-flat .p-card { border-color: transparent; }
+#wt-preview .p-img { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--wt-muted); background: rgba(127, 127, 127, .08); }
+#wt-preview .p-body { padding: .6rem; }
+#wt-preview .p-title { font-family: var(--wt-font-heading); font-weight: var(--wt-heading-weight); color: var(--wt-link); }
+#wt-preview .p-text { font-size: .85em; color: var(--wt-muted); margin: .25rem 0 .4rem; }
+#wt-preview .p-price { color: var(--wt-price); font-weight: 600; margin-bottom: .5rem; }
+#wt-preview .p-special { color: var(--wt-special); }
+#wt-preview .p-old { color: var(--wt-muted); font-weight: 400; font-size: .85em; }
+#wt-preview .p-btn { background: var(--wt-primary); color: var(--wt-primary-text); border-radius: var(--wt-button-radius); text-align: center; padding: .35rem; font-size: .85em; }
+#wt-preview.b-upper .p-btn, #wt-preview.b-upper .p-cart { text-transform: uppercase; letter-spacing: .04em; }
+#wt-preview .p-note { margin: .75rem 0 0; font-size: .8em; }
+#wt-preview .p-note a { color: var(--wt-link); }
+#wt-preview .p-footer { display: flex; justify-content: space-between; padding: .75rem; background: var(--wt-footer-bg); color: var(--wt-footer-text); font-size: .85em; }
+#wt-preview .p-social i { margin-left: .6rem; }
+.wt-preset { border: 1px solid #ccc; border-radius: 999px; padding: .2rem .7rem .2rem .3rem; background: #fff; font-size: .85rem; display: inline-flex; align-items: center; gap: .4rem; }
+.wt-preset span { display: inline-flex; width: 1.4rem; height: 1.4rem; border-radius: 50%; overflow: hidden; border: 1px solid rgba(0, 0, 0, .15); }
+.wt-preset span i { flex: 1; }
+</style>
+<script type="text/javascript"><!--
+(function() {
+    var defaults = {{ defaults }};
+
+    // Each preset sets the colors and the scheme; fonts and layout stay as they are.
+    var presets = {
+        'OpenCart Blue': {scheme: 'light', primary: '#229ac8', primary_text: '#ffffff', secondary: '#f0ad4e', link: '#229ac8', link_hover: '#1a7ba1', background: '#ffffff', surface: '#ffffff', text: '#333333', muted: '#6c757d', border: '#dddddd', price: '#333333', special: '#dc3545', topbar_bg: '#eeeeee', topbar_text: '#555555', header_bg: '#ffffff', header_text: '#333333', menu_bg: '#229ac8', menu_text: '#ffffff', footer_bg: '#303030', footer_text: '#e2e2e2', catbar_bg: '#ffffff', catbar_text: '#333333'},
+        'Midnight': {scheme: 'dark', primary: '#7c9cff', primary_text: '#0b1020', secondary: '#f5b74e', link: '#9db4ff', link_hover: '#c3d0ff', background: '#0f1117', surface: '#171a23', text: '#e6e8ee', muted: '#9aa3b2', border: '#2a2f3c', price: '#e6e8ee', special: '#ff7a85', topbar_bg: '#0b0d12', topbar_text: '#9aa3b2', header_bg: '#0f1117', header_text: '#e6e8ee', menu_bg: '#171a23', menu_text: '#e6e8ee', footer_bg: '#0b0d12', footer_text: '#9aa3b2', catbar_bg: '#171a23', catbar_text: '#e6e8ee'},
+        'Forest': {scheme: 'light', primary: '#2f6b4f', primary_text: '#ffffff', secondary: '#c8a24a', link: '#2f6b4f', link_hover: '#1f4a36', background: '#fbfaf6', surface: '#ffffff', text: '#2b2b26', muted: '#6d6b60', border: '#e4e1d6', price: '#2b2b26', special: '#b5452f', topbar_bg: '#2f6b4f', topbar_text: '#e8f1ec', header_bg: '#fbfaf6', header_text: '#2b2b26', menu_bg: '#24523d', menu_text: '#ffffff', footer_bg: '#1f2a24', footer_text: '#d9e2dc', catbar_bg: '#ffffff', catbar_text: '#2b2b26'},
+        'Sunset': {scheme: 'light', primary: '#e8590c', primary_text: '#ffffff', secondary: '#7048e8', link: '#d9480f', link_hover: '#a33a0b', background: '#fffaf5', surface: '#ffffff', text: '#2d2a26', muted: '#7a716a', border: '#f1e3d6', price: '#2d2a26', special: '#c92a2a', topbar_bg: '#2d2a26', topbar_text: '#f8efe7', header_bg: '#ffffff', header_text: '#2d2a26', menu_bg: '#e8590c', menu_text: '#ffffff', footer_bg: '#2d2a26', footer_text: '#e9e1d9', catbar_bg: '#ffffff', catbar_text: '#2d2a26'},
+        'Rose': {scheme: 'light', primary: '#c2255c', primary_text: '#ffffff', secondary: '#f59f00', link: '#a61e4d', link_hover: '#7a1538', background: '#fff8fa', surface: '#ffffff', text: '#2e2a2c', muted: '#7d7177', border: '#f3dde5', price: '#2e2a2c', special: '#c2255c', topbar_bg: '#fdeef3', topbar_text: '#7a1538', header_bg: '#ffffff', header_text: '#2e2a2c', menu_bg: '#fdeef3', menu_text: '#7a1538', footer_bg: '#2e2a2c', footer_text: '#f3dde5', catbar_bg: '#ffffff', catbar_text: '#2e2a2c'},
+        'Monochrome': {scheme: 'light', primary: '#111111', primary_text: '#ffffff', secondary: '#555555', link: '#111111', link_hover: '#555555', background: '#ffffff', surface: '#ffffff', text: '#111111', muted: '#6b6b6b', border: '#e5e5e5', price: '#111111', special: '#111111', topbar_bg: '#111111', topbar_text: '#ffffff', header_bg: '#ffffff', header_text: '#111111', menu_bg: '#ffffff', menu_text: '#111111', footer_bg: '#f5f5f5', footer_text: '#111111', catbar_bg: '#ffffff', catbar_text: '#111111'},
+        'Electric': {scheme: 'light', primary: '#0b8ef0', primary_text: '#ffffff', secondary: '#ffb020', link: '#1f2933', link_hover: '#0b8ef0', background: '#ffffff', surface: '#ffffff', text: '#2b2f33', muted: '#6b7280', border: '#e5e7eb', price: '#2b2f33', special: '#ef3e3e', topbar_bg: '#0b8ef0', topbar_text: '#ffffff', header_bg: '#0b8ef0', header_text: '#ffffff', menu_bg: '#0b8ef0', menu_text: '#ffffff', footer_bg: '#1c1c1e', footer_text: '#d1d5db', catbar_bg: '#ffffff', catbar_text: '#2b2f33'},
+        'Ocean': {scheme: 'light', primary: '#0b7285', primary_text: '#ffffff', secondary: '#fab005', link: '#0b7285', link_hover: '#085766', background: '#f6fbfc', surface: '#ffffff', text: '#1f2f33', muted: '#62777c', border: '#d7e8ec', price: '#1f2f33', special: '#e03131', topbar_bg: '#e3f4f7', topbar_text: '#085766', header_bg: '#ffffff', header_text: '#1f2f33', menu_bg: '#0b7285', menu_text: '#ffffff', footer_bg: '#0b2f36', footer_text: '#cfe6eb', catbar_bg: '#ffffff', catbar_text: '#1f2f33'}
+    };
+
+    var googleFonts = {'Inter': 'Inter', 'Roboto': 'Roboto', 'Open Sans': 'Open+Sans', 'Lato': 'Lato', 'Montserrat': 'Montserrat', 'Poppins': 'Poppins', 'Nunito': 'Nunito', 'Raleway': 'Raleway', 'Work Sans': 'Work+Sans', 'DM Sans': 'DM+Sans', 'Manrope': 'Manrope', 'Plus Jakarta Sans': 'Plus+Jakarta+Sans', 'Outfit': 'Outfit', 'Rubik': 'Rubik', 'Oswald': 'Oswald', 'Playfair Display': 'Playfair+Display', 'Merriweather': 'Merriweather', 'Lora': 'Lora', 'Libre Baskerville': 'Libre+Baskerville'};
+    var serif = ['Playfair Display', 'Merriweather', 'Lora', 'Libre Baskerville', 'georgia'];
+
+    function stack(font, source) {
+        var isSerif = serif.indexOf(font) !== -1;
+
+        if (source === 'system' || font === 'system' || font === 'georgia') {
+            return isSerif ? 'Georgia, "Times New Roman", serif' : 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+        }
+
+        return '"' + font + '", ' + (isSerif ? 'Georgia, serif' : 'system-ui, sans-serif');
+    }
+
+    function val(name) {
+        var el = $('#form-theme [name="' + name + '"]');
+
+        if (el.is(':radio')) return $('#form-theme [name="' + name + '"]:checked').val();
+        if (el.length > 1) return el.filter(':checkbox').prop('checked') ? 1 : 0;
+
+        return el.val();
+    }
+
+    function render() {
+        var p = document.getElementById('wt-preview');
+
+        $('.wt-color').each(function() {
+            if (/^#[0-9a-fA-F]{6}$/.test(this.value)) {
+                p.style.setProperty('--wt-' + this.name.substring(6).replace(/_/g, '-'), this.value);
+            }
+        });
+
+        var source = val('font_source'), body = val('font_body'), heading = val('font_heading');
+
+        p.style.setProperty('--wt-font-body', stack(body, source));
+        p.style.setProperty('--wt-font-heading', stack(heading, source));
+        p.style.setProperty('--wt-font-size', val('font_size') + 'px');
+        p.style.setProperty('--wt-line-height', val('line_height'));
+        p.style.setProperty('--wt-heading-weight', val('heading_weight'));
+        p.style.setProperty('--wt-heading-spacing', val('heading_spacing') + 'em');
+        p.style.setProperty('--wt-radius', val('radius') + 'px');
+        p.style.setProperty('--wt-button-radius', Math.min(999, parseInt(val('button_radius'), 10) || 0) + 'px');
+
+        p.className = '';
+        p.classList.add('card-' + val('card_style'));
+        if (val('logo') === 'center') p.classList.add('logo-center');
+        if (val('menu_style') === 'icons') p.classList.add('menu-icons');
+        if (!val('topbar')) p.classList.add('no-top');
+        if (val('heading_case') === 'uppercase') p.classList.add('h-upper');
+        if (val('button_case') === 'uppercase') p.classList.add('b-upper');
+
+        // Load the chosen Google fonts into this page for the preview.
+        var families = [];
+
+        if (source !== 'system') {
+            [body, heading].filter(function(f, i, a) { return googleFonts[f] && a.indexOf(f) === i; }).forEach(function(f) {
+                families.push('family=' + googleFonts[f] + ':wght@400;600;700;' + val('heading_weight'));
+            });
+        }
+
+        $('#wt-preview-fonts').attr('href', families.length ? 'https://fonts.googleapis.com/css2?' + families.join('&') + '&display=swap' : '');
+
+        $('.wt-range').each(function() { $(this).next('output').text(this.value); });
+    }
+
+    // Color picker <-> hex field.
+    $('.wt-picker').on('input', function() {
+        $('#' + $(this).attr('data-for')).val(this.value);
+        render();
+    });
+
+    $('.wt-color').on('input change', function() {
+        if (/^#[0-9a-fA-F]{6}$/.test(this.value)) {
+            $('.wt-picker[data-for="' + this.id + '"]').val(this.value.toLowerCase());
+        }
+
+        render();
+    });
+
+    $('#form-theme').on('input change', 'input, select, textarea', render);
+
+    $('.wt-icon-select').on('change', function() {
+        $('#' + $(this).attr('data-preview')).attr('class', 'fa-solid ' + (this.value || $(this).attr('data-auto')));
+    });
+
+    // Presets.
+    $.each(presets, function(name, colors) {
+        var swatch = '<span>' + [colors.primary, colors.menu_bg, colors.background, colors.footer_bg].map(function(c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</span>';
+
+        $('<button type="button" class="wt-preset">' + swatch + name + '</button>').on('click', function() {
+            $.each(colors, function(key, value) {
+                if (key === 'scheme') {
+                    $('#input-scheme-' + value).prop('checked', true);
+                } else {
+                    $('#input-color-' + key).val(value).trigger('change');
+                }
+            });
+
+            render();
+        }).appendTo('#wt-presets');
+    });
+
+    $('#wt-reset').on('click', function() {
+        if (!confirm('{{ text_confirm_reset|escape('js') }}')) return;
+
+        $.each(defaults, function(key, value) {
+            var el = $('#form-theme [name="' + key + '"]');
+
+            if (key === 'status' || key === 'cat_icons') return;
+
+            if (el.is(':radio')) {
+                el.filter('[value="' + value + '"]').prop('checked', true);
+            } else if (el.filter(':checkbox').length) {
+                el.filter(':checkbox').prop('checked', !!parseInt(value, 10));
+            } else {
+                el.val(value).trigger('change');
+            }
+        });
+
+        render();
+    });
+
+    render();
+})();
+//--></script>
+{{ footer }}

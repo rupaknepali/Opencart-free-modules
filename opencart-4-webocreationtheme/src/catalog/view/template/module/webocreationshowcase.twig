@@ -1,0 +1,12 @@
+<section class="wt-showcase">
+  <div class="wt-showcase-head wt-section-title">
+    <h3><a href="{{ href }}"><i class="fa-solid {{ icon }}" aria-hidden="true"></i> {{ title }}</a></h3>
+    {% if brands %}<ul class="wt-brands">{% for brand in brands %}<li><a href="{{ brand.href }}">{{ brand.name }}</a></li>{% endfor %}</ul>{% endif %}
+  </div>
+  <div class="wt-showcase-body{% if not banner %} wt-no-banner{% endif %}">
+    {% if banner %}<a href="{{ banner_link }}" class="wt-showcase-banner"><img src="{{ banner }}" alt="{{ title|striptags|e }}" width="380" height="760" loading="lazy"/></a>{% endif %}
+    <div class="row row-cols-2 row-cols-md-3 {% if banner %}row-cols-xl-4{% else %}row-cols-lg-4 row-cols-xl-5{% endif %}">
+      {% for product in products %}<div class="col mb-3">{{ product }}</div>{% endfor %}
+    </div>
+  </div>
+</section>

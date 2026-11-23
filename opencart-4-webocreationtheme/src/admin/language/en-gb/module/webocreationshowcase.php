@@ -1,0 +1,28 @@
+<?php
+$_['heading_title']     = 'Webocreation Category Showcase';
+$_['text_extension']    = 'Extensions';
+$_['text_success']      = 'Success: You have modified Webocreation Category Showcase!';
+$_['text_edit']         = 'Edit Webocreation Category Showcase';
+$_['text_info']         = 'A block for one category: its name and icon, links to the brands in it, a tall promo banner and its products. Create one per category you want on the home page, then add them to the Home layout in Design > Layouts.';
+$_['text_newest']       = 'Newest first';
+$_['text_sort_order']   = 'Sort order';
+$_['text_viewed']       = 'Most viewed';
+$_['text_rating']       = 'Best rated';
+$_['entry_name']        = 'Module name';
+$_['entry_category']    = 'Category';
+$_['entry_title']       = 'Heading';
+$_['entry_brands']      = 'Brand links';
+$_['entry_image']       = 'Promo banner';
+$_['entry_link']        = 'Banner link';
+$_['entry_limit']       = 'Products';
+$_['entry_sort']        = 'Order';
+$_['entry_status']      = 'Status';
+$_['help_title']        = 'Leave empty to use the category name.';
+$_['help_image']        = 'A tall image (about 380 × 760) shown to the left of the products. Leave empty for products only.';
+$_['help_link']         = 'Where the banner goes; empty links to the category.';
+$_['help_brands']       = 'Links to the brand pages of the products in this category.';
+$_['error_permission']  = 'Warning: You do not have permission to modify Webocreation Category Showcase!';
+$_['error_warning']     = 'Warning: Please check the form carefully for errors!';
+$_['error_name']        = 'Module name must be between 3 and 64 characters!';
+$_['error_category']    = 'Choose a category.';
+$_['error_link']        = 'Use a full address, a path starting with /, or index.php?route=...';

@@ -1,0 +1,44 @@
+<div class="wt-hero{% if not panel %} wt-hero-full{% endif %}">
+  <div class="wt-hero-slider">
+    <div id="{{ id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+      <div class="carousel-inner">
+        {% for slide in slides %}
+          <div class="carousel-item{% if loop.first %} active{% endif %}">
+            {% if slide.link %}<a href="{{ slide.link }}">{% endif %}<img src="{{ slide.image }}" alt="{{ slide.title|e }}" width="{{ width }}" height="{{ height }}"{% if not loop.first %} loading="lazy"{% endif %}/>{% if slide.link %}</a>{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      {% if slides|length > 1 and not tabs %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#{{ id }}" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">{{ text_previous }}</span></button>
+        <button class="carousel-control-next" type="button" data-bs-target="#{{ id }}" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">{{ text_next }}</span></button>
+      {% endif %}
+    </div>
+    {% if tabs %}
+      <div class="wt-hero-tabs">
+        {% for slide in slides %}<button type="button" data-bs-target="#{{ id }}" data-bs-slide-to="{{ loop.index0 }}"{% if loop.first %} class="active" aria-current="true"{% endif %}>{{ slide.title }}</button>{% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  {% if panel %}
+    <div class="wt-panel">
+      <div class="wt-panel-head"><h3>{{ panel_title }}</h3>{% if panel_more %}<a href="{{ panel_more }}">{{ text_more }}</a>{% endif %}</div>
+      {% for item in panel %}
+        <a href="{{ item.href }}" class="wt-panel-item">
+          <span><span class="wt-panel-name">{{ item.name }}</span><span class="wt-panel-meta">{{ item.meta }}</span></span>
+          {% if item.image %}<img src="{{ item.image }}" alt="" width="84" height="56" loading="lazy"/>{% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% if tabs %}
+<script type="text/javascript"><!--
+// The tab under the slider follows the active slide.
+document.getElementById('{{ id }}').addEventListener('slide.bs.carousel', function(e) {
+    this.parentNode.querySelectorAll('.wt-hero-tabs button').forEach(function(b, i) {
+        b.classList.toggle('active', i === e.to);
+        b.toggleAttribute('aria-current', i === e.to);
+    });
+});
+//--></script>
+{% endif %}
