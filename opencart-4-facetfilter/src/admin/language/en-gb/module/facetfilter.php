@@ -1,0 +1,22 @@
+<?php
+$_['heading_title']    = 'Faceted Filter';
+$_['text_extension']   = 'Extensions';
+$_['text_success']     = 'Success: You have modified Faceted Filter!';
+$_['text_edit']        = 'Edit Faceted Filter';
+$_['text_info']        = 'Adds a filter box to category pages: price, brand, attributes, your OpenCart filters, stock and rating, each with the number of matching products. After saving, add <strong>Faceted Filter</strong> to the <strong>Category</strong> layout (Column Left or Column Right) in <a href="%s">Design &gt; Layouts</a>.';
+$_['text_groups']      = 'Filters to show';
+$_['text_all']         = 'All attributes';
+$_['entry_price']      = 'Price range';
+$_['entry_brand']      = 'Brand';
+$_['entry_attribute']  = 'Attributes';
+$_['entry_filters']    = 'OpenCart filters';
+$_['entry_stock']      = 'In stock only';
+$_['entry_rating']     = 'Customer rating';
+$_['entry_attributes'] = 'Attributes to show';
+$_['entry_limit']      = 'Options before "Show more"';
+$_['entry_status']     = 'Status';
+$_['help_filters']     = 'The filter groups you assign to each category in Catalog > Categories > edit > Data > Filters.';
+$_['help_attributes']  = 'Leave all unticked to show every attribute that the category\'s products have.';
+$_['help_price']       = 'In the shopper\'s currency, with tax when the store shows prices with tax.';
+$_['error_permission'] = 'Warning: You do not have permission to modify Faceted Filter!';
+$_['error_limit']      = 'Enter a number from 3 to 50.';

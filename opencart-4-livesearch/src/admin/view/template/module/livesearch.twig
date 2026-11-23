@@ -1,0 +1,99 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_info }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3 required">
+            <label for="input-limit" class="col-sm-3 col-form-label">{{ entry_limit }}</label>
+            <div class="col-sm-9">
+              <input type="number" name="limit" value="{{ limit }}" id="input-limit" class="form-control"/>
+              <div id="error-limit" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-min" class="col-sm-3 col-form-label">{{ entry_min }}</label>
+            <div class="col-sm-9">
+              <input type="number" name="min" value="{{ min }}" id="input-min" class="form-control"/>
+              <div id="error-min" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-image" class="col-sm-3 col-form-label">{{ entry_image }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="image" value="0"/>
+                <input type="checkbox" name="image" value="1" id="input-image" class="form-check-input"{% if image %} checked{% endif %}/>
+              </div>
+              {% if help_image is defined %}<div class="form-text">{{ help_image }}</div>{% endif %}
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-image-size" class="col-sm-3 col-form-label">{{ entry_image_size }}</label>
+            <div class="col-sm-9">
+              <input type="number" name="image_size" value="{{ image_size }}" id="input-image-size" class="form-control"/>
+              <div id="error-image-size" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-price" class="col-sm-3 col-form-label">{{ entry_price }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="price" value="0"/>
+                <input type="checkbox" name="price" value="1" id="input-price" class="form-check-input"{% if price %} checked{% endif %}/>
+              </div>
+              {% if help_price is defined %}<div class="form-text">{{ help_price }}</div>{% endif %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-categories" class="col-sm-3 col-form-label">{{ entry_categories }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="categories" value="0"/>
+                <input type="checkbox" name="categories" value="1" id="input-categories" class="form-check-input"{% if categories %} checked{% endif %}/>
+              </div>
+              {% if help_categories is defined %}<div class="form-text">{{ help_categories }}</div>{% endif %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-description" class="col-sm-3 col-form-label">{{ entry_description }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="description" value="0"/>
+                <input type="checkbox" name="description" value="1" id="input-description" class="form-check-input"{% if description %} checked{% endif %}/>
+              </div>
+              {% if help_description is defined %}<div class="form-text">{{ help_description }}</div>{% endif %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-3 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="status" value="0"/>
+                <input type="checkbox" name="status" value="1" id="input-status" class="form-check-input"{% if status %} checked{% endif %}/>
+              </div>
+              {% if help_status is defined %}<div class="form-text">{{ help_status }}</div>{% endif %}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

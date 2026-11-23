@@ -1,0 +1,101 @@
+<div class="card mb-3 ff" id="facetfilter" data-base="{{ base }}">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <span><i class="fa-solid fa-sliders"></i> {{ heading_title }}</span>
+    {% if active %}<a href="{{ base }}" class="small ff-clear" rel="nofollow">{{ text_clear }}</a>{% endif %}
+  </div>
+  <div class="card-body">
+    <p class="small text-body-secondary mb-3" aria-live="polite">{{ text_total|format(total) }}</p>
+    {% if price %}
+      <div class="ff-group" data-key="price">
+        <div class="ff-title">{{ text_price }}</div>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">{{ price.symbol }}</span>
+          <input type="number" class="form-control ff-from" min="0" step="1" value="{{ price.from }}" placeholder="{{ price.min }}" aria-label="{{ text_price_from }}"/>
+          <span class="input-group-text">–</span>
+          <input type="number" class="form-control ff-to" min="0" step="1" value="{{ price.to }}" placeholder="{{ price.max }}" aria-label="{{ text_price_to }}"/>
+          <button type="button" class="btn btn-outline-secondary ff-go" aria-label="{{ button_apply }}"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+    {% endif %}
+    {% for group in groups %}
+      <fieldset class="ff-group" data-key="{{ group.key }}">
+        <legend class="ff-title">{{ group.name|e }}</legend>
+        {% for option in group.options %}
+          <div class="form-check{% if loop.index > limit and not option.checked %} ff-more d-none{% endif %}">
+            <input class="form-check-input" type="{{ group.single ? 'radio' : 'checkbox' }}" name="ff-{{ group.key }}" value="{{ option.value }}" id="ff-{{ option.value }}"{% if option.checked %} checked{% endif %}{% if option.count == 0 and not option.checked %} disabled{% endif %}/>
+            <label class="form-check-label d-flex justify-content-between gap-2" for="ff-{{ option.value }}">
+              <span>{% if option.stars %}<span class="ff-stars" aria-hidden="true">{% for i in 1..5 %}<i class="fa-{{ i <= option.stars ? 'solid' : 'regular' }} fa-star"></i>{% endfor %}</span> {% endif %}{{ option.name|e }}</span>
+              <span class="text-body-secondary small">{{ option.count }}</span>
+            </label>
+          </div>
+        {% endfor %}
+        {% if group.options|length > limit %}<button type="button" class="btn btn-link btn-sm p-0 ff-toggle">{{ text_more }}</button>{% endif %}
+      </fieldset>
+    {% endfor %}
+  </div>
+</div>
+<style>
+.ff .ff-group { margin-bottom: 1.1rem; border: 0; padding: 0; }
+.ff .ff-title { font-weight: 600; font-size: .95rem; margin-bottom: .5rem; float: none; width: auto; }
+.ff .form-check { margin-bottom: .3rem; }
+.ff .form-check-input:disabled + .form-check-label { opacity: .45; }
+.ff .ff-stars { color: #f5a623; font-size: .8rem; }
+</style>
+<script>
+(function () {
+    var box = document.getElementById('facetfilter');
+    if (!box) return;
+
+    // Build OpenCart's "filter" value: filter IDs first, then the facet segments.
+    function go() {
+        var core = [], brand = [], attr = [], seg = [];
+
+        box.querySelectorAll('input:checked').forEach(function (el) {
+            var v = el.value;
+            if (v[0] === 'f') core.push(v.slice(1));
+            else if (v[0] === 'b') brand.push(v.slice(1));
+            else if (v[0] === 'a') attr.push(v.slice(1));
+            else seg.push(v);
+        });
+
+        var from = box.querySelector('.ff-from'), to = box.querySelector('.ff-to');
+
+        if (from && to && (from.value !== '' || to.value !== '')) {
+            var lo = from.value !== '' ? Math.max(0, parseFloat(from.value)) : parseFloat(from.placeholder);
+            var hi = to.value !== '' ? Math.max(0, parseFloat(to.value)) : parseFloat(to.placeholder);
+            if (!isNaN(lo) && !isNaN(hi)) seg.push('p' + Math.min(lo, hi) + '-' + Math.max(lo, hi));
+        }
+
+        var parts = [];
+        if (core.length) parts.push(core.join(','));
+        if (brand.length) parts.push('b' + brand.join('.'));
+        if (attr.length) parts.push('a' + attr.join('.'));
+        parts = parts.concat(seg);
+
+        var base = box.dataset.base;
+        location = parts.length ? base + (base.indexOf('?') < 0 ? '?' : '&') + 'filter=' + encodeURIComponent(parts.join('_')) : base;
+    }
+
+    box.addEventListener('change', function (e) {
+        if (e.target.matches('.form-check-input')) go();
+    });
+
+    // A ticked radio (rating) can be unticked by clicking it again.
+    box.querySelectorAll('input[type=radio]').forEach(function (el) {
+        el.addEventListener('mousedown', function () { el.dataset.was = el.checked ? '1' : ''; });
+        el.addEventListener('click', function () { if (el.dataset.was) { el.checked = false; go(); } });
+    });
+
+    box.querySelectorAll('.ff-go').forEach(function (b) { b.addEventListener('click', go); });
+    box.querySelectorAll('.ff-from, .ff-to').forEach(function (i) {
+        i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+    });
+
+    box.querySelectorAll('.ff-toggle').forEach(function (b) {
+        b.addEventListener('click', function () {
+            b.closest('.ff-group').querySelectorAll('.ff-more').forEach(function (el) { el.classList.toggle('d-none'); });
+            b.textContent = b.textContent === '{{ text_more|escape('js') }}' ? '{{ text_less|escape('js') }}' : '{{ text_more|escape('js') }}';
+        });
+    });
+})();
+</script>

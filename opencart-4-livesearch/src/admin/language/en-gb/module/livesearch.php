@@ -1,0 +1,19 @@
+<?php
+$_['heading_title']     = 'Live Search';
+$_['text_extension']    = 'Extensions';
+$_['text_success']      = 'Success: You have modified Live Search!';
+$_['text_edit']         = 'Edit Live Search';
+$_['text_info']         = 'Shows matching products (and categories) under the header search box as shoppers type. It uses OpenCart\'s own product search, so results match the search page.';
+$_['entry_limit']       = 'Products to show';
+$_['entry_min']         = 'Start after this many characters';
+$_['entry_image']       = 'Product images';
+$_['entry_image_size']  = 'Image size (px)';
+$_['entry_price']       = 'Prices';
+$_['entry_categories']  = 'Matching categories';
+$_['entry_description'] = 'Search in descriptions';
+$_['entry_status']      = 'Status';
+$_['help_price']        = 'Hidden from guests when System > Settings > Option > "Login Display Prices" is on.';
+$_['help_description']  = 'Also matches words in product descriptions. Slower on large catalogs.';
+$_['help_categories']   = 'Up to three categories whose name contains the search.';
+$_['error_permission']  = 'Warning: You do not have permission to modify Live Search!';
+$_['error_range']       = 'Enter a number from %s to %s.';
