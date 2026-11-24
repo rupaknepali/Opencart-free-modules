@@ -1,0 +1,29 @@
+<div id="tab-preorder" class="tab-pane">
+  {% if not module_status %}
+    <div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{ text_module_off }}</div>
+  {% endif %}
+  <div class="row mb-3">
+    <label for="input-preorder-status" class="col-sm-2 col-form-label">{{ entry_preorder_status }}</label>
+    <div class="col-sm-10">
+      <div class="form-check form-switch form-switch-lg">
+        <input type="hidden" name="preorder[status]" value="0"/>
+        <input type="checkbox" name="preorder[status]" value="1" id="input-preorder-status" class="form-check-input"{% if preorder_status %} checked{% endif %}/>
+      </div>
+      <div class="form-text">{{ help_preorder_status }}</div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="input-preorder-ship-date" class="col-sm-2 col-form-label">{{ entry_ship_date }}</label>
+    <div class="col-sm-10">
+      <input type="date" name="preorder[ship_date]" value="{{ preorder_ship_date }}" id="input-preorder-ship-date" class="form-control" style="max-width: 220px;"/>
+      <div class="form-text">{{ help_ship_date }}</div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="input-preorder-note" class="col-sm-2 col-form-label">{{ entry_note }}</label>
+    <div class="col-sm-10">
+      <input type="text" name="preorder[note]" value="{{ preorder_note|e }}" maxlength="255" id="input-preorder-note" class="form-control"/>
+      <div class="form-text">{{ help_note }}</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="card mb-3">
+  <div class="card-header"><i class="fa-solid fa-calendar-check"></i> {{ text_order_title }}</div>
+  <div class="card-body">
+    <p class="text-muted mb-2">{{ text_order_help }}</p>
+    <table class="table table-sm mb-0">
+      <thead><tr><th>{{ column_name }}</th><th class="text-end">{{ column_quantity }}</th><th>{{ column_ship_date }}</th></tr></thead>
+      <tbody>
+        {% for line in lines %}
+          <tr><td>{{ line.name|e }}</td><td class="text-end">{{ line.quantity }}</td><td>{{ line.ship_date }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

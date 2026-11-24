@@ -1,0 +1,6 @@
+<table style="border-collapse: collapse; width: 100%; border: 1px solid #b6d4fe; background-color: #e7f1ff; margin-bottom: 20px;">
+  <tr>
+    <td style="font-size: 12px; padding: 10px; color: #052c65;"><b>{{ text_mail_title }}</b><br/>{{ text_mail_help }}
+      {% for line in lines %}<br/>&bull; {{ line.name|e }}: {{ line.ship_text|e }}{% endfor %}</td>
+  </tr>
+</table>

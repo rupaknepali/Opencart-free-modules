@@ -1,0 +1,105 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if not mail_ready %}
+      <div class="alert alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> <a href="{{ mail_settings }}">{{ text_mail_off }}</a></div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_pdfinvoice_status" value="0"/>
+                <input type="checkbox" name="module_pdfinvoice_status" value="1" id="input-status" class="form-check-input"{% if module_pdfinvoice_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_send_statuses }}</label>
+            <div class="col-sm-10">
+              <input type="hidden" name="module_pdfinvoice_send_statuses[]" value="0"/>
+              <div class="form-control" style="height: 160px; overflow: auto;">
+                {% for order_status in order_statuses %}
+                  <div class="form-check">
+                    <input type="checkbox" name="module_pdfinvoice_send_statuses[]" value="{{ order_status.order_status_id }}" id="input-send-{{ order_status.order_status_id }}" class="form-check-input"{% if order_status.order_status_id in module_pdfinvoice_send_statuses %} checked{% endif %}/>
+                    <label for="input-send-{{ order_status.order_status_id }}" class="form-check-label">{{ order_status.name|e }}</label>
+                  </div>
+                {% endfor %}
+              </div>
+              <div class="form-text">{{ help_send_statuses }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-invoice-no" class="col-sm-2 col-form-label">{{ entry_invoice_no }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_pdfinvoice_invoice_no" value="0"/>
+                <input type="checkbox" name="module_pdfinvoice_invoice_no" value="1" id="input-invoice-no" class="form-check-input"{% if module_pdfinvoice_invoice_no %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_invoice_no }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-account" class="col-sm-2 col-form-label">{{ entry_account }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_pdfinvoice_account" value="0"/>
+                <input type="checkbox" name="module_pdfinvoice_account" value="1" id="input-account" class="form-check-input"{% if module_pdfinvoice_account %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_account }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-logo" class="col-sm-2 col-form-label">{{ entry_logo }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_pdfinvoice_logo" value="0"/>
+                <input type="checkbox" name="module_pdfinvoice_logo" value="1" id="input-logo" class="form-check-input"{% if module_pdfinvoice_logo %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-paper" class="col-sm-2 col-form-label">{{ entry_paper }}</label>
+            <div class="col-sm-10">
+              <select name="module_pdfinvoice_paper" id="input-paper" class="form-select">
+                <option value="a4"{% if module_pdfinvoice_paper == 'a4' %} selected{% endif %}>{{ text_a4 }}</option>
+                <option value="letter"{% if module_pdfinvoice_paper == 'letter' %} selected{% endif %}>{{ text_letter }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-tax-id" class="col-sm-2 col-form-label">{{ entry_tax_id }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_pdfinvoice_tax_id" value="{{ module_pdfinvoice_tax_id }}" id="input-tax-id" class="form-control"/>
+              <div class="form-text">{{ help_tax_id }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-footer" class="col-sm-2 col-form-label">{{ entry_footer }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_pdfinvoice_footer" value="{{ module_pdfinvoice_footer }}" id="input-footer" class="form-control"/>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

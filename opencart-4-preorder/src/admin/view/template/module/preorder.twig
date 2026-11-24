@@ -1,0 +1,79 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert {% if stock_checkout %}alert-warning{% else %}alert-info{% endif %}"><i class="fa-solid fa-circle-info"></i> {% if stock_checkout %}{{ text_stock_checkout_on }}{% else %}{{ text_stock_checkout_off }}{% endif %}</div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_preorder_status" value="0"/>
+                <input type="checkbox" name="module_preorder_status" value="1" id="input-status" class="form-check-input"{% if module_preorder_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-button" class="col-sm-2 col-form-label">{{ entry_button }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_preorder_button" value="{{ module_preorder_button }}" id="input-button" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-ship-text" class="col-sm-2 col-form-label">{{ entry_ship_text }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_preorder_ship_text" value="{{ module_preorder_ship_text }}" id="input-ship-text" class="form-control"/>
+              <div class="form-text">{{ help_ship_text }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-no-date-text" class="col-sm-2 col-form-label">{{ entry_no_date_text }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_preorder_no_date_text" value="{{ module_preorder_no_date_text }}" id="input-no-date-text" class="form-control"/>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-calendar-check"></i> {{ text_products }}</div>
+      <div class="card-body">
+        {% if products %}
+          <table class="table table-sm mb-0">
+            <thead><tr><th>{{ column_name }}</th><th class="text-end">{{ column_stock }}</th><th>{{ column_ship_date }}</th><th class="text-end">{{ column_ordered }}</th><th>{{ column_status }}</th></tr></thead>
+            <tbody>
+              {% for product in products %}
+                <tr>
+                  <td><a href="{{ product.edit }}">{{ product.name|e }}</a></td>
+                  <td class="text-end">{{ product.quantity }}</td>
+                  <td>{{ product.ship_date ?: text_no_date }}</td>
+                  <td class="text-end">{{ product.ordered }}</td>
+                  <td>{% if product.active %}<span class="badge bg-info text-dark">{{ text_active }}</span>{% else %}<span class="badge bg-secondary">{{ text_waiting }}</span>{% endif %}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="mb-0 text-muted">{{ text_no_products }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
