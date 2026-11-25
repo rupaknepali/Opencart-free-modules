@@ -1,0 +1,61 @@
+<style>
+#wac{position:fixed;bottom:20px;{{ position }}:20px;z-index:1040;display:flex;flex-direction:column;align-items:{% if position == 'left' %}flex-start{% else %}flex-end{% endif %};gap:10px;font-size:15px}
+#wac[hidden]{display:none}
+#wac .wac-btn{display:inline-flex;align-items:center;gap:10px;background:{{ color }};color:#fff;text-decoration:none;border-radius:999px;padding:12px;box-shadow:0 6px 20px rgba(0,0,0,.2);font-weight:600;line-height:1}
+#wac .wac-btn:hover,#wac .wac-btn:focus-visible{filter:brightness(.92);color:#fff}
+#wac .wac-btn svg{width:32px;height:32px;flex:none}
+#wac .wac-label{padding-right:8px}
+#wac .wac-bubble{position:relative;max-width:260px;background:#fff;color:#1f2328;border-radius:12px;padding:12px 34px 12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.15);opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s}
+#wac .wac-bubble.show{opacity:1;transform:none}
+#wac .wac-bubble button{position:absolute;top:4px;right:6px;border:0;background:none;font-size:20px;line-height:1;color:#57606a;cursor:pointer;padding:2px 6px}
+#wac.wac-offline .wac-btn{background:#6e7781}
+@media (max-width:767.98px){ #wac .wac-label{display:none}{% if devices == 'desktop' %}#wac{display:none}{% endif %}}
+{% if devices == 'mobile' %}@media (min-width:768px){ #wac{display:none}}{% endif %}
+@media print{ #wac{display:none}}
+</style>
+<div id="wac"{% if hours %} hidden{% endif %}>
+  {% if greeting %}<div class="wac-bubble" role="status" hidden><span class="wac-text">{{ greeting|e }}</span><button type="button" aria-label="{{ text_close }}">&times;</button></div>{% endif %}
+  <a href="{{ link|e }}" class="wac-btn" target="_blank" rel="noopener" aria-label="{{ text_open_chat }}" data-wac="float">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4c-1.2-1.8-1.9-3.9-1.9-6 0-5.9 5-10.7 11.1-10.7s11.1 4.8 11.1 10.7S22.1 26.4 16 26.4zm6.1-8c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.3-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.5c-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.2.2 2.4 3.7 5.9 5.1 2.9 1.1 3.5.9 4.1.8.6-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.3-.3-.7-.5z"/></svg>
+    {% if label %}<span class="wac-label">{{ label|e }}</span>{% endif %}
+  </a>
+</div>
+<script>
+(function () {
+  var box = document.getElementById('wac');
+  if (!box) return;
+  var bubble = box.querySelector('.wac-bubble');
+  var hours = {{ hours ?: 'null' }};
+  if (hours) {
+    var parts = {};
+    try {
+      new Intl.DateTimeFormat('en-US', {timeZone: hours.tz, weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}).formatToParts(new Date()).forEach(function (p) { parts[p.type] = p.value; });
+    } catch (e) {}
+    var day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.weekday);
+    var now = (parts.hour || '00') + ':' + (parts.minute || '00');
+    var open = hours.days.indexOf(day) > -1 && now >= hours.open && now < hours.close;
+    if (!open) {
+      if (hours.offline == 'hide') return;
+      box.classList.add('wac-offline');
+      if (bubble && hours.note) bubble.querySelector('.wac-text').textContent = hours.note;
+    }
+    box.hidden = false;
+  }
+  if (bubble) {
+    var seen = false;
+    try { seen = sessionStorage.getItem('wac-bubble') == '1'; } catch (e) {}
+    if (!seen) {
+      setTimeout(function () { bubble.hidden = false; requestAnimationFrame(function () { bubble.classList.add('show'); }); }, 4000);
+    }
+    bubble.querySelector('button').addEventListener('click', function () {
+      bubble.hidden = true;
+      try { sessionStorage.setItem('wac-bubble', '1'); } catch (e) {}
+    });
+  }
+  // Count clicks in GA4 when gtag is on the page.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('[data-wac]');
+    if (a && typeof gtag == 'function') gtag('event', 'whatsapp_click', {placement: a.getAttribute('data-wac')});
+  });
+})();
+</script>

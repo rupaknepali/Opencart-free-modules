@@ -1,0 +1,12 @@
+{{ header }}
+<div id="newsletterpopup-confirm" class="container">
+  <div class="row">{{ column_left }}
+    <div id="content" class="col">{{ content_top }}
+      <h1 class="mt-4">{{ heading_title }}</h1>
+      <p>{{ message|e }}</p>
+      {% if coupon %}<p class="fs-4"><span class="badge bg-success-subtle text-success-emphasis border border-success px-3 py-2 font-monospace">{{ coupon|e }}</span></p>{% endif %}
+      <div class="text-end"><a href="{{ continue }}" class="btn btn-primary">{{ button_shop }}</a></div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

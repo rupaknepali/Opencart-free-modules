@@ -1,0 +1,28 @@
+<div id="tab-unitprice" class="tab-pane">
+  {% if not module_status %}
+    <div class="alert alert-warning"><i class="fa-solid fa-circle-exclamation"></i> {{ text_module_off }}</div>
+  {% endif %}
+  <p class="text-muted">{{ text_help }}</p>
+  <div class="row mb-3">
+    <label for="input-unitprice-amount" class="col-sm-2 col-form-label">{{ entry_amount }}</label>
+    <div class="col-sm-10">
+      <input type="text" name="unitprice[amount]" value="{{ unitprice_amount }}" placeholder="500" id="input-unitprice-amount" class="form-control" inputmode="decimal"/>
+      <div class="form-text">{{ help_amount }}</div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="input-unitprice-unit" class="col-sm-2 col-form-label">{{ entry_unit }}</label>
+    <div class="col-sm-10">
+      <select name="unitprice[unit]" id="input-unitprice-unit" class="form-select">
+        <option value="">{{ text_none }}</option>
+        {% for group in groups %}
+          <optgroup label="{{ group.label }}">
+            {% for unit in group.units %}
+              <option value="{{ unit.value }}"{% if unit.value == unitprice_unit %} selected{% endif %}>{{ unit.text }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</div>

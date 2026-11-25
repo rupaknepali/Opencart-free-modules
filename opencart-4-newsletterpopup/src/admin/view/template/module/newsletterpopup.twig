@@ -1,0 +1,164 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_newsletterpopup_status" value="0"/>
+                <input type="checkbox" name="module_newsletterpopup_status" value="1" id="input-status" class="form-check-input"{% if module_newsletterpopup_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <h5 class="mt-4 mb-3 border-bottom pb-2">{{ text_content }}</h5>
+          <div class="row mb-3">
+            <label for="input-title" class="col-sm-2 col-form-label">{{ entry_title }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_newsletterpopup_title" value="{{ module_newsletterpopup_title|e }}" id="input-title" class="form-control"/>
+              <div id="error-title" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-text" class="col-sm-2 col-form-label">{{ entry_text }}</label>
+            <div class="col-sm-10">
+              <textarea name="module_newsletterpopup_text" rows="2" id="input-text" class="form-control">{{ module_newsletterpopup_text|e }}</textarea>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-button" class="col-sm-2 col-form-label">{{ entry_button }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_newsletterpopup_button" value="{{ module_newsletterpopup_button|e }}" id="input-button" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-consent" class="col-sm-2 col-form-label">{{ entry_consent }}</label>
+            <div class="col-sm-10">
+              <textarea name="module_newsletterpopup_consent" rows="2" id="input-consent" class="form-control">{{ module_newsletterpopup_consent|e }}</textarea>
+              <div class="form-text">{{ help_consent }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-coupon" class="col-sm-2 col-form-label">{{ entry_coupon }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_newsletterpopup_coupon" value="{{ module_newsletterpopup_coupon|e }}" id="input-coupon" class="form-control"/>
+              <div id="error-coupon" class="invalid-feedback"></div>
+              <div class="form-text">{{ text_coupon_help }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-success" class="col-sm-2 col-form-label">{{ entry_success }}</label>
+            <div class="col-sm-10">
+              <textarea name="module_newsletterpopup_success" rows="2" id="input-success" class="form-control">{{ module_newsletterpopup_success|e }}</textarea>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-double-optin" class="col-sm-2 col-form-label">{{ entry_double_optin }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_newsletterpopup_double_optin" value="0"/>
+                <input type="checkbox" name="module_newsletterpopup_double_optin" value="1" id="input-double-optin" class="form-check-input"{% if module_newsletterpopup_double_optin %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_double_optin }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-pending" class="col-sm-2 col-form-label">{{ entry_pending }}</label>
+            <div class="col-sm-10">
+              <textarea name="module_newsletterpopup_pending" rows="2" id="input-pending" class="form-control">{{ module_newsletterpopup_pending|e }}</textarea>
+            </div>
+          </div>
+          <h5 class="mt-4 mb-3 border-bottom pb-2">{{ text_behaviour }}</h5>
+          <div class="row mb-3">
+            <label for="input-delay" class="col-sm-2 col-form-label">{{ entry_delay }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_newsletterpopup_delay" value="{{ module_newsletterpopup_delay|e }}" id="input-delay" class="form-control" min="0"/>
+              <div class="form-text">{{ help_delay }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-exit" class="col-sm-2 col-form-label">{{ entry_exit }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_newsletterpopup_exit" value="0"/>
+                <input type="checkbox" name="module_newsletterpopup_exit" value="1" id="input-exit" class="form-check-input"{% if module_newsletterpopup_exit %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_exit }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-days" class="col-sm-2 col-form-label">{{ entry_days }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_newsletterpopup_days" value="{{ module_newsletterpopup_days|e }}" id="input-days" class="form-control" min="0"/>
+              <div class="form-text">{{ help_days }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-guests" class="col-sm-2 col-form-label">{{ entry_guests }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_newsletterpopup_guests" value="0"/>
+                <input type="checkbox" name="module_newsletterpopup_guests" value="1" id="input-guests" class="form-check-input"{% if module_newsletterpopup_guests %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_guests }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center"><span><i class="fa-solid fa-envelope-open-text"></i> {{ text_subscribers }}</span><a href="{{ export }}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-csv"></i> {{ text_export }}</a></div>
+      <div class="card-body">
+        <p class="text-muted">{{ text_total }}</p>
+        {% if subscribers %}
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead><tr><th>{{ column_email }}</th><th>{{ column_status }}</th><th>{{ column_customer }}</th><th>{{ column_date }}</th><th class="text-end">{{ column_action }}</th></tr></thead>
+              <tbody>
+                {% for subscriber in subscribers %}
+                  <tr>
+                    <td>{{ subscriber.email|e }}</td>
+                    <td>{% if subscriber.confirmed %}<span class="badge bg-success">{{ text_confirmed }}</span>{% else %}<span class="badge bg-warning text-dark">{{ text_pending }}</span>{% endif %}</td>
+                    <td>{% if subscriber.customer %}<a href="{{ subscriber.customer }}"><i class="fa-solid fa-user"></i></a>{% endif %}</td>
+                    <td>{{ subscriber.date }}</td>
+                    <td class="text-end"><button type="button" class="btn btn-sm btn-danger" data-np-delete="{{ subscriber.id }}"><i class="fa-solid fa-trash-can"></i></button></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="mb-0 text-muted">{{ text_no_subscribers }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$('[data-np-delete]').on('click', function () {
+  if (!confirm('{{ text_confirm_delete|e('js') }}')) return;
+  var row = $(this).closest('tr');
+  $.post('{{ delete|e('js') }}'.replaceAll('&amp;', '&'), {id: $(this).data('np-delete')}, function (json) {
+    if (json.success) row.remove();
+    if (json.error) alert(json.error);
+  }, 'json');
+});
+</script>
+{{ footer }}

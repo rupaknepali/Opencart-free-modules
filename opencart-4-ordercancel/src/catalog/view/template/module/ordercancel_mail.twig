@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>{{ subject|e }}</title></head>
+<body style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2328;line-height:1.5">
+<p>{{ intro|e }}</p>
+{% if reason %}<p><strong>{{ entry_reason }}:</strong> {{ reason|e }}</p>{% endif %}
+{% if comment %}<p><strong>{{ entry_comment }}:</strong><br>{{ comment|e|nl2br }}</p>{% endif %}
+<p style="color:#57606a">{{ text_mail_refund }}</p>
+<p style="color:#57606a">{{ store|e }}</p>
+</body></html>

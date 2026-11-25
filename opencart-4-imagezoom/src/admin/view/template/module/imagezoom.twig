@@ -1,0 +1,83 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_sizes }} {{ text_small }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_imagezoom_status" value="0"/>
+                <input type="checkbox" name="module_imagezoom_status" value="1" id="input-status" class="form-check-input"{% if module_imagezoom_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-hover" class="col-sm-2 col-form-label">{{ entry_hover }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_imagezoom_hover" value="0"/>
+                <input type="checkbox" name="module_imagezoom_hover" value="1" id="input-hover" class="form-check-input"{% if module_imagezoom_hover %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_hover }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-swap" class="col-sm-2 col-form-label">{{ entry_swap }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_imagezoom_swap" value="0"/>
+                <input type="checkbox" name="module_imagezoom_swap" value="1" id="input-swap" class="form-check-input"{% if module_imagezoom_swap %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_swap }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-lightbox" class="col-sm-2 col-form-label">{{ entry_lightbox }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_imagezoom_lightbox" value="0"/>
+                <input type="checkbox" name="module_imagezoom_lightbox" value="1" id="input-lightbox" class="form-check-input"{% if module_imagezoom_lightbox %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_lightbox }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-size" class="col-sm-2 col-form-label">{{ entry_size }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_imagezoom_size" value="{{ module_imagezoom_size }}" id="input-size" class="form-control" min="800" max="4000" step="100"/>
+              <div id="error-size" class="invalid-feedback"></div>
+              <div class="form-text">{{ help_size }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-min" class="col-sm-2 col-form-label">{{ entry_min }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_imagezoom_min" value="{{ module_imagezoom_min }}" id="input-min" class="form-control" min="1" max="4" step="0.1"/>
+              <div id="error-min" class="invalid-feedback"></div>
+              <div class="form-text">{{ help_min }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

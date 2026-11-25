@@ -1,0 +1,130 @@
+<style>
+.iz-wrap{position:relative;display:inline-block;max-width:100%;cursor:zoom-in}
+.iz-wrap img{display:block}
+.iz-lens{position:absolute;inset:0;background-repeat:no-repeat;background-color:#fff;border-radius:inherit;opacity:0;transition:opacity .15s;pointer-events:none;z-index:2}
+.iz-wrap.iz-on .iz-lens{opacity:1}
+.iz-hint{position:absolute;right:10px;bottom:22px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;padding:3px 8px;border-radius:999px;pointer-events:none;z-index:3;transition:opacity .15s}
+.iz-wrap.iz-on .iz-hint{opacity:0}
+.iz-active img{outline:2px solid var(--bs-primary,#0d6efd);outline-offset:1px}
+</style>
+<script>
+(function () {
+  var cfg = {{ config }};
+  var box = document.querySelector('.image.magnific-popup');
+  if (!box) return;
+  var links = Array.prototype.slice.call(box.querySelectorAll('a'));
+  var main = links[0], mainImg = main && main.querySelector('img');
+  if (!mainImg) return;
+  var current = 0;
+
+  // Each link knows which picture it shows: the main link is "main", thumbnails 1, 2, 3...
+  main.setAttribute('data-iz', 'main');
+  links.slice(1).forEach(function (a, i) { a.setAttribute('data-iz', i + 1); });
+
+  // The core shows only the additional photos as thumbnails. When thumbnails switch the main image,
+  // add one for the main photo too, or shoppers can't get back to it.
+  if (cfg.swap && links.length > 1 && cfg.items[0] && cfg.items[0].small) {
+    var first = links[1];
+    var back = first.cloneNode(true);
+    back.href = cfg.lightbox ? cfg.items[0].zoom : cfg.items[0].popup;
+    back.setAttribute('data-iz', 0);
+    back.querySelector('img').src = cfg.items[0].small;
+    first.parentNode.insertBefore(back, first);
+    first.parentNode.insertBefore(document.createTextNode('\u00a0'), first);
+    links.splice(1, 0, back);
+  }
+
+  // Shown in the popup: the large zoom image, or the core popup size.
+  var gallery = [];
+  cfg.items.forEach(function (item, i) {
+    if (item) gallery.push({src: cfg.lightbox ? item.zoom : item.popup, index: i});
+  });
+
+  function openPopup(index) {
+    if (!window.jQuery || !jQuery.magnificPopup) return false;
+    var start = 0;
+    gallery.forEach(function (g, n) { if (g.index === index) start = n; });
+    jQuery.magnificPopup.open({items: gallery.map(function (g) { return {src: g.src}; }), type: 'image', gallery: {enabled: true}}, start);
+    return true;
+  }
+
+  function setMain(index) {
+    var item = cfg.items[index];
+    if (!item) return;
+    current = index;
+    mainImg.src = item.main;
+    main.href = cfg.lightbox ? item.zoom : item.popup;
+    links.forEach(function (a) { a.classList.toggle('iz-active', a.getAttribute('data-iz') === String(index)); });
+    if (lens) lens.style.backgroundImage = 'url("' + item.zoom + '")';
+  }
+
+  // Capture phase, so the core magnificPopup handler on the same box never sees these clicks.
+  box.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-iz]');
+    if (!a) return;
+    var key = a.getAttribute('data-iz');
+    var index = key === 'main' ? current : parseInt(key, 10);
+    if (!cfg.items[index]) return;
+    if (key !== 'main' && cfg.swap) {
+      e.preventDefault(); e.stopPropagation();
+      setMain(index);
+      return;
+    }
+    if (openPopup(index)) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+
+  // Hover zoom: only with a mouse, never on touch screens.
+  var lens = null;
+  if (cfg.hover && window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var wrap = main;
+    wrap.classList.add('iz-wrap');
+    lens = document.createElement('span');
+    lens.className = 'iz-lens';
+    wrap.appendChild(lens);
+    var loaded = {};
+    var size = null;
+
+    function measure(item) {
+      // The core thumbnail is letterboxed into a square: find the picture inside the white border.
+      var r = mainImg.getBoundingClientRect();
+      var cs = getComputedStyle(mainImg);
+      var pad = parseFloat(cs.paddingLeft) + parseFloat(cs.borderLeftWidth);
+      var w = r.width - 2 * pad, h = r.height - 2 * pad;
+      var boxRatio = w / h, imgRatio = item.zw / item.zh;
+      var cw = imgRatio > boxRatio ? w : h * imgRatio;
+      var ch = imgRatio > boxRatio ? w / imgRatio : h;
+      return {left: pad + (w - cw) / 2, top: pad + (h - ch) / 2, w: cw, h: ch, bw: r.width, bh: r.height};
+    }
+
+    wrap.addEventListener('mouseenter', function () {
+      var item = cfg.items[current];
+      if (!item) return;
+      size = measure(item);
+      if (item.zw / size.w < cfg.min) { size = null; wrap.style.cursor = 'pointer'; return; }
+      wrap.style.cursor = '';
+      // Show the zoom image at its own pixels, but never more than 3 times the picture on the page.
+      size.zw = Math.min(item.zw, size.w * 3);
+      size.zh = item.zh * size.zw / item.zw;
+      lens.style.backgroundImage = 'url("' + item.zoom + '")';
+      lens.style.backgroundSize = size.zw + 'px ' + size.zh + 'px';
+      if (loaded[item.zoom]) { wrap.classList.add('iz-on'); return; }
+      var img = new Image();
+      img.onload = function () { loaded[item.zoom] = true; if (size) wrap.classList.add('iz-on'); };
+      img.src = item.zoom;
+    });
+    wrap.addEventListener('mousemove', function (e) {
+      if (!size) return;
+      var r = mainImg.getBoundingClientRect();
+      var fx = Math.min(1, Math.max(0, (e.clientX - r.left - size.left) / size.w));
+      var fy = Math.min(1, Math.max(0, (e.clientY - r.top - size.top) / size.h));
+      var x = size.zw > size.bw ? -fx * (size.zw - size.bw) : (size.bw - size.zw) / 2;
+      var y = size.zh > size.bh ? -fy * (size.zh - size.bh) : (size.bh - size.zh) / 2;
+      lens.style.backgroundPosition = x + 'px ' + y + 'px';
+    });
+    wrap.addEventListener('mouseleave', function () { size = null; wrap.classList.remove('iz-on'); });
+  }
+
+  if (cfg.lightbox && cfg.items[0]) main.href = cfg.items[0].zoom;
+  if (cfg.swap && links.length > 1) setMain(0);
+})();
+</script>

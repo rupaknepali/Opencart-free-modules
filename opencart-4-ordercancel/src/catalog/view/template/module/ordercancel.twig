@@ -1,0 +1,77 @@
+{% if cancelled %}
+  <div class="alert alert-secondary"><i class="fa-solid fa-ban"></i> {{ cancelled }}</div>
+{% else %}
+  <div id="ordercancel" class="card mb-4">
+    <div class="card-body d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div><strong>{{ text_title }}</strong><br/><span class="text-body-secondary">{{ text_can_cancel }}</span></div>
+      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modal-ordercancel"><i class="fa-solid fa-ban"></i> {{ button_cancel_order }}</button>
+    </div>
+  </div>
+  <div id="modal-ordercancel" class="modal fade" tabindex="-1" aria-labelledby="modal-ordercancel-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div id="form-ordercancel" data-action="{{ action }}" class="modal-content">
+        <div class="modal-header">
+          <h5 id="modal-ordercancel-title" class="modal-title">{{ text_confirm }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-body-secondary">{{ text_confirm_help }}</p>
+          {% if reasons %}
+            <div class="mb-3">
+              <label for="input-ordercancel-reason" class="form-label{% if reason_required %} required{% endif %}">{{ entry_reason }}</label>
+              <select name="reason" id="input-ordercancel-reason" class="form-select">
+                <option value="">{{ text_select }}</option>
+                {% for key, reason in reasons %}
+                  <option value="{{ key }}">{{ reason|e }}</option>
+                {% endfor %}
+              </select>
+              <div id="error-ordercancel-reason" class="invalid-feedback"></div>
+            </div>
+          {% endif %}
+          <div class="mb-0">
+            <label for="input-ordercancel-comment" class="form-label">{{ entry_comment }}</label>
+            <textarea name="comment" id="input-ordercancel-comment" rows="3" maxlength="1000" class="form-control"></textarea>
+          </div>
+          <div id="ordercancel-alert" class="mt-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ button_keep }}</button>
+          <button type="button" id="button-ordercancel" class="btn btn-danger">{{ button_confirm }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+  // Not a <form>: the core order page binds its reorder handler to every form on the page.
+  document.getElementById('button-ordercancel').addEventListener('click', function () {
+    var form = document.getElementById('form-ordercancel'), button = this;
+    var data = new FormData();
+    form.querySelectorAll('[name]').forEach(function (field) { data.append(field.name, field.value); });
+    var reason = form.querySelector('#input-ordercancel-reason');
+    button.disabled = true;
+    if (reason) reason.classList.remove('is-invalid');
+    form.querySelector('#ordercancel-alert').innerHTML = '';
+    fetch(form.getAttribute('data-action'), {method: 'POST', body: data, credentials: 'same-origin'})
+      .then(function (r) { return r.json(); })
+      .then(function (json) {
+        button.disabled = false;
+        if (json.error) {
+          if (json.error.reason && reason) {
+            reason.classList.add('is-invalid');
+            document.getElementById('error-ordercancel-reason').textContent = json.error.reason;
+            document.getElementById('error-ordercancel-reason').classList.add('d-block');
+          }
+          if (json.error.warning) {
+            var div = document.createElement('div');
+            div.className = 'alert alert-danger mb-0';
+            div.textContent = json.error.warning;
+            form.querySelector('#ordercancel-alert').appendChild(div);
+          }
+          return;
+        }
+        if (json.success) location.reload();
+      })
+      .catch(function () { button.disabled = false; });
+  });
+  </script>
+{% endif %}

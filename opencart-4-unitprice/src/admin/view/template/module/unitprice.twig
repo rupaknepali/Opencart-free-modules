@@ -1,0 +1,116 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if not module_on %}
+      <div class="alert alert-warning"><i class="fa-solid fa-circle-exclamation"></i> {{ text_module_off }}</div>
+    {% endif %}
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <p class="text-muted">{{ text_help }}</p>
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_unitprice_status" value="0"/>
+                <input type="checkbox" name="module_unitprice_status" value="1" id="input-status" class="form-check-input"{% if module_unitprice_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-product" class="col-sm-2 col-form-label">{{ entry_product }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_unitprice_product" value="0"/>
+                <input type="checkbox" name="module_unitprice_product" value="1" id="input-product" class="form-check-input"{% if module_unitprice_product %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-thumb" class="col-sm-2 col-form-label">{{ entry_thumb }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_unitprice_thumb" value="0"/>
+                <input type="checkbox" name="module_unitprice_thumb" value="1" id="input-thumb" class="form-check-input"{% if module_unitprice_thumb %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-weight" class="col-sm-2 col-form-label">{{ entry_weight }}</label>
+            <div class="col-sm-10">
+              <select name="module_unitprice_weight" id="input-weight" class="form-select">
+                <option value="kg"{% if module_unitprice_weight == 'kg' %} selected{% endif %}>1 kg</option>
+                <option value="100g"{% if module_unitprice_weight == '100g' %} selected{% endif %}>100 g</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-volume" class="col-sm-2 col-form-label">{{ entry_volume }}</label>
+            <div class="col-sm-10">
+              <select name="module_unitprice_volume" id="input-volume" class="form-select">
+                <option value="l"{% if module_unitprice_volume == 'l' %} selected{% endif %}>1 l</option>
+                <option value="100ml"{% if module_unitprice_volume == '100ml' %} selected{% endif %}>100 ml</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-us-weight" class="col-sm-2 col-form-label">{{ entry_us_weight }}</label>
+            <div class="col-sm-10">
+              <select name="module_unitprice_us_weight" id="input-us-weight" class="form-select">
+                <option value="oz"{% if module_unitprice_us_weight == 'oz' %} selected{% endif %}>1 oz</option>
+                <option value="lb"{% if module_unitprice_us_weight == 'lb' %} selected{% endif %}>1 lb</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-format" class="col-sm-2 col-form-label">{{ entry_format }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_unitprice_format" value="{{ module_unitprice_format|e }}" id="input-format" class="form-control"/>
+              <div class="form-text">{{ help_format }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-content" class="col-sm-2 col-form-label">{{ entry_content }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_unitprice_content" value="{{ module_unitprice_content|e }}" id="input-content" class="form-control"/>
+              <div class="form-text">{{ help_content }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-scale-balanced"></i> {{ text_products }}</div>
+      <div class="card-body">
+        {% if products %}
+          <table class="table table-sm mb-0">
+            <thead><tr><th>{{ column_name }}</th><th>{{ column_content }}</th></tr></thead>
+            <tbody>
+              {% for product in products %}
+                <tr><td><a href="{{ product.edit }}">{{ product.name|e }}</a></td><td>{{ product.content }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="mb-0 text-muted">{{ text_no_products }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

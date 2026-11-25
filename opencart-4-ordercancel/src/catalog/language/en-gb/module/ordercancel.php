@@ -1,0 +1,22 @@
+<?php
+$_['text_title']        = 'Changed your mind?';
+$_['text_can_cancel']   = 'You can cancel this order until %s, as long as we have not shipped it.';
+$_['text_can_cancel_no_limit'] = 'You can cancel this order as long as we have not shipped it.';
+$_['text_confirm']      = 'Cancel order #%s?';
+$_['text_confirm_help'] = 'The order is cancelled right away and you get an email confirmation. If you already paid, we refund the payment.';
+$_['text_select']       = '-- Please choose --';
+$_['text_cancelled']    = 'You cancelled this order on %s.';
+$_['text_success']      = 'Your order #%s has been cancelled. We have sent you an email confirmation.';
+$_['text_history']      = 'Cancelled by the customer. Reason: %s';
+$_['text_mail_subject'] = 'Order #%s was cancelled by the customer';
+$_['text_mail_intro']   = '%s cancelled order #%s (%s) on your store.';
+$_['text_mail_refund']  = 'Refund the payment in your payment provider if the customer already paid. The stock has been put back if the order was in a processing status.';
+$_['text_mail_comment'] = 'Comment';
+$_['entry_reason']      = 'Reason';
+$_['entry_comment']     = 'Comment (optional)';
+$_['button_cancel_order'] = 'Cancel order';
+$_['button_keep']       = 'Keep my order';
+$_['button_confirm']    = 'Yes, cancel the order';
+$_['error_login']       = 'Please log in again to cancel this order.';
+$_['error_order']       = 'This order cannot be cancelled any more. Please contact us.';
+$_['error_reason']      = 'Please choose a reason.';
