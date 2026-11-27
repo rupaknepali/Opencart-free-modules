@@ -1,0 +1,130 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_honest }} {{ text_preview }}</div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_recentsales_status" value="0"/>
+                <input type="checkbox" name="module_recentsales_status" value="1" id="input-status" class="form-check-input"{% if module_recentsales_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-2 col-form-label fw-bold text-sm-end">{{ entry_statuses }}</div>
+            <div class="col-sm-10">
+              <div id="input-statuses" class="form-control p-0" style="height:140px;overflow:auto">
+                {% for s in order_statuses %}
+                  <div class="form-check m-2"><input type="checkbox" name="module_recentsales_statuses[]" value="{{ s.order_status_id }}" id="input-st-{{ s.order_status_id }}" class="form-check-input"{% if s.order_status_id in module_recentsales_statuses %} checked{% endif %}/><label for="input-st-{{ s.order_status_id }}" class="form-check-label">{{ s.name }}</label></div>
+                {% endfor %}
+              </div>
+              <div id="error-statuses" class="invalid-feedback"></div>
+              <div class="form-text">{{ help_statuses }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-days" class="col-sm-2 col-form-label">{{ entry_days }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_recentsales_days" value="{{ module_recentsales_days|e }}" id="input-days" class="form-control" min="0"/>
+            </div>
+          </div>
+          <h5 class="mt-4 mb-3 border-bottom pb-2">{{ text_popup }}</h5>
+          <div class="row mb-3">
+            <label for="input-popup" class="col-sm-2 col-form-label">{{ entry_popup }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_recentsales_popup" value="0"/>
+                <input type="checkbox" name="module_recentsales_popup" value="1" id="input-popup" class="form-check-input"{% if module_recentsales_popup %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-text" class="col-sm-2 col-form-label">{{ entry_text }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_recentsales_text" value="{{ module_recentsales_text|e }}" id="input-text" class="form-control"/>
+              <div class="form-text">{{ help_text }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-city" class="col-sm-2 col-form-label">{{ entry_city }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_recentsales_city" value="0"/>
+                <input type="checkbox" name="module_recentsales_city" value="1" id="input-city" class="form-check-input"{% if module_recentsales_city %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ text_privacy }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-city-text" class="col-sm-2 col-form-label">{{ entry_city_text }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_recentsales_city_text" value="{{ module_recentsales_city_text|e }}" id="input-city-text" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-delay" class="col-sm-2 col-form-label">{{ entry_delay }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_recentsales_delay" value="{{ module_recentsales_delay|e }}" id="input-delay" class="form-control" min="0"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-interval" class="col-sm-2 col-form-label">{{ entry_interval }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_recentsales_interval" value="{{ module_recentsales_interval|e }}" id="input-interval" class="form-control" min="0"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-max" class="col-sm-2 col-form-label">{{ entry_max }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_recentsales_max" value="{{ module_recentsales_max|e }}" id="input-max" class="form-control" min="0"/>
+            </div>
+          </div>
+          <h5 class="mt-4 mb-3 border-bottom pb-2">{{ text_counter }}</h5>
+          <div class="row mb-3">
+            <label for="input-counter" class="col-sm-2 col-form-label">{{ entry_counter }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_recentsales_counter" value="0"/>
+                <input type="checkbox" name="module_recentsales_counter" value="1" id="input-counter" class="form-check-input"{% if module_recentsales_counter %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-counter-text" class="col-sm-2 col-form-label">{{ entry_counter_text }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_recentsales_counter_text" value="{{ module_recentsales_counter_text|e }}" id="input-counter-text" class="form-control"/>
+              <div class="form-text">{{ help_counter_text }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-min" class="col-sm-2 col-form-label">{{ entry_min }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_recentsales_min" value="{{ module_recentsales_min|e }}" id="input-min" class="form-control" min="0"/>
+              <div class="form-text">{{ help_min }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

@@ -1,0 +1,127 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> {{ text_intro }}</div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-3 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_deliveryslot_status" value="0"/>
+                <input type="checkbox" name="module_deliveryslot_status" value="1" id="input-status" class="form-check-input"{% if module_deliveryslot_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-required" class="col-sm-3 col-form-label">{{ entry_required }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_deliveryslot_required" value="0"/>
+                <input type="checkbox" name="module_deliveryslot_required" value="1" id="input-required" class="form-check-input"{% if module_deliveryslot_required %} checked{% endif %}/>
+              </div>
+              <div class="form-text">{{ help_required }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-lead" class="col-sm-3 col-form-label">{{ entry_lead }}</label>
+            <div class="col-sm-9">
+              <input type="number" min="0" name="module_deliveryslot_lead" value="{{ module_deliveryslot_lead|e }}" id="input-lead" class="form-control" style="max-width: 10rem;"/>
+              <div class="form-text">{{ help_lead }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-cutoff" class="col-sm-3 col-form-label">{{ entry_cutoff }}</label>
+            <div class="col-sm-9">
+              <input type="text" name="module_deliveryslot_cutoff" value="{{ module_deliveryslot_cutoff|e }}" placeholder="14:00" id="input-cutoff" class="form-control" style="max-width: 10rem;"/>
+              <div class="form-text">{{ help_cutoff }}</div>
+              <div id="error-cutoff" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-days" class="col-sm-3 col-form-label">{{ entry_days }}</label>
+            <div class="col-sm-9">
+              <input type="number" min="1" max="90" name="module_deliveryslot_days" value="{{ module_deliveryslot_days|e }}" id="input-days" class="form-control" style="max-width: 10rem;"/>
+              <div id="error-days" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-3 col-form-label">{{ entry_closed }}</div>
+            <div class="col-sm-9">
+              {% for day in weekdays %}
+                <div class="form-check form-check-inline">
+                  <input type="checkbox" name="module_deliveryslot_closed[]" value="{{ day.value }}" id="input-closed-{{ day.value }}" class="form-check-input"{% if day.value in module_deliveryslot_closed %} checked{% endif %}/>
+                  <label for="input-closed-{{ day.value }}" class="form-check-label">{{ day.name }}</label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-holidays" class="col-sm-3 col-form-label">{{ entry_holidays }}</label>
+            <div class="col-sm-9">
+              <textarea name="module_deliveryslot_holidays" rows="3" id="input-holidays" class="form-control" style="max-width: 20rem;">{{ module_deliveryslot_holidays|e }}</textarea>
+              <div class="form-text">{{ help_holidays }}</div>
+              <div id="error-holidays" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-slots" class="col-sm-3 col-form-label">{{ entry_slots }}</label>
+            <div class="col-sm-9">
+              <textarea name="module_deliveryslot_slots" rows="4" id="input-slots" class="form-control font-monospace" style="max-width: 20rem;">{{ module_deliveryslot_slots|e }}</textarea>
+              <div class="form-text">{{ help_slots }}</div>
+              <div id="error-slots" class="invalid-feedback"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-calendar-days"></i> {{ text_upcoming }}</div>
+      <div class="card-body">
+        {% if upcoming %}
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>{{ column_date }}</th>
+                  <th>{{ column_slot }}</th>
+                  <th class="text-end">{{ column_booked }}</th>
+                  <th>{{ column_orders }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in upcoming %}
+                  <tr>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.slot|e }}</td>
+                    <td class="text-end">{{ row.booked }}</td>
+                    <td>{% for order in row.orders %}<a href="{{ order.href }}">#{{ order.order_id }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted mb-0">{{ text_no_upcoming }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

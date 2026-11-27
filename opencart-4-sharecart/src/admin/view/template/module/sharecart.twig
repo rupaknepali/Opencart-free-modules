@@ -1,0 +1,97 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_sharecart_status" value="0"/>
+                <input type="checkbox" name="module_sharecart_status" value="1" id="input-status" class="form-check-input"{% if module_sharecart_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-button" class="col-sm-2 col-form-label">{{ entry_button }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_sharecart_button" value="{{ module_sharecart_button|e }}" id="input-button" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-intro" class="col-sm-2 col-form-label">{{ entry_intro }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_sharecart_intro" value="{{ module_sharecart_intro|e }}" id="input-intro" class="form-control"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-loaded" class="col-sm-2 col-form-label">{{ entry_loaded }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_sharecart_loaded" value="{{ module_sharecart_loaded|e }}" id="input-loaded" class="form-control"/>
+              <div id="error-loaded" class="invalid-feedback"></div>
+              <div class="form-text">{{ help_loaded }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-mode" class="col-sm-2 col-form-label">{{ entry_mode }}</label>
+            <div class="col-sm-10">
+              <select name="module_sharecart_mode" id="input-mode" class="form-select">
+                <option value="merge"{% if module_sharecart_mode != 'replace' %} selected{% endif %}>{{ text_merge }}</option>
+                <option value="replace"{% if module_sharecart_mode == 'replace' %} selected{% endif %}>{{ text_replace }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-days" class="col-sm-2 col-form-label">{{ entry_days }}</label>
+            <div class="col-sm-10">
+              <input type="number" name="module_sharecart_days" value="{{ module_sharecart_days|e }}" id="input-days" class="form-control" min="0"/>
+              <div class="form-text">{{ help_days }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-share-nodes"></i> {{ text_recent }}</div>
+      <div class="card-body">
+        {% if recent %}
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead><tr><th>{{ column_code }}</th><th class="text-end">{{ column_items }}</th><th>{{ column_customer }}</th><th class="text-end">{{ column_opened }}</th><th>{{ column_date }}</th></tr></thead>
+              <tbody>
+                {% for row in recent %}
+                  <tr>
+                    <td><a href="{{ row.url }}" target="_blank" rel="noopener"><code>{{ row.code }}</code></a>{% if row.expired %} <span class="badge bg-secondary">{{ text_expired }}</span>{% endif %}</td>
+                    <td class="text-end">{{ row.items }}</td>
+                    <td>{{ row.customer|e }}</td>
+                    <td class="text-end">{{ row.opened }}</td>
+                    <td>{{ row.date }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="mb-0 text-muted">{{ text_no_recent }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

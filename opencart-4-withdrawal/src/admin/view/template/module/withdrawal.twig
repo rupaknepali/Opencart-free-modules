@@ -1,0 +1,136 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa-solid fa-scale-balanced"></i> {{ text_law }}</div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_withdrawal_status" value="0"/>
+                <input type="checkbox" name="module_withdrawal_status" value="1" id="input-status" class="form-check-input"{% if module_withdrawal_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-link" class="col-sm-2 col-form-label">{{ entry_link }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_withdrawal_link" value="{{ module_withdrawal_link|e }}" id="input-link" class="form-control"/>
+              <div class="form-text">{{ help_link }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-confirm" class="col-sm-2 col-form-label">{{ entry_confirm }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_withdrawal_confirm" value="{{ module_withdrawal_confirm|e }}" id="input-confirm" class="form-control"/>
+              <div class="form-text">{{ help_confirm }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-intro" class="col-sm-2 col-form-label">{{ entry_intro }}</label>
+            <div class="col-sm-10"><textarea name="module_withdrawal_intro" rows="3" id="input-intro" class="form-control">{{ module_withdrawal_intro|e }}</textarea></div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-footer" class="col-sm-2 col-form-label">{{ entry_footer }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_withdrawal_footer" value="0"/>
+                <input type="checkbox" name="module_withdrawal_footer" value="1" id="input-footer" class="form-check-input"{% if module_withdrawal_footer %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-account" class="col-sm-2 col-form-label">{{ entry_account }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_withdrawal_account" value="0"/>
+                <input type="checkbox" name="module_withdrawal_account" value="1" id="input-account" class="form-check-input"{% if module_withdrawal_account %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-mail" class="col-sm-2 col-form-label">{{ entry_mail }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_withdrawal_mail" value="0"/>
+                <input type="checkbox" name="module_withdrawal_mail" value="1" id="input-mail" class="form-check-input"{% if module_withdrawal_mail %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-order-status" class="col-sm-2 col-form-label">{{ entry_order_status }}</label>
+            <div class="col-sm-10">
+              <select name="module_withdrawal_order_status" id="input-order-status" class="form-select">
+                <option value="0">{{ text_keep }}</option>
+                {% for s in order_statuses %}<option value="{{ s.order_status_id }}"{% if s.order_status_id == module_withdrawal_order_status %} selected{% endif %}>{{ s.name }}</option>{% endfor %}
+              </select>
+              <div class="form-text">{{ help_order_status }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-alert" class="col-sm-2 col-form-label">{{ entry_alert }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="module_withdrawal_alert" value="0"/>
+                <input type="checkbox" name="module_withdrawal_alert" value="1" id="input-alert" class="form-check-input"{% if module_withdrawal_alert %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-rotate-left"></i> {{ text_requests }}</div>
+      <div class="card-body">
+        {% if requests %}
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead><tr><th>{{ column_date }}</th><th>{{ column_name }}</th><th>{{ column_email }}</th><th>{{ column_order }}</th><th>{{ column_items }}</th><th>{{ column_status }}</th><th class="text-end">{{ column_action }}</th></tr></thead>
+              <tbody>
+                {% for r in requests %}
+                  <tr>
+                    <td class="text-nowrap">{{ r.date }}</td>
+                    <td>{{ r.name|e }}</td>
+                    <td>{{ r.email|e }}</td>
+                    <td>{% if r.order_url %}<a href="{{ r.order_url }}">#{{ r.order|e }}</a> <span class="badge bg-success">{{ text_matched }}</span>{% else %}{{ r.order|e }} <span class="badge bg-warning text-dark">{{ text_unmatched }}</span>{% endif %}</td>
+                    <td>{{ r.items|e }}</td>
+                    <td>{% if r.processed %}<span class="badge bg-secondary">{{ text_done }}</span>{% else %}<span class="badge bg-primary">{{ text_new }}</span>{% endif %}</td>
+                    <td class="text-end">{% if not r.processed %}<button type="button" class="btn btn-sm btn-outline-success" data-wd-process="{{ r.id }}">{{ text_mark }}</button>{% endif %}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="mb-0 text-muted">{{ text_no_requests }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$('[data-wd-process]').on('click', function () {
+  var btn = $(this);
+  $.post('{{ process|e('js') }}'.replaceAll('&amp;', '&'), {id: btn.data('wd-process')}, function (json) {
+    if (json.success) btn.closest('tr').find('.badge.bg-primary').removeClass('bg-primary').addClass('bg-secondary').text('{{ text_done|e('js') }}'), btn.remove();
+  }, 'json');
+});
+</script>
+{{ footer }}

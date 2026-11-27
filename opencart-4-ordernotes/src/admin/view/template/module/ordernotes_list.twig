@@ -1,0 +1,23 @@
+{% if notes %}
+  <ul class="list-group mb-3">
+    {% for note in notes %}
+      <li class="list-group-item{% if note.pinned %} list-group-item-warning{% endif %}">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+          <div>
+            {% if note.pinned %}<span class="badge bg-warning text-dark me-1"><i class="fa-solid fa-thumbtack"></i> {{ text_pinned }}</span>{% endif %}
+            <div style="white-space: pre-line;">{{ note.note|e }}</div>
+            <small class="text-muted">{{ note.by|e }}</small>
+          </div>
+          {% if can_modify %}
+            <div class="text-nowrap">
+              <button type="button" class="btn btn-sm btn-light ordernotes-pin" data-id="{{ note.ordernote_id }}" data-pinned="{{ note.pinned ? 0 : 1 }}" title="{{ note.pinned ? text_unpin : text_pin }}" data-bs-toggle="tooltip"><i class="fa-solid fa-thumbtack"></i></button>
+              {% if note.delete %}<button type="button" class="btn btn-sm btn-outline-danger ordernotes-delete" data-id="{{ note.ordernote_id }}" title="{{ button_delete }}" data-bs-toggle="tooltip"><i class="fa-solid fa-trash-can"></i></button>{% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-muted">{{ text_none }}</p>
+{% endif %}

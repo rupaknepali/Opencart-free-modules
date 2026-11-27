@@ -1,0 +1,18 @@
+<script type="text/javascript">
+(function () {
+    var badges = {{ badges }};
+
+    $('#order input[name="selected[]"]').each(function () {
+        var b = badges[this.value];
+
+        if (b) {
+            var cell = $(this).closest('tr').children('td').eq(1);
+
+            cell.find('.ordernotes-badge').remove();
+            cell.prepend($('<span class="ordernotes-badge badge bg-warning text-dark me-1" data-bs-toggle="tooltip"><i class="fa-solid fa-note-sticky"></i> ' + b.total + '</span>').attr('title', b.title));
+        }
+    });
+
+    // OpenCart's common.js shows tooltips for [data-bs-toggle="tooltip"] on hover.
+})();
+</script>

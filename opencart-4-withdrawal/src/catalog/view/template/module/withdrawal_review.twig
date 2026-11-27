@@ -1,0 +1,13 @@
+<h1 class="mt-4">{{ heading_title }}</h1>
+<p>{{ text_review_help }}</p>
+<table class="table table-bordered" style="max-width:640px">
+  <tr><th style="width:40%">{{ entry_name }}</th><td>{{ name|e }}</td></tr>
+  <tr><th>{{ entry_order }}</th><td>{{ order|e }}</td></tr>
+  <tr><th>{{ entry_items }}</th><td>{{ items ? items|e|nl2br : text_whole }}</td></tr>
+  <tr><th>{{ entry_email }}</th><td>{{ email|e }}</td></tr>
+</table>
+<form action="{{ action }}" method="post" class="d-flex gap-2 mb-4">
+  <input type="hidden" name="key" value="{{ key }}"/>
+  <button type="submit" class="btn btn-danger btn-lg">{{ confirm_text|e }}</button>
+  <a href="{{ back }}" class="btn btn-light btn-lg">{{ text_back }}</a>
+</form>

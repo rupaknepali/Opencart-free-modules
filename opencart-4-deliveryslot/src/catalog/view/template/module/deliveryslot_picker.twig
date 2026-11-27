@@ -1,0 +1,101 @@
+<fieldset id="deliveryslot" class="mt-3">
+  <legend>{{ text_title }}</legend>
+  {% if dates %}
+    <p class="mb-2">{{ text_choose }}</p>
+    <div class="mb-2">
+      <label for="deliveryslot-date" class="form-label">{{ text_date }}</label>
+      <select id="deliveryslot-date" class="form-select">
+        <option value="">{{ text_select }}</option>
+        {% for date in dates %}
+          <option value="{{ date.date }}"{% if date.date == selected_date %} selected{% endif %}>{{ date.label|e }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div id="deliveryslot-slots-wrap" class="mb-2"{% if not selected_date %} style="display: none;"{% endif %}>
+      <div class="form-label">{{ text_slot }}</div>
+      <div id="deliveryslot-slots" class="d-flex flex-wrap gap-2"></div>
+    </div>
+    <div id="deliveryslot-result" class="form-text text-success"></div>
+    <div id="deliveryslot-error" class="invalid-feedback"></div>
+  {% else %}
+    <p class="text-muted mb-0">{{ text_none }}</p>
+  {% endif %}
+</fieldset>
+{% if dates %}
+<script type="text/javascript">
+(function () {
+    var dates = {{ dates_json }};
+    var selectedSlot = '{{ selected_slot|e('js') }}';
+
+    function slotsFor(value) {
+        for (var i = 0; i < dates.length; i++) {
+            if (dates[i].date === value) {
+                return dates[i].slots;
+            }
+        }
+
+        return [];
+    }
+
+    function render() {
+        var date = $('#deliveryslot-date').val();
+        var box = $('#deliveryslot-slots').empty();
+
+        $('#deliveryslot-slots-wrap').toggle(!!date);
+
+        $.each(slotsFor(date), function (i, slot) {
+            var id = 'deliveryslot-slot-' + i;
+            var input = $('<input type="radio" name="deliveryslot_slot" class="btn-check" autocomplete="off"/>').attr('id', id).val(slot.label).prop('checked', slot.label === selectedSlot);
+            var label = $('<label class="btn btn-outline-primary"></label>').attr('for', id).text(slot.label);
+
+            if (slot.left) {
+                label.append($('<small class="d-block"></small>').text(slot.left));
+            }
+
+            box.append(input, label);
+        });
+    }
+
+    function save(slot) {
+        $.ajax({
+            url: '{{ save }}',
+            type: 'post',
+            data: {date: $('#deliveryslot-date').val(), slot: slot},
+            dataType: 'json',
+            success: function (json) {
+                $('#deliveryslot-error').removeClass('d-block').text('');
+                $('#deliveryslot-result').text('');
+
+                if (json['error']) {
+                    $('#deliveryslot-error').text(json['error']).addClass('d-block');
+                }
+
+                if (json['success'] || json['cleared']) {
+                    selectedSlot = slot;
+                    $('#deliveryslot-result').text(json['success'] || '');
+                }
+
+                // The confirm step shows the slot, or asks for one, so reload it either way.
+                $('#checkout-confirm').load('{{ confirm }}');
+            },
+            error: function (xhr, status, error) { console.log(error); }
+        });
+    }
+
+    $('#deliveryslot-date').on('change', function () {
+        if (selectedSlot) {
+            save('');
+        }
+
+        selectedSlot = '';
+        render();
+    });
+
+    $('#deliveryslot-slots').on('change', 'input', function () {
+        save(this.value);
+    });
+
+    render();
+})();
+</script>
+{% endif %}

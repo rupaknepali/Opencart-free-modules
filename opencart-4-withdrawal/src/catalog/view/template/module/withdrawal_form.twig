@@ -1,0 +1,34 @@
+<h1 class="mt-4">{{ heading_title|e }}</h1>
+<p>{{ intro|e }}</p>
+{% if errors.warning %}<div class="alert alert-danger">{{ errors.warning }}</div>{% endif %}
+<form action="{{ action }}" method="post" class="mb-4" style="max-width:640px" novalidate>
+  <div class="mb-3">
+    <label for="wd-name" class="form-label required">{{ entry_name }}</label>
+    <input type="text" name="name" id="wd-name" value="{{ name|e }}" autocomplete="name" class="form-control{% if errors.name %} is-invalid{% endif %}" required/>
+    {% if errors.name %}<div class="invalid-feedback d-block">{{ errors.name }}</div>{% endif %}
+  </div>
+  <div class="mb-3">
+    <label for="wd-order" class="form-label required">{{ entry_order }}</label>
+    {% if orders %}
+      <select name="order" id="wd-order" class="form-select{% if errors.order %} is-invalid{% endif %}">
+        <option value="">{{ text_select_order }}</option>
+        {% for o in orders %}<option value="{{ o.order_id }}"{% if o.order_id == order %} selected{% endif %}>{{ o.label }}</option>{% endfor %}
+      </select>
+    {% else %}
+      <input type="text" name="order" id="wd-order" value="{{ order|e }}" class="form-control{% if errors.order %} is-invalid{% endif %}" required/>
+    {% endif %}
+    {% if errors.order %}<div class="invalid-feedback d-block">{{ errors.order }}</div>{% endif %}
+  </div>
+  <div class="mb-3">
+    <label for="wd-items" class="form-label">{{ entry_items }}</label>
+    <textarea name="items" id="wd-items" rows="3" class="form-control">{{ items|e }}</textarea>
+    <div class="form-text">{{ text_whole }}</div>
+  </div>
+  <div class="mb-3">
+    <label for="wd-email" class="form-label required">{{ entry_email }}</label>
+    <input type="email" name="email" id="wd-email" value="{{ email|e }}" autocomplete="email" class="form-control{% if errors.email %} is-invalid{% endif %}" required/>
+    {% if errors.email %}<div class="invalid-feedback d-block">{{ errors.email }}</div>{% endif %}
+  </div>
+  <div style="position:absolute;left:-9999px" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"/></div>
+  <button type="submit" class="btn btn-primary">{{ button_continue }}</button>
+</form>

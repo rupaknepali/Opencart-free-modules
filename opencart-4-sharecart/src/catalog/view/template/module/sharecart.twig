@@ -1,0 +1,46 @@
+<div id="sharecart" class="card mt-3 mb-3">
+  <div class="card-body d-flex flex-wrap align-items-center gap-2">
+    <button type="button" id="sharecart-button" data-action="{{ create }}" class="btn btn-outline-primary"><i class="fa-solid fa-share-nodes"></i> {{ button|e }}</button>
+    <div id="sharecart-result" class="flex-grow-1" hidden>
+      <div class="small text-body-secondary mb-1">{{ intro|e }}</div>
+      <div class="input-group">
+        <input type="text" id="sharecart-url" class="form-control" readonly aria-label="{{ text_cart_link }}"/>
+        <button type="button" id="sharecart-copy" class="btn btn-primary" data-copied="{{ text_copied }}">{{ text_copy }}</button>
+      </div>
+    </div>
+    <div id="sharecart-error" class="text-danger small" hidden></div>
+  </div>
+</div>
+<script>
+(function () {
+  // The cart list is reloaded with AJAX after every change, so bind once on the document.
+  if (window.sharecartBound) return;
+  window.sharecartBound = true;
+  document.addEventListener('click', function (e) {
+    var share = e.target.closest('#sharecart-button');
+    if (share) {
+      share.disabled = true;
+      fetch(share.getAttribute('data-action').replace(/&amp;/g, '&'), {method: 'POST', credentials: 'same-origin'})
+        .then(function (r) { return r.json(); })
+        .then(function (json) {
+          share.disabled = false;
+          var err = document.getElementById('sharecart-error');
+          if (json.error) { err.textContent = json.error; err.hidden = false; return; }
+          err.hidden = true;
+          document.getElementById('sharecart-url').value = json.url;
+          document.getElementById('sharecart-result').hidden = false;
+          document.getElementById('sharecart-url').select();
+        })
+        .catch(function () { share.disabled = false; });
+    }
+    var copy = e.target.closest('#sharecart-copy');
+    if (copy) {
+      var input = document.getElementById('sharecart-url');
+      input.select();
+      var done = function () { var t = copy.textContent; copy.textContent = copy.getAttribute('data-copied'); setTimeout(function () { copy.textContent = t; }, 1500); };
+      if (navigator.clipboard) { navigator.clipboard.writeText(input.value).then(done, function () { document.execCommand('copy'); done(); }); }
+      else { document.execCommand('copy'); done(); }
+    }
+  });
+})();
+</script>

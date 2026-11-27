@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2328;line-height:1.5;max-width:600px">
+<p>{{ intro|e }}</p>
+<h3 style="font-size:15px;margin:20px 0 8px">{{ text_mail_content }}</h3>
+<table cellpadding="6" cellspacing="0" border="1" style="border-collapse:collapse;border-color:#d0d7de;width:100%">
+  <tr><td style="width:40%"><strong>{{ entry_name }}</strong></td><td>{{ name|e }}</td></tr>
+  <tr><td><strong>{{ entry_order }}</strong></td><td>{{ order|e }}</td></tr>
+  <tr><td><strong>{{ entry_items }}</strong></td><td>{{ items ? items|e|nl2br : text_whole }}</td></tr>
+  <tr><td><strong>{{ entry_email }}</strong></td><td>{{ email|e }}</td></tr>
+  <tr><td><strong>{{ entry_date }}</strong></td><td>{{ submitted|e }}</td></tr>
+</table>
+<p style="margin-top:16px">{{ text_mail_next }}</p>
+<p style="color:#57606a">{{ store|e }}</p>
+</body></html>

@@ -1,0 +1,85 @@
+<style>
+.qe-cell{cursor:pointer;border-bottom:1px dashed #9aa4b2}
+.qe-cell:hover{background:#fff3cd}
+.qe-input{width:100px;display:inline-block;text-align:right}
+.qe-ok{color:#198754;font-size:12px;margin-left:4px}
+.qe-err{color:#dc3545;font-size:12px;display:block}
+</style>
+<script>
+(function () {
+  var rows = {{ rows }}, fields = {{ fields }}, url = {{ url|json_encode }};
+  var table = document.querySelector('#form-product table');
+  if (!table) return;
+  function post(id, field, value, done) {
+    var d = new FormData(); d.append('product_id', id); d.append('field', field); d.append('value', value);
+    fetch(url, {method: 'POST', body: d, credentials: 'same-origin'}).then(function (r) { return r.json(); }).then(done);
+  }
+  function badge(q) { return q <= 0 ? 'bg-warning' : (q <= 5 ? 'bg-danger' : 'bg-success'); }
+  function flash(cell, ok, msg) {
+    var s = document.createElement('span'); s.className = ok ? 'qe-ok' : 'qe-err'; s.textContent = msg;
+    cell.appendChild(s); setTimeout(function () { s.remove(); }, ok ? 1500 : 4000);
+  }
+  function editor(cell, id, field, current, render) {
+    if (cell.querySelector('input')) return;
+    var old = cell.innerHTML;
+    var input = document.createElement('input');
+    input.type = 'text'; input.value = current; input.className = 'form-control form-control-sm qe-input';
+    input.setAttribute('inputmode', field == 'price' ? 'decimal' : 'numeric');
+    cell.innerHTML = ''; cell.appendChild(input); input.focus(); input.select();
+    var finish = function (save) {
+      if (!save || input.value === String(current)) { cell.innerHTML = old; return; }
+      input.disabled = true;
+      post(id, field, input.value, function (json) {
+        if (json.error) { cell.innerHTML = old; flash(cell, false, json.error); return; }
+        rows[id].price = json.price; rows[id].quantity = json.quantity;
+        render(json); flash(cell, true, json.success);
+      });
+    };
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+      if (e.key === 'Escape') { finish(false); }
+    });
+    input.addEventListener('blur', function () { finish(true); });
+  }
+  table.querySelectorAll('tbody tr').forEach(function (tr) {
+    var box = tr.querySelector('input[name="selected[]"]');
+    if (!box) return;
+    var id = box.value, row = rows[id], tds = tr.children;
+    if (!row) return;
+    if (!row.editable) { tds[2].insertAdjacentHTML('beforeend', '<div class="small text-muted">{{ variant|e('js') }}</div>'); return; }
+    var priceCell = tds[4], qtyCell = tds[5];
+    if (fields.price) {
+      priceCell.classList.add('qe-cell'); priceCell.title = '{{ click|e('js') }}';
+      priceCell.addEventListener('click', function () {
+        editor(priceCell, id, 'price', row.price, function (json) {
+          // A running special stays visible: only the regular price line changes.
+          var struck = priceCell.querySelector('span[style*="line-through"]');
+          if (struck) { struck.textContent = json.price_text; } else { priceCell.textContent = json.price_text; }
+        });
+      });
+    }
+    if (fields.quantity) {
+      qtyCell.classList.add('qe-cell'); qtyCell.title = '{{ click|e('js') }}';
+      qtyCell.addEventListener('click', function () {
+        editor(qtyCell, id, 'quantity', row.quantity, function (json) {
+          qtyCell.innerHTML = '<span class="badge ' + badge(json.quantity) + '">' + json.quantity + '</span>';
+        });
+      });
+    }
+    if (fields.status) {
+      var sw = document.createElement('div');
+      sw.className = 'form-check form-switch mt-1';
+      sw.innerHTML = '<input class="form-check-input" type="checkbox" role="switch"' + (row.status ? ' checked' : '') + ' aria-label="Status">';
+      tds[2].appendChild(sw);
+      sw.querySelector('input').addEventListener('change', function (e) {
+        var input = e.target;
+        post(id, 'status', input.checked ? '1' : '0', function (json) {
+          if (json.error) { input.checked = !input.checked; flash(tds[2], false, json.error); return; }
+          tr.classList.toggle('table-active', !json.status); tr.classList.toggle('opacity-50', !json.status);
+          flash(tds[2], true, json.success);
+        });
+      });
+    }
+  });
+})();
+</script>
